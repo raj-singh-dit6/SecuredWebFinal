@@ -10,11 +10,10 @@
     <title>Users List</title>
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
-    <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
-    <link href="<c:url value='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css' />" rel="stylesheet"></link>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+    <link href="<c:url value='/static/css/bootstrap.min.css' />" rel="stylesheet"></link>
+    <script src="/static/js/jquery-1.12.4.js"></script>
+	<script src="/static/js/jquery.dataTables.min.js"></script>
+	<script src="/static/js/dataTables.bootstrap.min.js"></script>
 </head>
  
 <body>
@@ -36,7 +35,6 @@
                         <sec:authorize access="hasRole('ADMIN')">
                             <th width="100"></th>
                         </sec:authorize>
-                         
                     </tr>
                 </thead>
                 <tbody>
@@ -71,4 +69,5 @@
 $(document).ready(function() {
     $('#userList').DataTable();
 } );
+
 </script>
