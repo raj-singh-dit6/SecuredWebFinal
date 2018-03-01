@@ -10,6 +10,11 @@
     <title>Users List</title>
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
+    <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
+    <link href="<c:url value='https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css' />" rel="stylesheet"></link>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 </head>
  
 <body>
@@ -18,7 +23,7 @@
         <div class="panel panel-default">
               <!-- Default panel contents -->
             <div class="panel-heading"><span class="lead">List of Users </span></div>
-            <table class="table table-hover">
+            <table id="userList" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>Firstname</th>
@@ -60,3 +65,10 @@
     </div>
 </body>
 </html>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#userList').DataTable();
+} );
+</script>
