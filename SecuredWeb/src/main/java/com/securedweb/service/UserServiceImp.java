@@ -7,8 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.securedweb.dao.UserDao;
 import com.securedweb.model.User;
+import com.securedweb.repository.UserRepository;
 
 @Service("userService")
 @Transactional
@@ -16,30 +16,29 @@ public class UserServiceImp implements UserService{
 
 	
 	@Autowired
-	UserDao userDao;
+	UserRepository userRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public User findById(int id) {
-		return userDao.findById(id);
+		return userRepository.findById(id).get();
 	}
 
 	@Override
 	public User findBySSO(String sso) {
-		return userDao.findBySSO(sso);
+		return userRepository.findBySsoId(sso);
 	}
 
 	@Override
 	public void saveUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		userDao.saveUser(user);		
+		userRepository.save(user);
 	}
 
 	@Override
 	public void updateUser(User user) {
-		User entity = userDao.findById(user.getId());
+		User entity = userRepository.findById(user.getId()).get();
 		if(entity!=null)
 		{	entity.setSsoId(user.getSsoId());
 			if(!(user.getPassword().equals(entity.getPassword())))
@@ -52,17 +51,17 @@ public class UserServiceImp implements UserService{
 
 	@Override
 	public void deleteUserBySSO(String sso) {
-		userDao.deleteUserBySSO(sso);
+		userRepository.deleteBySsoId(sso);
 	}
 
 	@Override
 	public List<User> findAlluser() {
-		return userDao.findAllUser();
+		return (List<User>) userRepository.findAll();
 	}
 
 	@Override
 	public boolean isUserSSOUnique(Integer id, String sso) {
-		User user = userDao.findBySSO(sso);
+		User user = userRepository.findBySsoId(sso);
 		return ( user == null || ((id!=null) && user.getId() == id));
 	}
 

@@ -24,21 +24,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.securedweb.model.Role;
 import com.securedweb.model.User;
-import com.securedweb.model.UserRole;
-import com.securedweb.service.UserRoleService;
+import com.securedweb.service.RoleService;
 import com.securedweb.service.UserService;
 
 @Controller
 @RequestMapping("/")
 @SessionAttributes("roles")
 public class AppController {
- 
-    @Autowired
+
+	@Autowired
     UserService userService;
      
     @Autowired
-    UserRoleService userRoleService;
+    RoleService roleService;
      
     @Autowired
     MessageSource messageSource;
@@ -164,8 +164,8 @@ public class AppController {
      * This method will provide UserRole list to views
      */
     @ModelAttribute("roles")
-    public List<UserRole> initializeProfiles() {
-        return userRoleService.findAll();
+    public List<Role> initializeProfiles() {
+        return roleService.findAll();
     }
      
     /**

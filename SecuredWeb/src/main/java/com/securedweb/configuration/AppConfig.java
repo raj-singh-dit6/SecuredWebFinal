@@ -1,32 +1,43 @@
 package com.securedweb.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.format.FormatterRegistry;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.securedweb.converter.RoleToUserRoleConverter;
+import com.securedweb.web.MultiTenancyInterceptor;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.securedweb")
-public class AppConfig extends WebMvcConfigurerAdapter{
+public class AppConfig implements WebMvcConfigurer{
 
+	private static final Logger LOG = LoggerFactory.getLogger(AppConfig.class);
+	
+	
+    /*RoleToUserRoleConverter roleToUserRoleConverter;
     
-    @Autowired
-    RoleToUserRoleConverter roleToUserRoleConverter;
-     
- 
+    @Autowired    
+    AppConfig(@Lazy RoleToUserRoleConverter roleToUserRoleConverter)
+    {
+    	this.roleToUserRoleConverter=roleToUserRoleConverter;
+    }*/
     /**
      * Configure ViewResolvers to deliver preferred views.
      */
@@ -52,10 +63,10 @@ public class AppConfig extends WebMvcConfigurerAdapter{
      * Configure Converter to be used.
      * In our example, we need a converter to convert string values[Roles] to UserRole in newUser.jsp
      */
-    @Override
+    /*@Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(roleToUserRoleConverter);
-    }
+    }*/
      
  
     /**
@@ -75,5 +86,17 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     @Override
     public void configurePathMatch(PathMatchConfigurer matcher) {
         matcher.setUseRegisteredSuffixPatternMatch(true);
-    }	
+    }
+    
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+     registry.addInterceptor(new MultiTenancyInterceptor());
+    }
+    
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.indentOutput(true);
+        converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+    }
 }

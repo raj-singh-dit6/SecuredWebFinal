@@ -3,29 +3,40 @@ package com.securedweb.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class AbstractDao<PK extends Serializable,T > {
 
 	private final Class<T> persistentClass;
 	
+	
+	
 	@SuppressWarnings("unchecked")
     public AbstractDao(){
         this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-    }
+    
+	}
 	
 	/*Using setter also we can set the Class of the Entity*/
 	/*public void setClazz( final Class< T > clazzToSet ){
 	      persistentClass = clazzToSet;
 	   }*/
-	
 	@Autowired
-	 private SessionFactory sessionFactory;
+	@Qualifier("tenantEntityManager")
+	EntityManagerFactory masterEntityManager;
 	 
-    protected Session getSession(){
+    protected Session getSession()
+    {
+    	System.out.println("Getting session..........");
+    	System.out.println(masterEntityManager.toString());
+    	SessionFactory sessionFactory = masterEntityManager.unwrap(SessionFactory.class);
+    	System.out.println("............... session..........");
         return sessionFactory.getCurrentSession();
     }
  

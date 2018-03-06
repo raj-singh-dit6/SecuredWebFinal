@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.securedweb.model.User;
-import com.securedweb.model.UserRole;
+import com.securedweb.model.Role;
 import com.securedweb.service.UserService;
 
 
@@ -45,9 +45,9 @@ public class CustomUserDetailsService implements UserDetailsService{
 	private List<GrantedAuthority> getGrantedAuthorities(User user){
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
          
-        for(UserRole userRole : user.getUserRoles()){
-            logger.info("UserRole : {}", userRole);
-            authorities.add(new SimpleGrantedAuthority("ROLE_"+userRole.getType()));
+        for(Role role : user.getUserRoles()){
+            logger.info("Role : {}", role);
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getType()));
         }
         logger.info("authorities : {}", authorities);
         return authorities;

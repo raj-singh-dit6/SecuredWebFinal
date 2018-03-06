@@ -1,9 +1,11 @@
 package com.securedweb.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,12 +15,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="APP_USER")
+@Table(name="USER")
 public class User implements Serializable{
 	
 	@Id 
@@ -36,7 +42,7 @@ public class User implements Serializable{
 	@NotEmpty
     @Column(name="FIRST_NAME", nullable=false)
     private String firstName;
- 
+
 	@NotEmpty
     @Column(name="LAST_NAME", nullable=false)
     private String lastName;
@@ -44,19 +50,98 @@ public class User implements Serializable{
 	@NotEmpty
     @Column(name="EMAIL", nullable=false)
     private String email;
-    
+	
+	@NotEmpty
+    @JoinColumn(name="TENANT_ID")
+    private Integer tenandId;
+	
+	@NotEmpty
+    @Column(name="FORGOT_TOKEN")
+    private Integer forgotToken;
+	
+	@NotEmpty
+    @Column(name="TOKEN_ID")
+    private String tokenId;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "TENANT_ID")
+	private Tenant tenant;
+	
+	@Column(name="CREATED_ON")
+	@CreationTimestamp
+	private LocalDateTime createDateTime;
+
+	@Column(name="UPDATED_ON")
+	@UpdateTimestamp
+	private LocalDateTime updateDateTime;
+	
+	
+	@OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL)
+	private Set<UserProject> userProjects = new HashSet<UserProject>(); 
+	
+	@OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL)
+	private Set<UserTask> userTasks = new HashSet<UserTask>();
+	
 	@NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "APP_USER_USER_ROLE", 
+    @JoinTable(name = "USER_ROLE", 
              joinColumns = { @JoinColumn(name = "USER_ID") }, 
-             inverseJoinColumns = { @JoinColumn(name = "USER_ROLE_ID") })
-    private Set<UserRole> userRoles = new HashSet<UserRole>();
+             inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
+    private Set<Role> userRoles = new HashSet<Role>();
+	
+	public String getTokenId() {
+		return tokenId;
+	}
 
-    public Set<UserRole> getUserRoles() {
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
+	}
+
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
+	}
+
+	public Integer getTenandId() {
+		return tenandId;
+	}
+
+	public void setTenandId(Integer tenandId) {
+		this.tenandId = tenandId;
+	}
+
+	public Integer getForgotToken() {
+		return forgotToken;
+	}
+
+	public void setForgotToken(Integer forgotToken) {
+		this.forgotToken = forgotToken;
+	}
+
+	public LocalDateTime getCreateDateTime() {
+		return createDateTime;
+	}
+
+	public void setCreateDateTime(LocalDateTime createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+
+	public LocalDateTime getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(LocalDateTime updateDateTime) {
+		this.updateDateTime = updateDateTime;
+	}
+
+	public Set<Role> getUserRoles() {
 		return userRoles;
 	}
 
-	public void setUserRoles(Set<UserRole> userRoles) {
+	public void setUserRoles(Set<Role> userRoles) {
 		this.userRoles = userRoles;
 	}
 
@@ -107,7 +192,23 @@ public class User implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public Set<UserProject> getUserProjects() {
+		return userProjects;
+	}
 
+	public void setUserProjects(Set<UserProject> userProjects) {
+		this.userProjects = userProjects;
+	}
+
+	public Set<UserTask> getUserTasks() {
+		return userTasks;
+	}
+
+	public void setUserTasks(Set<UserTask> userTasks) {
+		this.userTasks = userTasks;
+	}
+	
 	@Override
 	public boolean equals(Object o)
 	{
