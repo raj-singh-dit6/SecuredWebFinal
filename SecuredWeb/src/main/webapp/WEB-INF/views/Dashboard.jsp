@@ -56,7 +56,7 @@
     				<strong>Sorry!</strong> There was some issue while adding user.Please try again.
   				</div>
 	            <div class="panel-body">
-	            	 <c:choose>
+<%-- 	            	 <c:choose>
 	            	 <c:when test="${list}">
                                       <!-- Default panel contents -->
             <div class="panel-heading"><span class="lead">List of Users </span></div>
@@ -97,7 +97,8 @@
                     </c:when>
                     <c:otherwise>
                  	</c:otherwise>
-                  </c:choose>	
+                  </c:choose> --%>
+                  <table id="userList" class="table table-striped table-bordered display" width="100%"></table>	
 	            </div>
 	        
 	        </div>
@@ -216,26 +217,6 @@
 $(document).ready(function() {
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
-	
-	$('#userList').DataTable({
-		 responsive: {
-	            details: {
-	                display: $.fn.dataTable.Responsive.display.modal( {
-	                    header: function ( row ) {
-	                        var data = row.data();
-	                        return 'Details for '+data[0]+' '+data[1];
-	                    }
-	                } ),
-	                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
-	                    tableClass: 'table'
-	                } )
-	            }
-	        },
-		"pagingType" : "full_numbers",
-	    select	   : true,
-	    rowReorder: true
-	    
-	});
 });
 
 $('#registerUser').click(function(e) {
@@ -261,12 +242,6 @@ $('#registerUser').click(function(e) {
     user.forgotToken = "";
     user.userRoles	= userRoles;
 
-    alert(JSON.stringify(user));
-	
-    //Prevent default submission of form
-    e.preventDefault();
-    
-    //Remove all errors
     $('input').next().remove();
     
     $.ajax({
@@ -313,17 +288,56 @@ $('#manageUsers').click(function(e) {
        },
        success : function(users) {
        
-    	   alert(users);
-         
+    	   fillDataInDataTable(users);
        }
  });
 }); 
 
-/* $('#manageUsers').click(function(){
-	$.get("list",
-		    function(data, status){
-		        alert("Data: " + data + "\nStatus: " + status);
-		    });
-}); */
+function fillDataInDataTable(users){
+	var dataSet=[];
+	users.forEach(function(user){
+		var dataEach = [];
+		dataEach.push(user.firstName);
+		dataEach.push(user.lastName);
+		dataEach.push(user.ssoId);
+		dataEach.push(user.email);
+		var roles = "";
+		user.userRoles.forEach(function(role){
+			roles = roles + role.type + " ,";
+		});
+		roles = roles.substring(0,roles.length-1);
+		dataEach.push(roles);
+		dataSet.push(dataEach);
+	});
+	
+	alert(JSON.stringify(dataSet));
+	alert(dataSet);
+	$('#userList').DataTable( {
+        data: dataSet,
+        columns: [
+            { title: "First Name" },
+            { title: "Last Name	" },
+            { title: "SSO ID" },
+            { title: "Email" },
+            { title: "Roles" },
+        ], 
+        /*  responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal( {
+                    header: function ( row ) {
+                        var data = row.data();
+                        return 'Details for '+data[0]+' '+data[1];
+                    }
+                } ),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                    tableClass: 'table'
+                } )
+            }
+        },  */
+		"pagingType" : "full_numbers",
+	    select	   : true,
+	    rowReorder: true
+    });
+}
 
 </script>
