@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import com.securedweb.model.Role;
-import com.securedweb.service.RoleService;
+import com.securedweb.model.tenant.Role;
+import com.securedweb.service.tenant.RoleService;
 
 /**
  * A converter class used in views to map id's to actual userRole objects.

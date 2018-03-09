@@ -3,6 +3,7 @@ package com.securedweb.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.securedweb.model.User;
-import com.securedweb.model.Role;
-import com.securedweb.service.UserService;
+import com.securedweb.model.tenant.Role;
+import com.securedweb.model.tenant.User;
+import com.securedweb.service.tenant.UserService;
 
 
 @Service("customUserDetailsService")
@@ -44,7 +45,6 @@ public class CustomUserDetailsService implements UserDetailsService{
 	
 	private List<GrantedAuthority> getGrantedAuthorities(User user){
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-         
         for(Role role : user.getUserRoles()){
             logger.info("Role : {}", role);
             authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getType()));

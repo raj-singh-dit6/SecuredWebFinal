@@ -2,18 +2,17 @@ package com.securedweb.util;
 
 public class TenantHolder {
 
-    private static final InheritableThreadLocal<String> currentTenantName = new InheritableThreadLocal<>();
+	  private static final ThreadLocal<String> CONTEXT = new ThreadLocal<>();
 
-    public static String getCurrentTenant() {
-        return currentTenantName.get();
-    }
+	  public static void setTenantId(String tenantId) {
+	    CONTEXT.set(tenantId);
+	  }
 
-    public static void setTenant(final String tenantName) {
-        currentTenantName.set(tenantName);
-    }
+	  public static String getTenantId() {
+	    return CONTEXT.get();
+	  }
 
-    public static void cleanupTenant() {
-        currentTenantName.remove();
-    }
-
-}
+	  public static void clear() {
+	    CONTEXT.remove();
+	  }
+	}

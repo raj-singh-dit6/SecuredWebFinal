@@ -1,3 +1,4 @@
-<div class="authbar">
-    <span>Dear <strong>${loggedinuser}</strong>, Welcome to Project Tracking Tool .</span> <span class="floatRight"><a href="<c:url value="/logout" />">Logout</a></span>
+<div class="panel panel-default">
+      <div class="panel-heading"><span class="authHeader">Dear <strong class="authHeader">${loggedinuser}</strong>, Welcome to your Dashboard</span></div>
 </div>
+     

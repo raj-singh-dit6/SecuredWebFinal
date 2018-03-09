@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.securedweb.model.User;
-
 @Component("currentTenantIdentifierResolverImpl")
 public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentifierResolver {
 
@@ -20,12 +18,23 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
 	
 	@Override
 	public String resolveCurrentTenantIdentifier() {
+		
+		/*ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		String tenantId = attr!=null?attr.getRequest().getParameter("tenantId"):"";
+        
+        if (tenantId != "") {
+            TenantHolder.setTenantId(tenantId);
+        	return tenantId;
+        }
+        return DEFAULT_TENANT_ID;*/
+        
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();				
-		if(authentication != null && authentication.getPrincipal() instanceof User) {
-			System.out.println(((User)authentication.getPrincipal()).getTenandId());
+		if(authentication != null) {
+			//System.out.println(((User)authentication.getPrincipal()).getTenantId());
 			RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 			if (requestAttributes != null) {
 					String identifier = (String) requestAttributes.getAttribute("CURRENT_TENANT_IDENTIFIER",RequestAttributes.SCOPE_REQUEST);
+					System.err.println("CurentTenantIdentifier : "+TenantHolder.getTenantId());
 					if (identifier != null) {
 						return identifier;
 					}
