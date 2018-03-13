@@ -28,6 +28,9 @@ public class TaskStatus {
 	@Column(name="STATUS_COLOUR")
 	private String statusColour;
 	
+	@Column(name="TENANT_ID")
+	private String tenantId;
+
 	@OneToMany(mappedBy="taskStatus")
 	private Set<Task> tasks;
 	
@@ -86,7 +89,15 @@ public class TaskStatus {
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
+	
 
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 	
 
 }

@@ -25,6 +25,12 @@ public class TenantServiceImp implements TenantService{
 	public List<Tenant> findAll() {
 		return (List<Tenant>) tenantRepository.findAll();
 	}
+
+	@Override
+	public Tenant findById(String id) {
+		tenantRepository.findById(Integer.parseInt(id));
+		return tenantRepository.findById(Integer.parseInt(id)).get();
+	}
 	
     
     

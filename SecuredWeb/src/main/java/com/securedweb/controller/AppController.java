@@ -2,8 +2,6 @@ package com.securedweb.controller;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,23 +29,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Role;
+import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.model.tenant.User;
-import com.securedweb.model.tenant.UserJSONResponse;
+import com.securedweb.service.master.TenantService;
+import com.securedweb.service.tenant.ProjectService;
 import com.securedweb.service.tenant.RoleService;
+import com.securedweb.service.tenant.TaskStatusService;
 import com.securedweb.service.tenant.UserService;
 import com.securedweb.util.TenantHolder;
 
 @Controller
 @RequestMapping("/")
 @SessionAttributes("roles")
-public class UserController {
+public class AppController {
 
 	@Autowired
     UserService userService;
      
     @Autowired
     RoleService roleService;
+    
+    @Autowired
+    TenantService tenantService;
+    
+    @Autowired
+    ProjectService projectService;
+     
+    
+    @Autowired
+    TaskStatusService taskStatusService;
      
     @Autowired
     MessageSource messageSource;
@@ -57,25 +69,65 @@ public class UserController {
      
     @Autowired
     AuthenticationTrustResolver authenticationTrustResolver;
-     
-    @GetMapping(value = "/list",produces = { MediaType.APPLICATION_JSON_VALUE })
+
+    
+    
+    /**
+     * This method handles login GET requests.
+     * If users is already logged-in and tries to goto login page again, will be redirected to list page.
+     */
+    @GetMapping(value = {"/","/login","/home"})
+    public String loginPage() {
+        if (isCurrentAuthenticationAnonymous()) {
+            return "login";
+        } else {
+        	String tenantId=userService.findBySSO(getPrincipal()).getTenantId();
+        	System.err.println("Controller : "+tenantId);
+        	if(tenantId.equals("1"))
+        		return "forward:/Dashboard";
+        	else
+        		return "forward:/Dashboard?"+"tenantId="+tenantId;
+        }
+    }
+    
+    @GetMapping(value = "/Dashboard")
+    public String getDashboard (Model model) {
+    	String tenantId=userService.findBySSO(getPrincipal()).getTenantId();
+    	String tenantName= tenantService.findById(tenantId).getTenantName();
+        System.err.println(tenantName);
+    	model.addAttribute("edit", false);
+        model.addAttribute("list", false);
+        model.addAttribute("tenantName", tenantName);
+        model.addAttribute("tenantId", tenantId);
+        model.addAttribute("loggedinuser", getPrincipal());
+    	return "Dashboard";
+    }
+ 
+    /**
+     * This method handles logout requests.
+     * Toggle the handlers if you are RememberMe functionality is useless in your app.
+     */
+    @GetMapping(value="/logout")
+    public String logoutPage (HttpServletRequest request, HttpServletResponse response){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){    
+            //new SecurityContextLogoutHandler().logout(request, response, auth);
+            persistentTokenBasedRememberMeServices.logout(request, response, auth);
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
+        return "redirect:/login?logout";
+    }
+
+    
+    @GetMapping(value = "/user/manageUsers",produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public List<User> listUsers() {
+    public List<User> manangeUsers() {
 		List<User> users = userService.findAllUser();
 		System.err.println(users);
     	return users;
     }
- 
-    @GetMapping(value = { "/newuser" })
-    public String newUser(ModelMap model) {
-    	User user = new User();
-        model.addAttribute("user", user);
-        model.addAttribute("edit", false);
-        model.addAttribute("loggedinuser", getPrincipal());
-        return "Dashboard";
-    }
     
-    @PostMapping(value = "/addUser", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(value = "/user/addUser")
     @ResponseBody
     public String addUser(@RequestBody User user) {
     	System.out.println(user.getUserRoles().size());
@@ -85,7 +137,7 @@ public class UserController {
     	userService.saveUser(user);
        return "success";
     }
- 
+    
     /**
      * This method will be called on form submission, handling POST request for
      * saving user in database. It also validates the user input
@@ -116,11 +168,18 @@ public class UserController {
  
         model.addAttribute("success", "User " + user.getFirstName() + " "+ user.getLastName() + " registered successfully");
         model.addAttribute("loggedinuser", getPrincipal());
-        //return "success";
         return "registrationSuccess";
     }
- 
- 
+     
+    /**
+     * This method handles Access-Denied redirect.
+     */
+    @GetMapping(value = "/Access_Denied")
+    public String accessDeniedPage(ModelMap model) {
+        model.addAttribute("loggedinuser", getPrincipal());
+        return "accessDenied";
+    }
+
     /**
      * This method will provide the medium to update an existing user.
      */
@@ -133,7 +192,7 @@ public class UserController {
         model.addAttribute("loggedinuser", getPrincipal());
         return "ajax/registration";
     }
-     
+    
     /**
      * This method will be called on form submission, handling POST request for
      * updating user in database. It also validates the user input
@@ -175,59 +234,19 @@ public class UserController {
     public List<Role> initializeRoles() {
         return roleService.findAll();
     }
-     
-    /**
-     * This method handles Access-Denied redirect.
-     */
-    @GetMapping(value = "/Access_Denied")
-    public String accessDeniedPage(ModelMap model) {
-        model.addAttribute("loggedinuser", getPrincipal());
-        return "accessDenied";
-    }
- 
-    /**
-     * This method handles login GET requests.
-     * If users is already logged-in and tries to goto login page again, will be redirected to list page.
-     */
-    @GetMapping(value = {"/","/login","/home"})
-    public String loginPage() {
-        if (isCurrentAuthenticationAnonymous()) {
-            return "login";
-        } else {
-        	String tenantId=userService.findBySSO(getPrincipal()).getTenantId();
-        	System.err.println("Controller : "+tenantId);
-        	if(tenantId.equals("1"))
-        		return "forward:/Dashboard";
-        	else
-        		return "forward:/Dashboard?"+"tenantId="+tenantId;
-        }
+    
+    @ModelAttribute("status")
+    public List<TaskStatus> initializeProjects() {
+        return taskStatusService.findAll();
     }
     
-    @GetMapping(value = "/Dashboard")
-    public String getDashboard (Model model) {
-    	User user = new User();
-        model.addAttribute("user", user);
-        model.addAttribute("edit", false);
-        model.addAttribute("list", false);
-        model.addAttribute("loggedinuser", getPrincipal());
-    	return "Dashboard";
+    
+    @ModelAttribute("projects")
+    public List<Project> initializeTasks() {
+        return projectService.findAll();
     }
- 
-    /**
-     * This method handles logout requests.
-     * Toggle the handlers if you are RememberMe functionality is useless in your app.
-     */
-    @GetMapping(value="/logout")
-    public String logoutPage (HttpServletRequest request, HttpServletResponse response){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){    
-            //new SecurityContextLogoutHandler().logout(request, response, auth);
-            persistentTokenBasedRememberMeServices.logout(request, response, auth);
-            SecurityContextHolder.getContext().setAuthentication(null);
-        }
-        return "redirect:/login?logout";
-    }
- 
+    
+
     /**
      * This method returns the principal[user-name] of logged-in user.
      */
@@ -251,5 +270,7 @@ public class UserController {
         System.out.println(authentication.getPrincipal());
         return authenticationTrustResolver.isAnonymous(authentication);
     }
+    
+ 
  
 }

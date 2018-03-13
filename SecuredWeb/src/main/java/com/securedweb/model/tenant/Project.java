@@ -31,17 +31,9 @@ public class Project implements Serializable{
 	@NotEmpty
 	@Column(name="NAME", nullable=false)
 	private String name;
-	
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
 
 	@NotEmpty
-	@Column(name="DESCRIPTION")
+	@Column(name="DESCRIPTION" , nullable=false)
 	private String description;
 	
 	@ManyToOne(cascade={CascadeType.ALL})
@@ -60,6 +52,9 @@ public class Project implements Serializable{
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 	
+	@OneToMany(mappedBy="project")
+    private Set<Task> tasks;
+	
 	@NotEmpty
 	@Column(name="TENANT_ID", nullable=false)
 	private String tenantId;
@@ -71,6 +66,15 @@ public class Project implements Serializable{
 		return id;
 	}
 
+	
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	
 	public Set<UserProject> getUserProjects() {
 		return userProjects;
 	}
@@ -129,6 +133,16 @@ public class Project implements Serializable{
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+	
+
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
 	}
 	
 }

@@ -82,7 +82,6 @@ public class UserServiceImp implements UserService{
 	            Hibernate.initialize(user.getUserTasks());
 		}
 		return userList;
-	
 	}
 
 	@Override
@@ -90,5 +89,7 @@ public class UserServiceImp implements UserService{
 		User user = userRepository.findBySsoId(ssoId);
 		return ( user == null || ((id!=null) && user.getId() == id));
 	}
+	
+	
 
 }

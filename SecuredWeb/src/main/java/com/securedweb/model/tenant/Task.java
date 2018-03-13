@@ -28,9 +28,14 @@ public class Task implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
+	
+	@ManyToOne
+    @JoinColumn(name="PROJECT_ID", nullable=false)
+	private Project project;
+	
 	@Column(name="NAME",nullable=false)
 	private String name;
-	
+
 	@Column(name="DESCRIPTION")
 	private String description;
 	
@@ -117,4 +122,13 @@ public class Task implements Serializable {
 	public void setTaskStatus(TaskStatus taskStatus) {
 		this.taskStatus = taskStatus;
 	}
+	
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
 }
