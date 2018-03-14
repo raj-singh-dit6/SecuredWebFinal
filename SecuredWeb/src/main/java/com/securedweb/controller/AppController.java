@@ -1,15 +1,12 @@
 package com.securedweb.controller;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,27 +15,20 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Role;
 import com.securedweb.model.tenant.TaskStatus;
-import com.securedweb.model.tenant.User;
+import com.securedweb.repository.tenant.UserRepository;
 import com.securedweb.service.master.TenantService;
 import com.securedweb.service.tenant.ProjectService;
 import com.securedweb.service.tenant.RoleService;
 import com.securedweb.service.tenant.TaskStatusService;
 import com.securedweb.service.tenant.UserService;
-import com.securedweb.util.TenantHolder;
 
 @Controller
 @RequestMapping("/")
@@ -47,7 +37,11 @@ public class AppController {
 
 	@Autowired
     UserService userService;
-     
+    
+	
+	@Autowired
+	UserRepository userRepository;
+	
     @Autowired
     RoleService roleService;
     
@@ -81,7 +75,7 @@ public class AppController {
         if (isCurrentAuthenticationAnonymous()) {
             return "login";
         } else {
-        	String tenantId=userService.findBySSO(getPrincipal()).getTenantId();
+        	String tenantId=userRepository.findBySsoId(getPrincipal()).getTenantId();
         	System.err.println("Controller : "+tenantId);
         	if(tenantId.equals("1"))
         		return "forward:/Dashboard";
@@ -92,13 +86,14 @@ public class AppController {
     
     @GetMapping(value = "/Dashboard")
     public String getDashboard (Model model) {
-    	String tenantId=userService.findBySSO(getPrincipal()).getTenantId();
+    	String tenantId=userRepository.findBySsoId(getPrincipal()).getTenantId();
     	String tenantName= tenantService.findById(tenantId).getTenantName();
         System.err.println(tenantName);
     	model.addAttribute("edit", false);
         model.addAttribute("list", false);
         model.addAttribute("tenantName", tenantName);
         model.addAttribute("tenantId", tenantId);
+        model.addAttribute("home", true);
         model.addAttribute("loggedinuser", getPrincipal());
     	return "Dashboard";
     }
@@ -118,118 +113,12 @@ public class AppController {
         return "redirect:/login?logout";
     }
 
-    
-    @GetMapping(value = "/user/manageUsers",produces = { MediaType.APPLICATION_JSON_VALUE })
-    @ResponseBody
-    public List<User> manangeUsers() {
-		List<User> users = userService.findAllUser();
-		System.err.println(users);
-    	return users;
-    }
-    
-    @PostMapping(value = "/user/addUser")
-    @ResponseBody
-    public String addUser(@RequestBody User user) {
-    	System.out.println(user.getUserRoles().size());
-    	
-    	user.setTenantId(TenantHolder.getTenantId());
-    	System.err.println(user.toString());
-    	userService.saveUser(user);
-       return "success";
-    }
-    
-    /**
-     * This method will be called on form submission, handling POST request for
-     * saving user in database. It also validates the user input
-     */
-    @PostMapping(value = { "/newuser" })
-    public String saveUser(@Valid User user, BindingResult result,
-            ModelMap model) {
- 
-        if (result.hasErrors()) {
-            return "ajax/registration";
-        }
- 
-        /*
-         * Preferred way to achieve uniqueness of field [sso] should be implementing custom @Unique annotation 
-         * and applying it on field [sso] of Model class [User].
-         * 
-         * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
-         * framework as well while still using internationalized messages.
-         * 
-         */
-        if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
-            FieldError ssoError =new FieldError("user","ssoId",messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
-            result.addError(ssoError);
-            return "ajax/registration";
-        }
-         
-        userService.saveUser(user);
- 
-        model.addAttribute("success", "User " + user.getFirstName() + " "+ user.getLastName() + " registered successfully");
-        model.addAttribute("loggedinuser", getPrincipal());
-        return "registrationSuccess";
-    }
-     
-    /**
-     * This method handles Access-Denied redirect.
-     */
     @GetMapping(value = "/Access_Denied")
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loggedinuser", getPrincipal());
         return "accessDenied";
     }
 
-    /**
-     * This method will provide the medium to update an existing user.
-     */
-    @GetMapping(value = { "/edit-user" })
-    public String editUser(@PathVariable String ssoId, ModelMap model) {
-        System.out.println(ssoId);
-    	User user = userService.findBySSO(ssoId);
-        model.addAttribute("user", user);
-        model.addAttribute("edit", true);
-        model.addAttribute("loggedinuser", getPrincipal());
-        return "ajax/registration";
-    }
-    
-    /**
-     * This method will be called on form submission, handling POST request for
-     * updating user in database. It also validates the user input
-     */
-    @PostMapping(value = { "/edit-user-{ssoId}" })
-    public String updateUser(@Valid User user, BindingResult result,
-            ModelMap model, @PathVariable String ssoId) {
- 
-        if (result.hasErrors()) {
-            return "ajax/registration";
-        }
-        /*//Uncomment below 'if block' if you WANT TO ALLOW UPDATING SSO_ID in UI which is a unique key to a User.
-        if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
-            FieldError ssoError =new FieldError("user","ssoId",messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
-            result.addError(ssoError);
-            return "registration";
-        }*/
-        userService.updateUser(user);
-        model.addAttribute("success", "User " + user.getFirstName() + " "+ user.getLastName() + " updated successfully");
-        model.addAttribute("loggedinuser", getPrincipal());
-        return "registrationSuccess";
-    }
- 
-     
-    /**
-     * This method will delete an user by it's SSOID value.
-     */
-    @GetMapping(value = { "/delete-user-{ssoId}" })
-    public String deleteUser(@PathVariable String ssoId) {
-    	userService.deleteUserBySSO(ssoId);
-        return "forward:/list?tenantId="+TenantHolder.getTenantId();
-    }
-     
- 
-    /**
-     * This method will provide UserRole list to views
-     */
     @ModelAttribute("roles")
     public List<Role> initializeRoles() {
         return roleService.findAll();

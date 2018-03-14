@@ -10,7 +10,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-	  <a class="navbar-brand" href="#">Tenant ID</a>
+	  <a class="navbar-brand" href="home">${tenantName}</a>
 	</div>
 	  <!-- Links -->
 	<div class="collapse navbar-collapse" id="myNavbar">  
@@ -26,16 +26,39 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageUsers" class="dropdown-item" href="#" >Manage Users</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newUserModal">Add User</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAddAjaxPage('user')" data-target="#addUserModal">Add User</a>
 	      </div>
 	    </li>
 	    </sec:authorize>
-	    <li class="nav-item">
-	      <a class="nav-link" href="#">Projects</a>
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Projects
+	      </a>
+	      <div class="dropdown-menu">
+	        <a id="manageProjects" class="dropdown-item" href="#" >Manage Projects</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newProjectModal">Add Project</a>
+	      </div>
 	    </li>
-	    <li class="nav-item">
-	      <a class="nav-link" href="#">Tasks</a>
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Tasks
+	      </a>
+	      <div class="dropdown-menu">
+	        <a id="manageTasks" class="dropdown-item" href="#" >Manage Tasks</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newTaskModal">Add Task</a>
+	      </div>
 	    </li>
+	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')"> 
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Task Status
+	      </a>
+	      <div class="dropdown-menu">
+	        <a id="manageTaskStatus" class="dropdown-item" href="#" >Manage Task Status</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newTaskStatusModal">Add Task Status</a>
+	      </div>
+	    </li>
+	    </sec:authorize>
 	    <sec:authorize access="hasRole('USER')">  
 	    <li class="nav-item">
 	      <a class="nav-link" href="#">Team Members</a>
