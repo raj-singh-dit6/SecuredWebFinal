@@ -17,5 +17,6 @@ public interface UserService {
 
 	List<UserDTO> getAllUsers();
 
-	boolean isUserSSOUnique(String ssoId, String tenantId);
+
+	boolean isUserSSOUnique(String ssoId);
 }

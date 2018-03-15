@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
   <!-- Brand -->
   <div class="container-fluid">
 	<div class="navbar-header">
@@ -22,11 +22,11 @@
 	    </li>
 	    <li class="nav-item dropdown">
 	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-	        Administration
+	        Admin
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageUsers" class="dropdown-item" href="#" >Manage Users</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAddAjaxPage('user')" data-target="#addUserModal">Add User</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('user','add')" data-target="#UserModalAjax">Add User</a>
 	      </div>
 	    </li>
 	    </sec:authorize>
@@ -36,7 +36,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageProjects" class="dropdown-item" href="#" >Manage Projects</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newProjectModal">Add Project</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('project','add')"  data-target="#ProjectModalAjax">Add Project</a>
 	      </div>
 	    </li>
 	    <li class="nav-item dropdown">
@@ -45,7 +45,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageTasks" class="dropdown-item" href="#" >Manage Tasks</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newTaskModal">Add Task</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('task','add')" data-target="#TaskModalAjax">Add Task</a>
 	      </div>
 	    </li>
 	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')"> 
@@ -55,7 +55,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageTaskStatus" class="dropdown-item" href="#" >Manage Task Status</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newTaskStatusModal">Add Task Status</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('taskStatus','add')" data-target="#TaskStatusModalAjax">Add Task Status</a>
 	      </div>
 	    </li>
 	    </sec:authorize>

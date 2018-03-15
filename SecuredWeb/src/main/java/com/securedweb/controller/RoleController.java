@@ -13,62 +13,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.securedweb.dto.tenant.RoleDTO;
 import com.securedweb.dto.tenant.StatusDTO;
-import com.securedweb.dto.tenant.UserDTO;
 import com.securedweb.service.tenant.RoleService;
-import com.securedweb.service.tenant.UserService;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/role")
+public class RoleController {
  
  @Autowired()
- private UserService userService;
- 
- @Autowired
- RoleService roleService;
- 
- @GetMapping(value="/{ssoId}",produces={MediaType.APPLICATION_JSON_VALUE})
- public UserDTO getUser(@PathVariable("ssoId") String ssoId){
-	 return userService.getUser(ssoId);
- }
+ private RoleService roleService;
  
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/add",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
- public StatusDTO addUser(@RequestBody UserDTO user){
-	 StatusDTO status = new StatusDTO();
-	 if(userService.isUserSSOUnique(user.getSsoId()))
-	{
-		 userService.addUser(user);
-	     status.setMessage("User added successfully");
-	     status.setStatus(200);
-	     return status;
-	}else {
-		status.setMessage("Please enter a unique SSO ID");
-		return status;
-	}		 
+ public StatusDTO addRole(@RequestBody RoleDTO role){
+	 
+	 return null;
  }
  
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
- public StatusDTO updateUser(@RequestBody UserDTO user){
-	 userService.updateUser(user);
+ public StatusDTO updateRole(@RequestBody RoleDTO role){
 	 StatusDTO status = new StatusDTO();
-     status.setMessage("User details updated successfully");
+     status.setMessage("Role details updated successfully");
      status.setStatus(200);
      return status;
  }
 
  @GetMapping(value="/all",produces={MediaType.APPLICATION_JSON_VALUE})
- public List<UserDTO> getAllUsers(){
- return userService.getAllUsers();
+ public List<RoleDTO> getAllRoles(){
+ return roleService.getAllRoles();
  
  }
  
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
- @DeleteMapping(value="/delete/{ssoId}",produces={MediaType.APPLICATION_JSON_VALUE})
- public StatusDTO deleteUSer(@PathVariable("ssoId") String ssoId){
-	 userService.deleteUser(ssoId);
+ @DeleteMapping(value="/delete/{roleId}",produces={MediaType.APPLICATION_JSON_VALUE})
+ public StatusDTO deleteRole(@PathVariable("roleId") String roleId){
      StatusDTO status = new StatusDTO();
      status.setMessage("User Deleted Successfully");
      status.setStatus(200);

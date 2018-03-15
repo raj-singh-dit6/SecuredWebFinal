@@ -13,9 +13,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
     <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
-    <link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
+   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 	
@@ -85,81 +84,39 @@ nav-link.dropdown-toggle:hover{
 
 	<footer class="container-fluid text-center">
 	  <p>${tenantName}</p>
+	  <input type="hidden" id="tenantId" value="${tenantId}">
 	</footer>
-	 
-<!-- Add user  Modal -->
-  <div class="modal fade" id="addUserModal">
-    <div class="modal-dialog modal-dialog-centered">
-      	<div class="modal-content" id="addUserBody">
-		</div>
-	</div>
-  </div>
-  <!-- ---------------------Modal ends here----------------------- -->
 
-	<!-- The Modal -->
-  <div class="modal fade" id="newProjectModal">
+<!--  User Modal -->
+  <div class="modal fade" id="UserModalAjax">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Add New Project</h4>
-          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-        	<form action="#" method="POST" name="addProjectForm">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="projName">Project Name</label>
-                    <div class="col-md-7">
-                        <input type="text" name="projName" id="projName" class="form-control input-sm"/>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="projDesc">Description</label>
-                    <div class="col-md-7">
-                        <input type="text" name="projDesc" id="projDesc" class="form-control input-sm" />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="projParent">Parent Project</label>
-                    <div class="col-md-7">
-                    	<select  class="form-control" id="projParent">
-					    <c:forEach items="${projects}" var="project">    
-					        <option id="${project.id}" value="${project.id}">${project.name}</option>
-					     </c:forEach>   
-					      </select>
-                        <!-- <input type="text" name="projParent" id="projParent" class="form-control input-sm" /> -->
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-        <!-- Modal footer -->
-        <div class="modal-footer">
-                <button id="addProject" type="button" class="btn btn-primary">Add</button>  
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>	
+      <div class="modal-content" id="UserModalBody">
+    
       </div>
     </div>
   </div>
   <!-- ---------------------Modal ends here----------------------- -->
+  
+  
+	<!-- Project Modal -->
+ <div class="modal fade" id="ProjectModalAjax">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" id="ProjectModalBody">
+      
+      </div>
+   </div>
+ </div>
+  <!-- ---------------------Modal ends here----------------------- -->
 
  <!-- The Modal -->
-  <div class="modal fade" id="newTaskModal">
+  <div class="modal fade" id="TaskModalAjax">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content" id="TaskModalBody">
       
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Add New Task</h4>
-          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         
         <!-- Modal body -->
@@ -218,9 +175,9 @@ nav-link.dropdown-toggle:hover{
   <!-- ---------------------Modal ends here----------------------- -->
 
  <!-- The Modal -->
-  <div class="modal fade" id="newTaskStatusModal">
+  <div class="modal fade" id="TaskStatusModalAjax">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <div class="modal-content" id="TaskStatusModalBody">
       
         <!-- Modal Header -->
         <div class="modal-header">
@@ -265,93 +222,292 @@ nav-link.dropdown-toggle:hover{
   </div>
   <!-- ---------------------Modal ends here----------------------- -->
  	
-	<!-- Edit User Modal -->
-  <div class="modal fade" id="editUserModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" id="editUserBody">
-    
-      </div>
-    </div>
-  </div>
-  <!-- ---------------------Modal ends here----------------------- -->
-	 	
- 	
- 	
 </body>
 </html>
 <script>
 
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
-   
+var tenantId=$("#tenantId").val();
+
 $(document).ready(function() {
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
 });
-   
-function loadEditAjaxPage(pageType,id)
-{
-	if(pageType=="user")
-	{	var ssoId = id;
-		$.ajax({
-	    	async: false,
-	    	type: "POST",
-	        url: "view/editAjaxPage/"+pageType+"/"+ssoId+"",
-	        beforeSend: function(xhr) {
-		           xhr.setRequestHeader(header, token);
-		       },
-	        success: function(response) {
-	            $("#editUserBody").html( response );
-	        }
-	    });
-		$('#editUserModal').modal('show');
-	}else if(pageType=="project")
-	{
-		
-	}else if(pageType=="task")
-	{
-		
-	}else if(pageType=="taskStatus")
-	{
-		
-	}
-	
-}
 
-function loadAddAjaxPage(pageType)
+function loadAjaxPage(pageType,operation,id)
 {	
+	var reqURL= "view/ajaxPage/"+pageType+"?tenantId="+tenantId;
 	if(pageType=="user")
 	{   
 		$.ajax({
 	    	async: false,
-	    	type: "POST",
-	        url: "view/addAjaxPage/"+pageType+"",
+	    	type: "GET",
+	        url: reqURL,
 	        beforeSend: function(xhr) {
 		           xhr.setRequestHeader(header, token);
 		       },
 	        success: function(response) {
-	            $("#addUserBody").html( response );
+	            $("#UserModalBody").html( response );
 	        }
 	    });
-		$('#addUserModal').modal('show');
-		
+		$('#UserModalAjax').modal('show');
+		if(operation=="add"){
+			$("#UserModalHeading").text("Add New User");
+			$("#UpdateUserSubmit").hide();
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "role/all?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(roles) {
+		            roles.forEach(function(role){
+		            	$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'">'+role.type+'</option>"');
+		            });
+		        }
+		    });
+		}
+		else if(operation=="edit")
+		{  	var ssoId = id;
+			$("#UserModalHeading").text("Update User Details");
+			$("div #userPassword").hide();
+			$("div #userSsoId").hide();
+			$("#AddUserSubmit").hide();
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "user/"+ssoId+"?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(user) {
+		        	$("#userFirstName").val(user.firstName);
+		        	$("#userLastName").val(user.lastName);
+		        	$("#userEmail").val(user.email);
+		        }
+		    });
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "role/all?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(roles) {
+		            roles.forEach(function(role){
+		            	$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'">'+role.type+'</option>"');
+		            });
+		        }
+		    });
+		}	
 	}else if(pageType=="project")
 	{
-		
-	}else if(pageType=="task")
-	{
-		
-	}else if(pageType=="taskStatus")
-	{
-		
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	            $("#ProjectModalBody").html( response );
+	        }
+	    });
+		$('#ProjectModalAjax').modal('show');
+		if(operation=="add"){
+			$("#ProjectModalHeading").text("Add New Project");
+			$("#UpdateProjectSubmit").hide();
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "project/all?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(projects) {
+		        	projects.forEach(function(project){
+		            	$("select#projParent").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+		            });
+		        }
+			});
+		}	
+		else if(operation=="edit")
+		{  	var projectId = id;
+			$("#ProjectModalHeading").text("Update User Details");
+			$("#AddProjectSubmit").hide();
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "project/"+projectId+"?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(project) {
+		        	$("#projName").val(project.name);
+		        	$("#projDesc").val(project.description);
+		        	$("#projId").val(id);
+		        }
+		    });
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "project/all?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(projects) {
+		        	projects.forEach(function(project){
+		            	$("select#projParent").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+		            });
+		        }
+		    });
+			
+		}else if(pageType=="task")
+		{
+			
+		}else if(pageType=="taskStatus")
+		{
+			
+		}
 	}
+}
+
+
+function deleteProjectById(id)
+{	
+	var action=bootbox.confirm({
+    message: "Are you sure , you want to delete record for this project ?",
+    buttons: {
+        confirm: {
+            label: 'Yes',
+            className: 'btn-success'
+        },
+        cancel: {
+            label: 'No',
+            className: 'btn-danger'
+        }
+    },
+    callback: function (result) {
+    	if(result)
+    	{
+    		$.ajax({
+    	    	async: false,
+    	    	type: "DELETE",
+    	        url: "project/delete/"+id+"",
+    	        beforeSend: function(xhr) {
+    		           xhr.setRequestHeader(header, token);
+    		       },
+    	        success: function(status) {
+    	        	if(status.status==200){
+    	        		$('#successMessage').html(status.message);
+    		            $('#successAlert').show();
+    		            $('#manageProjects').click();
+    	        	}else{
+    	        		$('#warningMessage').html(status.message);
+    	        		$('#warningAlert').show();
+    	        	}	
+    	        }
+    	    });
+    	}	
+    	}
+	});
+}
+
+function addProject() {
+	var parentProject = {};
+	$('select#projParent option').each(function() {
+		if (this.selected)
+		{	
+	    	if($(this).val()!="")
+	    	{	
+		    	parentProject.id=$(this).val();
+		    	parentProject.name=$(this).text();
+	    	}
+		}
+	});
+    
+	var project = {};
+    project.name 	= $('#projName').val();
+    project.description 	= $('#projDesc').val();
+    project.parentProject	= parentProject;
+    $.ajax({
+       type:'POST',
+       async: false,
+       url : 'project/add',
+       contentType: 'application/json',
+       data : JSON.stringify(project),
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(status) {
+    	   
+    	   if(status.status==200){
+	        	$('#successMessage').html(status.message);
+	        	$('#ProjectModalAjax').modal('hide');
+	            $('#successAlert').show();
+	            $('#manageProjects').click();
+	          }else{
+	        	$('#warningMessage').html(status.message);
+	        	$('#ProjectModalAjax').modal('hide');  
+	            $('#warningAlert').show();
+	          }
+       }
+ });
+}
+
+function updateProject()
+{	
+	var parentProject = {};
+	$('select#projParent option').each(function() {
+	    if (this.selected)
+	    {
+	    	if($(this).val()!="")
+	    	{	
+		    	parentProject.id=$(this).val();
+		    	parentProject.name=$(this).text();
+	    	}
+	    }	
+	});
+	
+	var project = {};
+	project.id = $('#projId').val();
+    project.name 	= $('#projName').val();
+    project.description 	= $('#projDesc').val();
+    project.parentProject	= parentProject;
+    
+    $.ajax({
+       type:'POST',
+       async: false,
+       url : 'project/update',
+       contentType: 'application/json',
+       data : JSON.stringify(project),
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(status) {
+    	   if(status.status==200){
+	        	$('#successMessage').html(status.message);
+	        	$('#ProjectModalAjax').modal('hide');
+	            $('#successAlert').show();
+	            $('#manageProjects').click();
+	          }else{
+	        	$('#warningMessage').html(status.message);
+	        	$('#ProjectModalAjax').modal('hide');  
+	            $('#warningAlert').show();
+	          }
+       }
+ });
 	
 }
 
-function editUser()
+function updateUser()
 {	
 	var userRoles = [];
-	$.each($("#editUserRoles option:selected"), function(){            
+	$.each($("#userRoles option:selected"), function(){            
 		var role={};
 		role.id=$(this).val();
 		role.type=$(this).text();
@@ -359,56 +515,35 @@ function editUser()
 	});
 	
     var user = {};
-    user.firstName 	= $('#editFirstName').val();
-    user.lastName 	= $('#editLastName').val();
-    user.ssoId 		= $('#editSsoId').val();
-    user.email 		= $('#editEmail').val();
+    user.firstName 	= $('#userFirstName').val();
+    user.lastName 	= $('#userLastName').val();
+    user.ssoId 		= $('#userSsoId').val();
+    user.email 		= $('#userEmail').val();
     user.userRoles	= userRoles;
-	debugger
-    bootbox.confirm({
-        message: "Are you sure , you want to update details for this user ?",
-        buttons: {
-            confirm: {
-                label: 'Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-        	if(result)
-        	{
-        		$.ajax({
-        		       type:'POST',
-        		       async: false,
-        		       url : 'user/update',
-        		       contentType: 'application/json',
-        		       data : JSON.stringify(user),
-        		       dataType : 'json',
-        		       beforeSend: function(xhr) {
-        		           xhr.setRequestHeader(header, token);
-        		       },
-        		       success : function(status) {
-        		       
-        		          if(status.status==200){
-        		        	$('#successMessage').html(status.message);
-        		        	$('#editUserModal').modal('hide');
-        		            $('#successAlert').show();
-        		            $('#manageUsers').click();
-        		          }else{
-        		        	$('#swarningMessage').html(status.message);
-        		        	$('#editUserModal').modal('hide');  
-        		            $('#warningAlert').show();
-        		          }
-        		       }
-        		 });
-        	}	
-        	console.log('This was logged in the callback: ' + result);
-        }
-    });
-    
+	$.ajax({
+	       type:'POST',
+	       async: false,
+	       url : 'user/update?tenantId='+tenantId,
+	       contentType: 'application/json',
+	       data : JSON.stringify(user),
+	       dataType : 'json',
+	       beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+	       success : function(status) {
+	       
+	          if(status.status==200){
+	        	$('#successMessage').html(status.message);
+	        	$('#UserModalAjax').modal('hide');
+	            $('#successAlert').show();
+	            $('#manageUsers').click();
+	          }else{
+	        	$('#warningMessage').html(status.message);
+	        	$('#UserModalAjax').modal('hide');  
+	            $('#warningAlert').show();
+	          }
+	       }
+	 });
 }
 
 function deleteUserBySSOId(id)
@@ -454,7 +589,7 @@ function deleteUserBySSOId(id)
 	});
 }
 
-$('#addUser').click(function(e) {
+function addUser(){
 	var userRoles = [];
 	$.each($("#userRoles option:selected"), function(){            
 		var role={};
@@ -464,17 +599,17 @@ $('#addUser').click(function(e) {
 	});
 	
     var user = {};
-    user.firstName 	= $('#firstName').val();
-    user.lastName 	= $('#lastName').val();
-    user.ssoId 		= $('#ssoId').val();
-    user.password 	= $('#password').val();
-    user.email 		= $('#email').val();
+    user.firstName 	= $('#userFirstName').val();
+    user.lastName 	= $('#userLastName').val();
+    user.ssoId 		= $('#userSsoId').val();
+    user.password 	= $('#userPassword').val();
+    user.email 		= $('#userEmail').val();
     user.userRoles	= userRoles;
 
     $.ajax({
        type:'POST',
        async: false,
-       url : 'user/add',
+       url : 'user/add?tenanId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(user),
        dataType : 'json',
@@ -484,7 +619,7 @@ $('#addUser').click(function(e) {
        success : function(status) {
     	   if(status.status==200){
     		   	$('#successMessage').html(status.message);
-    		    $('#addUserModal').modal('hide');
+    		    $('#UserModalAjax').modal('hide');
 	            $('#successAlert').show();
 	            $('#manageUsers').click();
 	       	}else{
@@ -494,51 +629,7 @@ $('#addUser').click(function(e) {
 	       	}
        }
  });
-}); 
-
-$('#addProject').click(function(e) {
-	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	
-	var projParent = {};
-	$("#projParent option:selected"), function(){            
-		projParent.id=$(this).val();
-		projParent.name=$(this).text();
-	};
-	
-    var project = {};
-    project.name 	= $('#projName').val();
-    project.description 	= $('#projDesc').val();
-    project.parentProject	= projParent;
-    project.tenantId	= "";
-
-    $.ajax({
-       type:'POST',
-       async: false,
-       url : 'project/addProject',
-       contentType: 'application/json',
-       data : JSON.stringify(project),
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(res) {
-       
-          if(res=="success"){
-             //Set response
-            //alert(res);
-            $('#newProjectModal').modal('hide');
-            $('#successAlert').show();
-            $('#manageProject').click();
-          }else{
-            //Set error messages
-        	$('#newProjectModal').modal('hide	');  
-            $('#warningAlert').show();
-          }
-       }
- });
-}); 
+}
 
 $('#addTask').click(function(e) {
 	
@@ -558,8 +649,6 @@ $('#addTask').click(function(e) {
     task.description    = $('#taskDesc').val();
     task.taskStatus 	= taskStatus;
     task.tenantId 	= "";
-
-    //alert(JSON.stringify(task));
     
     $.ajax({
        type:'POST',
@@ -575,14 +664,11 @@ $('#addTask').click(function(e) {
        success : function(res) {
        
           if(res=="success"){
-             //Set response
-            //alert(res);
             $('#newTaskModal').modal('hide');
             $('#successAlert').show();
             $('#manageTasks').click();
           }else{
-            //Set error messages
-        	$('#newTaskModal').modal('hide	');  
+        	$('#newTaskModal').modal('hide');  
             $('#warningAlert').show();
           }
        }
@@ -598,8 +684,6 @@ $('#addTaskStatus').click(function(e) {
     taskStatus.status 	= $('#taskStatusName').val();
     taskStatus.statusColour = $('#statusColourPicker option:selected').val();
     taskStatus.tenantId 	= "";
-	
-    //alert(JSON.stringify(taskStatus));
     
     $.ajax({
        type:'POST',
@@ -615,7 +699,6 @@ $('#addTaskStatus').click(function(e) {
        success : function(res) {
        
           if(res=="success"){
-             //Set response
             //alert(res);
             $('#newTaskStatusModal').modal('hide');
             $('#successAlert').show();
@@ -631,9 +714,6 @@ $('#addTaskStatus').click(function(e) {
 
 
 $('#manageUsers').click(function(e) {
-	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
     
     $.ajax({
        type:'GET',
@@ -642,7 +722,6 @@ $('#manageUsers').click(function(e) {
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
-           // here it is
            xhr.setRequestHeader(header, token);
        },
        success : function(users) {
@@ -682,7 +761,7 @@ function fillUsersInDataTable(users){
             { title: "Email" },
             { title: "Roles" },
             { "render": function (data, type, full, meta) {
-            	return '<a class="userEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[2] + '\' onClick="loadEditAjaxPage(\'user\',\'' + full[2] + '\');" data-target="#editUserModal" >Edit</a>'} },
+            	return '<a class="userEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[2] + '\' onClick="loadAjaxPage(\'user\',\'edit\',\'' + full[2] + '\');" data-target="#UserModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
                	return '<a class="userDelete btn btn-danger custom-width" href=# id=\'' + full[2] + '\' onClick="deleteUserBySSOId(\'' + full[2] + '\');" >Delete</a>'} },	
         ],
@@ -712,38 +791,42 @@ function fillUsersInDataTable(users){
 
 $('#manageProjects').click(function(e) {
 	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-    
+	debugger
     $.ajax({
        type:'GET',
        async: false,
-       url : 'project/manageProjects',
+       url : 'project/all',
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
-           // here it is
            xhr.setRequestHeader(header, token);
        },
        success : function(projects) {
-       
     	   fillProjectsInDataTable(projects);
        }
  });
 }); 
 
 function fillProjectsInDataTable(projects){
+	debugger
 	var dataSet=[];
 	projects.forEach(function(project){
 		var dataEach = [];
+		dataEach.push(project.id);
 		dataEach.push(project.name);
 		dataEach.push(project.description);
-		dataEach.push(project.parentProject.name);
+		if(project.parentProject!=null){
+			dataEach.push(project.parentProject.id);
+			dataEach.push(project.parentProject.name);
+		}else{
+			dataEach.push("");
+			dataEach.push("");
+		}
 		var projects = "";
-		user.childProjects.forEach(function(project){
-			projects = projects + project.name + " ,";
+		project.childProjects.forEach(function(project){
+			projects = projects + project.name + ", ";
 		});
-		projects = projects.substring(0,projects.length-1);
+		projects = projects.substring(0,projects.length-2);
 		dataEach.push(projects);
 		dataSet.push(dataEach);
 	});
@@ -755,14 +838,22 @@ function fillProjectsInDataTable(projects){
 	$('#dataTable').DataTable( {
         data: dataSet,
         columns: [
+        	{ title: "Project Id" },
             { title: "Project Name" },
             { title: "Description" },
+            { title: "Parent Project Id" },
             { title: "Parent Project" },
             { title: "Child Projects" },
+            { "render": function (data, type, full, meta) {
+            	return '<a class="projectEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'project\',\'edit\',\'' + full[0] + '\');" data-target="#ProjectModalAjax" >Edit</a>'} },
+           	{ "render": function (data, type, full, meta) {
+               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteProjectById(\'' + full[0] + '\');" >Delete</a>'} },
         ],
         responsive: true,
-        colReorder: true,
-       /*  responsive: {
+        scrollY:        450,
+        deferRender:    true,
+        scroller:       true,
+         responsive: {
             details: {
                 display: $.fn.dataTable.Responsive.display.modal( {
                     header: function ( row ) {
@@ -774,20 +865,23 @@ function fillProjectsInDataTable(projects){
                     tableClass: 'table'
                 } )
             }
-        }, */
+        }, 
         "pagingType" : "full_numbers",
 	    select	   : true,
 	    rowReorder: true,
-/* 	    "columnDefs": [ {
-	    	data : null,  
-	    	responsivePriority: 1 , 
-	    	orderable: false, 
-	    	width : '200px' , 
-	    	title : '' , 
-	    	class : 'form-control' , 
-	    	'defaultContent': '<button id="emailDeal"  style="  color : red ; color: rgb(201, 191, 197) ;  border-radius: 5px ; width: 100px; height: 100px; background-color: transparent; border-width: 0.5px; border-color: white;" >Click to Email Deal </button> <button id+"showDeal"  style="  margin-top: 10px color : red ; color: rgb(201, 191, 197) ; border-radius: 5px ; width: 100px; height: 100px; background-color: transparent; border-width: 0.5px; border-color: white;" >Click to Show Deal </button>'
-
-        } ], */
+	    colReorder: true,
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 3 ],
+                "visible": false,
+                "searchable": false
+            }
+		]
     });
 }
 

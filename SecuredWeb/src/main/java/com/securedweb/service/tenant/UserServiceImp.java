@@ -27,22 +27,32 @@ public class UserServiceImp implements UserService{
 
 	@Override
 	public UserDTO getUser(String ssoId) {
-		User user=userRepository.findBySsoId(ssoId);
 		UserDTO userDTO = new UserDTO();
-		userDTO.setFirstName(user.getFirstName());
-		userDTO.setLastName(user.getLastName());
-		userDTO.setEmail(user.getEmail());
-		userDTO.setSsoId(user.getSsoId());
+		User user;
+		if(TenantHolder.getTenantId().equals("1")){
+			user=userRepository.findBySsoId(ssoId);
+		}else {
+			user=userRepository.findBySsoIdAndTenantId(ssoId,TenantHolder.getTenantId());
+			
+		}
 		
 		if(user!=null){
-            Hibernate.initialize(user.getUserRoles());
+			Hibernate.initialize(user.getUserRoles());
+            Hibernate.initialize(user.getUserProjects());
+            Hibernate.initialize(user.getUserTasks());
+            
+            userDTO.setFirstName(user.getFirstName());
+			userDTO.setLastName(user.getLastName());
+			userDTO.setEmail(user.getEmail());
+			userDTO.setSsoId(user.getSsoId());
+			userDTO.setTenantId(user.getTenantId());
         }
 		return userDTO;
 	}
 
 	@Override
 	public UserDTO addUser(UserDTO user) {
-		User newUser = new User();
+		 User newUser = new User();
 		 newUser.setFirstName(user.getFirstName());
 		 newUser.setLastName(user.getLastName());
 		 newUser.setEmail(user.getEmail());
@@ -56,20 +66,19 @@ public class UserServiceImp implements UserService{
 
 	@Override
 	public UserDTO updateUser(UserDTO user) {
-		User updatedUser = userRepository.findBySsoIdAndTenantId(user.getSsoId(), TenantHolder.getTenantId());
-		updatedUser.setFirstName(user.getFirstName());
-		updatedUser.setLastName(user.getLastName());
-		updatedUser.setEmail(user.getEmail());
-		updatedUser.setSsoId(user.getSsoId());
-		updatedUser.setTenantId(user.getTenantId());
-		updatedUser.setUserRoles(user.getUserRoles());;
-		updatedUser=userRepository.save(updatedUser);
+		User updateUser = userRepository.findBySsoIdAndTenantId(user.getSsoId(), TenantHolder.getTenantId());
+		updateUser.setFirstName(user.getFirstName());
+		updateUser.setLastName(user.getLastName());
+		updateUser.setEmail(user.getEmail());
+		updateUser.setUserRoles(user.getUserRoles());;
+		updateUser=userRepository.save(updateUser);
 		return user;
 	}
 
 	@Override
 	public void deleteUser(String ssoId) {
-		userRepository.deleteBySsoId(ssoId);
+
+		userRepository.deleteBySsoIdAndTenantId(ssoId,TenantHolder.getTenantId());
 	}
 
 	@Override
@@ -103,8 +112,8 @@ public class UserServiceImp implements UserService{
 	}
 
 	@Override
-	public boolean isUserSSOUnique(String ssoId,String tenantId) {
-		User user = userRepository.findBySsoIdAndTenantId(ssoId,tenantId);
+	public boolean isUserSSOUnique(String ssoId) {
+		User user = userRepository.findBySsoIdAndTenantId(ssoId,TenantHolder.getTenantId());
 		return user == null;
 	}
 	

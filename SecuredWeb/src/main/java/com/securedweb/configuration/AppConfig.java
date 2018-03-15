@@ -37,8 +37,8 @@ public class AppConfig implements WebMvcConfigurer{
 	@Qualifier("multiTenancyInterceptor")
 	private MultiTenancyInterceptor multiTenancyInterceptor;
     
-	@Autowired
-	RoleToUserRoleConverter roleToUserRoleConverter;
+	/*@Autowired
+	RoleToUserRoleConverter roleToUserRoleConverter;*/
     
     /**
      * Configure ViewResolvers to deliver preferred views.
@@ -65,11 +65,11 @@ public class AppConfig implements WebMvcConfigurer{
      * Configure Converter to be used.
      * In our example, we need a converter to convert string values[Roles] to UserRole in newUser.jsp
      */
-    @Override
+   /* @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(roleToUserRoleConverter);
     }
-     
+     */
  
     /**
      * Configure MessageSource to lookup any validation/error message in internationalized property files

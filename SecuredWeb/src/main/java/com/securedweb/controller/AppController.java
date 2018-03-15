@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.securedweb.model.tenant.Project;
+import com.securedweb.dto.tenant.ProjectDTO;
+import com.securedweb.dto.tenant.RoleDTO;
 import com.securedweb.model.tenant.Role;
 import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.repository.tenant.UserRepository;
@@ -76,24 +77,20 @@ public class AppController {
             return "login";
         } else {
         	String tenantId=userRepository.findBySsoId(getPrincipal()).getTenantId();
-        	System.err.println("Controller : "+tenantId);
-        	if(tenantId.equals("1"))
-        		return "forward:/Dashboard";
-        	else
-        		return "forward:/Dashboard?"+"tenantId="+tenantId;
+        	return "redirect:/Dashboard?"+"tenantId="+tenantId;
         }
     }
     
     @GetMapping(value = "/Dashboard")
-    public String getDashboard (Model model) {
-    	String tenantId=userRepository.findBySsoId(getPrincipal()).getTenantId();
+    public String getDashboard (Model model,HttpServletRequest req) {
+    	String tenantId=req.getParameter("tenantId");
+    	System.err.println("CONTROLLER TENANT FROM REQUEST"+tenantId);
+    	req.getSession().setAttribute("tenantId", tenantId);
     	String tenantName= tenantService.findById(tenantId).getTenantName();
-        System.err.println(tenantName);
-    	model.addAttribute("edit", false);
-        model.addAttribute("list", false);
+    	System.err.println(tenantName);
+    	System.err.println("CONTROLLER TENANT FROM SESSION :"+req.getSession().getAttribute("tenantId"));
         model.addAttribute("tenantName", tenantName);
         model.addAttribute("tenantId", tenantId);
-        model.addAttribute("home", true);
         model.addAttribute("loggedinuser", getPrincipal());
     	return "Dashboard";
     }
@@ -120,19 +117,19 @@ public class AppController {
     }
 
     @ModelAttribute("roles")
-    public List<Role> initializeRoles() {
-        return roleService.findAll();
+    public List<RoleDTO> initializeRoles() {
+        return roleService.getAllRoles();
     }
     
     @ModelAttribute("status")
-    public List<TaskStatus> initializeProjects() {
+    public List<TaskStatus> initializeTaskStatus() {
         return taskStatusService.findAll();
     }
     
     
     @ModelAttribute("projects")
-    public List<Project> initializeTasks() {
-        return projectService.findAll();
+    public List<ProjectDTO> initializeProjects() {
+        return projectService.getAllProjects();
     }
     
 

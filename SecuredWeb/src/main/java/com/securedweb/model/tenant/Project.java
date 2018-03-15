@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="PROJECT")
@@ -38,9 +42,11 @@ public class Project implements Serializable{
 	
 	@ManyToOne(cascade={CascadeType.ALL})
 	@JoinColumn(name="PARENT_PROJECT_ID")
+	@JsonBackReference
 	private Project parentProject;
 
-	@OneToMany(mappedBy="parentProject")
+	@OneToMany(mappedBy="parentProject",fetch=FetchType.LAZY)
+	@JsonManagedReference
 	private Set<Project> childProjects = new HashSet<Project>(); 
 	
 	
@@ -52,14 +58,14 @@ public class Project implements Serializable{
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 	
-	@OneToMany(mappedBy="project")
+	@OneToMany(mappedBy="project",fetch=FetchType.LAZY)
     private Set<Task> tasks;
 	
 	@NotEmpty
 	@Column(name="TENANT_ID", nullable=false)
 	private String tenantId;
 	
-	@OneToMany(mappedBy = "primaryKey.project",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "primaryKey.project",cascade = CascadeType.ALL,fetch=FetchType.LAZY)
 	private Set<UserProject> userProjects = new HashSet<UserProject>();
 	
 	public Integer getId() {
@@ -144,5 +150,6 @@ public class Project implements Serializable{
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
+
 	
 }
