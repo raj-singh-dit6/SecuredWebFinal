@@ -77,7 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
 			{
 					Hibernate.initialize(project.getChildProjects());
 					Hibernate.initialize(project.getParentProject());
-					Hibernate.initialize(project.getTasks());
+					//Hibernate.initialize(project.getTasks());
 					//Hibernate.initialize(project.getUserProjects());
 					
 						ProjectDTO projectDTO = new ProjectDTO();
@@ -105,13 +105,12 @@ public class ProjectServiceImpl implements ProjectService {
 		{
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
-			Hibernate.initialize(project.getTasks());
+			//Hibernate.initialize(project.getTasks());
 			//Hibernate.initialize(project.getUserProjects());
 
 				projectDTO.setName(project.getName());
 				projectDTO.setId(project.getId());
 				projectDTO.setDescription(project.getDescription());
-				//projectDTO.setParentProject(project.getParentProject());
 		}
 		return projectDTO;
 	}
@@ -123,7 +122,7 @@ public class ProjectServiceImpl implements ProjectService {
 		{
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
-			Hibernate.initialize(project.getTasks());
+			//Hibernate.initialize(project.getTasks());
 			//Hibernate.initialize(project.getUserProjects());
 		}
 		return project;
@@ -137,7 +136,7 @@ public class ProjectServiceImpl implements ProjectService {
 		{
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
-			Hibernate.initialize(project.getTasks());
+			//Hibernate.initialize(project.getTasks());
 			//Hibernate.initialize(project.getUserProjects());
 		}
 		return project;

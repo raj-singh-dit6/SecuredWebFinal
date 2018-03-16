@@ -59,6 +59,7 @@ public class Project implements Serializable{
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="project",fetch=FetchType.LAZY)
     private Set<Task> tasks;
 	

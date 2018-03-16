@@ -12,4 +12,6 @@ public interface TaskStatusRepository extends CrudRepository<TaskStatus,Integer>
 
 	TaskStatus findByIdAndTenantId(Integer id, String tenantId);
 
+	void deleteByIdAndTenantId(Integer id, String tenantId);
+
 }

@@ -72,6 +72,7 @@ public class User implements Serializable{
 	@OneToMany(mappedBy = "project")
 	private Set<UserProject> userProjects = new HashSet<UserProject>(); 
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "task")
 	private Set<UserTask> userTasks = new HashSet<UserTask>();
 	

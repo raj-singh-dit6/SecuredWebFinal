@@ -30,6 +30,7 @@ public class TaskStatusServiceImpl implements TaskStatusService{
 			{
 				Hibernate.initialize(taskStatus.getTasks());
 				TaskStatusDTO taskStatusDTO = new TaskStatusDTO();
+				taskStatusDTO.setId(taskStatus.getId());
 				taskStatusDTO.setStatus(taskStatus.getStatus());
 				taskStatusDTO.setStatusColour(taskStatus.getStatusColour());
 				taskStatusDTOList.add(taskStatusDTO);
@@ -52,5 +53,20 @@ public class TaskStatusServiceImpl implements TaskStatusService{
 	public TaskStatus getTaskStatus(Integer id) {
 		TaskStatus taskStatus = taskStatusRepository.findByIdAndTenantId(id,TenantHolder.getTenantId());
 		return taskStatus;
+	}
+	
+	@Override
+	public TaskStatusDTO getTaskStatusDTO(Integer id) {
+		TaskStatus taskStatus = taskStatusRepository.findByIdAndTenantId(id,TenantHolder.getTenantId());
+		TaskStatusDTO taskStatusDTO = new TaskStatusDTO();
+		taskStatusDTO.setId(taskStatus.getId());
+		taskStatusDTO.setStatus(taskStatus.getStatus());
+		taskStatusDTO.setStatusColour(taskStatus.getStatusColour());
+		return taskStatusDTO;
+	}
+
+	@Override
+	public void deleteTaskStatus(Integer id) {
+		taskStatusRepository.deleteByIdAndTenantId(id,TenantHolder.getTenantId());
 	}
 }

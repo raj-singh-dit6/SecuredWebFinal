@@ -275,7 +275,7 @@ function loadAjaxPage(pageType,operation,id)
 		}	
 		else if(operation=="edit")
 		{  	var projectId = id;
-			$("#ProjectModalHeading").text("Update User Details");
+			$("#ProjectModalHeading").text("Update Project Details");
 			$("#AddProjectSubmit").hide();
 			$.ajax({
 		    	async: false,
@@ -443,7 +443,7 @@ function loadAjaxPage(pageType,operation,id)
 			}
 	}else if(pageType=="taskStatus")
 	{
-		
+		debugger
 		$.ajax({
 	    	async: false,
 	    	type: "GET",
@@ -472,9 +472,9 @@ function loadAjaxPage(pageType,operation,id)
 		        beforeSend: function(xhr) {
 			           xhr.setRequestHeader(header, token);
 			       },
-		        success: function(task) {
-		        	$("#taskStatusName").val(task.name);
-		        	$("#taskStatusId").val(task.id);
+		        success: function(taskStatus) {
+		        	$("#taskStatusName").val(taskStatus.name);
+		        	$("#taskStatusId").val(taskStatus.id);
 		        }
 		    });
 			
@@ -959,7 +959,7 @@ function fillUserProjectsInDataTable(userProjects){
     });
 }
 
-$('#addTask').click(function(e) {
+function addTask() {
 	
 	var taskStatus = {};
 	$("#taskStatus option:selected"), function(){            
@@ -983,24 +983,23 @@ $('#addTask').click(function(e) {
        data : JSON.stringify(task),
        dataType : 'json',
        beforeSend: function(xhr) {
-           // here it is
            xhr.setRequestHeader(header, token);
        },
-       success : function(res) {
+       success : function(status) {
        
-          if(res=="success"){
-            $('#newTaskModal').modal('hide');
+          if(status.status==200){
+            $('#TaskModalAjax').modal('hide');
             $('#successAlert').show();
             $('#manageTasks').click();
           }else{
-        	$('#newTaskModal').modal('hide');  
+        	$('#TaskModalAjax').modal('hide');  
             $('#warningAlert').show();
           }
        }
  });
-}); 
+} 
 
-$('#addTaskStatus').click(function(e) {
+function addTaskStatus() {
     var taskStatus = {};
     taskStatus.status 	= $('#taskStatusName').val();
     taskStatus.statusColour = $('#statusColourPicker option:selected').val();
@@ -1018,16 +1017,16 @@ $('#addTaskStatus').click(function(e) {
        success : function(status) {
        
           if(status.status==200){
-            $('#newTaskStatusModal').modal('hide');
+            $('#TaskStatusModalAjax').modal('hide');
             $('#successAlert').show();
             $('#manageTaskStatus').click();
           }else{
-        	$('#newTaskStatusModal').modal('hide	');  
+        	$('#TaskStatusModalAjax').modal('hide');  
             $('#warningAlert').show();
           }
        }
  });
-}); 
+} 
 
 
 $('#manageUsers').click(function(e) {

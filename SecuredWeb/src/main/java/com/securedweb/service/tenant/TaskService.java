@@ -9,5 +9,9 @@ public interface TaskService {
 	TaskDTO addTask(TaskDTO task);
 
 	List<TaskDTO> getAllTasks();
+
+	void deleteTask(Integer taskId);
+
+	TaskDTO getTaskDTO(Integer taskId);
 	
 }

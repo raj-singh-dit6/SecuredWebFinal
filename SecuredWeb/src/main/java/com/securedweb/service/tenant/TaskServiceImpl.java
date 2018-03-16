@@ -13,6 +13,7 @@ import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Task;
 import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.repository.tenant.TaskRepository;
+import com.securedweb.util.TenantHolder;
 
 @Service("taskService")
 @Transactional("tenantTransactionManager")
@@ -73,6 +74,24 @@ public class TaskServiceImpl implements TaskService{
 			 }	 
 		}
 		return taskDTOList;
+	}
+
+	@Override
+	public void deleteTask(Integer taskId) {
+		taskRepository.deleteByIdAndTenantId(taskId,TenantHolder.getTenantId());		
+	}
+
+	@Override
+	public TaskDTO getTaskDTO(Integer taskId) {
+		Task task=taskRepository.findByIdAndTenantId(taskId,TenantHolder.getTenantId());
+		TaskDTO taskDTO= new TaskDTO();
+		taskDTO.setId(task.getId());
+		taskDTO.setDescription(task.getDescription());
+		taskDTO.setName(task.getName());
+		taskDTO.setProject(task.getProject());
+		taskDTO.setTaskStatus(task.getTaskStatus());
+		
+		return taskDTO;
 	}
 	
 	

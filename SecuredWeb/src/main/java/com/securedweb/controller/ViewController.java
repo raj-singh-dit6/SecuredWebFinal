@@ -31,6 +31,10 @@ public class ViewController {
 			view ="ajax/projectModalAjax";
 		else if(pagetype.equals("userProject"))
 			view ="ajax/assignProjectModalAjax";
+		else if(pagetype.equals("task"))
+			view ="ajax/taskModalAjax";
+		else if(pagetype.equals("taskStatus"))
+			view ="ajax/taskStatusModalAjax";
 		
 		return view;
 	}	

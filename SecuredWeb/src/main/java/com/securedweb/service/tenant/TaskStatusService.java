@@ -12,4 +12,8 @@ public interface TaskStatusService {
 	TaskStatus getTaskStatus(Integer id);
 
 	TaskStatusDTO addTaskStatus(TaskStatusDTO taskStatus);
+
+	TaskStatusDTO getTaskStatusDTO(Integer id);
+
+	void deleteTaskStatus(Integer taskStatusId);
 }

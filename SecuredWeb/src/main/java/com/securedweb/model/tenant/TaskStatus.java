@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="TASK_STATUS")
 public class TaskStatus {
@@ -31,6 +33,7 @@ public class TaskStatus {
 	@Column(name="TENANT_ID")
 	private String tenantId;
 
+	@JsonIgnore
 	@OneToMany(mappedBy="taskStatus")
 	private Set<Task> tasks;
 	

@@ -20,6 +20,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="TASK")
 public class Task implements Serializable {
@@ -43,6 +45,7 @@ public class Task implements Serializable {
 	@JoinColumn(name="TASK_STATUS_ID", nullable=false)
 	private TaskStatus taskStatus;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "task")
 	private Set<UserTask> userTasks = new HashSet<UserTask>();
 	
