@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.securedweb.dto.tenant.TaskStatusDTO;
 import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.repository.tenant.TaskStatusRepository;
+import com.securedweb.util.TenantHolder;
 
 @Service("taskStatusService")
 @Transactional("tenantTransactionManager")
@@ -17,23 +19,38 @@ public class TaskStatusServiceImpl implements TaskStatusService{
 
 	@Autowired
 	TaskStatusRepository taskStatusRepository;
-	
+
 	@Override
-	public List<TaskStatus> findAll() {
-		List<TaskStatus> taskStatus = new ArrayList<TaskStatus>();
-		taskStatus = (List<TaskStatus>) taskStatusRepository.findAll(); 
-		for(TaskStatus status:taskStatus)
+	public List<TaskStatusDTO> getAllTaskStatus() {
+		List<TaskStatus> taskStatusList = (List<TaskStatus>) taskStatusRepository.findByTenantId(TenantHolder.getTenantId()); 
+		List<TaskStatusDTO> taskStatusDTOList	= new ArrayList<TaskStatusDTO>();
+		for(TaskStatus taskStatus:taskStatusList)
 		{
-			if(status!=null)
+			if(taskStatus!=null)
 			{
-				Hibernate.initialize(status.getTasks());
+				Hibernate.initialize(taskStatus.getTasks());
+				TaskStatusDTO taskStatusDTO = new TaskStatusDTO();
+				taskStatusDTO.setStatus(taskStatus.getStatus());
+				taskStatusDTO.setStatusColour(taskStatus.getStatusColour());
+				taskStatusDTOList.add(taskStatusDTO);
 			}	
 		}	
-		return taskStatus; 
+		return taskStatusDTOList; 
 	}
 
 	@Override
-	public void saveTaskStatus(TaskStatus taskStatus) {
-		taskStatusRepository.save(taskStatus);
+	public TaskStatusDTO addTaskStatus(TaskStatusDTO taskStatus) {
+		TaskStatus newTaskStatus = new TaskStatus();
+		newTaskStatus.setStatus(taskStatus.getStatus());
+		newTaskStatus.setStatusColour(taskStatus.getStatusColour());
+		newTaskStatus.setTenantId(TenantHolder.getTenantId());
+		taskStatusRepository.save(newTaskStatus);
+		return taskStatus;
+	}
+
+	@Override
+	public TaskStatus getTaskStatus(Integer id) {
+		TaskStatus taskStatus = taskStatusRepository.findByIdAndTenantId(id,TenantHolder.getTenantId());
+		return taskStatus;
 	}
 }

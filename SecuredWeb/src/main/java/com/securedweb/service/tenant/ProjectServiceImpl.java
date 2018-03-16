@@ -78,7 +78,7 @@ public class ProjectServiceImpl implements ProjectService {
 					Hibernate.initialize(project.getChildProjects());
 					Hibernate.initialize(project.getParentProject());
 					Hibernate.initialize(project.getTasks());
-					Hibernate.initialize(project.getUserProjects());
+					//Hibernate.initialize(project.getUserProjects());
 					
 						ProjectDTO projectDTO = new ProjectDTO();
 						projectDTO.setId(project.getId());
@@ -98,7 +98,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public ProjectDTO getProject(Integer id) {
+	public ProjectDTO getProjectDTO(Integer id) {
 		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
 		ProjectDTO projectDTO = new ProjectDTO();
 		if(project!=null)
@@ -106,7 +106,7 @@ public class ProjectServiceImpl implements ProjectService {
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
 			Hibernate.initialize(project.getTasks());
-			Hibernate.initialize(project.getUserProjects());
+			//Hibernate.initialize(project.getUserProjects());
 
 				projectDTO.setName(project.getName());
 				projectDTO.setId(project.getId());
@@ -124,7 +124,21 @@ public class ProjectServiceImpl implements ProjectService {
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
 			Hibernate.initialize(project.getTasks());
-			Hibernate.initialize(project.getUserProjects());
+			//Hibernate.initialize(project.getUserProjects());
+		}
+		return project;
+	}
+	
+	
+	@Override
+	public Project getProject(Integer id) {
+		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
+		if(project!=null)
+		{
+			Hibernate.initialize(project.getChildProjects());
+			Hibernate.initialize(project.getParentProject());
+			Hibernate.initialize(project.getTasks());
+			//Hibernate.initialize(project.getUserProjects());
 		}
 		return project;
 	}

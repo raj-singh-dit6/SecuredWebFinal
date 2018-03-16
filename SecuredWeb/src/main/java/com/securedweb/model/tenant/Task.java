@@ -43,12 +43,22 @@ public class Task implements Serializable {
 	@JoinColumn(name="TASK_STATUS_ID", nullable=false)
 	private TaskStatus taskStatus;
 
-	@OneToMany(mappedBy = "primaryKey.task",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "task")
 	private Set<UserTask> userTasks = new HashSet<UserTask>();
 	
 	@NotEmpty
 	@Column(name="TENANT_ID", nullable=false)
 	private String tenantId;
+	
+
+	@Column(name="CREATED_ON")
+	@CreationTimestamp
+	private LocalDateTime createDateTime;
+	
+	
+	@Column(name="UPDATED_ON")
+	@UpdateTimestamp
+	private LocalDateTime updateDateTime;
 	
 	public String getTenantId() {
 		return tenantId;
@@ -65,15 +75,6 @@ public class Task implements Serializable {
 	public void setUserTasks(Set<UserTask> userTasks) {
 		this.userTasks = userTasks;
 	}
-
-	@Column(name="CREATED_ON")
-	@CreationTimestamp
-	private LocalDateTime createDateTime;
-	
-	
-	@Column(name="UPDATED_ON")
-	@UpdateTimestamp
-	private LocalDateTime updateDateTime;
 
 	public Integer getId() {
 		return id;

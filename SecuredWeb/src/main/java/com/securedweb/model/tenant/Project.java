@@ -22,6 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -65,7 +66,8 @@ public class Project implements Serializable{
 	@Column(name="TENANT_ID", nullable=false)
 	private String tenantId;
 	
-	@OneToMany(mappedBy = "primaryKey.project",cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+	@JsonIgnore
+	@OneToMany(mappedBy = "project")
 	private Set<UserProject> userProjects = new HashSet<UserProject>();
 	
 	public Integer getId() {
@@ -150,6 +152,5 @@ public class Project implements Serializable{
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
-
 	
 }

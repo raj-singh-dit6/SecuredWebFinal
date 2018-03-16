@@ -6,9 +6,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
-@Embeddable
+/*@Embeddable*/
 public class UserTaskCompositeKey implements Serializable{
-	
+	/*
 	@ManyToOne(cascade = CascadeType.ALL)
 	private User user;
 	
@@ -31,5 +31,5 @@ public class UserTaskCompositeKey implements Serializable{
 		this.task = task;
 	}
 	 
-
+*/
 }

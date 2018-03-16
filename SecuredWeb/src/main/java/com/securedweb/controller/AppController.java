@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.securedweb.dto.tenant.ProjectDTO;
 import com.securedweb.dto.tenant.RoleDTO;
+import com.securedweb.dto.tenant.TaskStatusDTO;
 import com.securedweb.model.tenant.Role;
 import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.repository.tenant.UserRepository;
@@ -120,18 +121,6 @@ public class AppController {
     public List<RoleDTO> initializeRoles() {
         return roleService.getAllRoles();
     }
-    
-    @ModelAttribute("status")
-    public List<TaskStatus> initializeTaskStatus() {
-        return taskStatusService.findAll();
-    }
-    
-    
-    @ModelAttribute("projects")
-    public List<ProjectDTO> initializeProjects() {
-        return projectService.getAllProjects();
-    }
-    
 
     /**
      * This method returns the principal[user-name] of logged-in user.

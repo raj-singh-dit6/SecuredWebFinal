@@ -3,36 +3,33 @@ package com.securedweb.model.tenant;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name="USER_TASK")
-@AssociationOverrides({
-	@AssociationOverride(name = "primaryKey.user",
-        joinColumns = @JoinColumn(name = "USER_ID")),
-    @AssociationOverride(name = "primaryKey.task",
-        joinColumns = @JoinColumn(name = "TASK_ID")) })
 public class UserTask implements Serializable{
+
+	@Id
+    @GeneratedValue
+    @Column(name = "USER_TASK_ID")
+	private Integer id;
 	
-	@EmbeddedId
-	private UserTaskCompositeKey primaryKey = new UserTaskCompositeKey();
-	
-	@Transient
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "USER_ID")
 	private User user;
 
-	@Transient
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "TASK_ID")
     private Task task;
 	
     @Column(name = "TENANT_ID")
@@ -46,12 +43,13 @@ public class UserTask implements Serializable{
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 
-	public UserTaskCompositeKey getPrimaryKey() {
-		return primaryKey;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setPrimaryKey(UserTaskCompositeKey primaryKey) {
-		this.primaryKey = primaryKey;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public User getUser() {

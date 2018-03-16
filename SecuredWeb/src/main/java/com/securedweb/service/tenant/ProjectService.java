@@ -12,8 +12,9 @@ public interface ProjectService {
 	ProjectDTO addProject(ProjectDTO project);
 	ProjectDTO updateProject(ProjectDTO project);
 	List<ProjectDTO> getAllProjects();
-	ProjectDTO getProject(Integer id);
 	Project getParentProject(Integer id);
 	void deleteProject(Integer id);
+	ProjectDTO getProjectDTO(Integer id);
+	Project getProject(Integer id);
 	
 }

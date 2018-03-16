@@ -100,6 +100,7 @@ public class UserServiceImp implements UserService{
             Hibernate.initialize(user.getUserTasks());
             
 				UserDTO userDTO = new UserDTO();
+				userDTO.setId(user.getId());
 				userDTO.setFirstName(user.getFirstName());
 				userDTO.setLastName(user.getLastName());
 				userDTO.setEmail(user.getEmail());
@@ -118,5 +119,23 @@ public class UserServiceImp implements UserService{
 	}
 	
 	
+	
+	@Override
+	public User getUser(Integer id) {
+		User user;
+		if(TenantHolder.getTenantId().equals("1")){
+			user=userRepository.findById(id).get();
+		}else {
+			user=userRepository.findByIdAndTenantId(id,TenantHolder.getTenantId());
+			
+		}
+		
+		if(user!=null){
+			Hibernate.initialize(user.getUserRoles());
+            Hibernate.initialize(user.getUserProjects());
+            Hibernate.initialize(user.getUserTasks());
+        }
+		return user;
+	}
 
 }

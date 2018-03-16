@@ -23,11 +23,14 @@ public class ViewController {
 
 	@GetMapping(value="/ajaxPage/{pagetype}")
 	public String ajaxPage(@PathVariable("pagetype") String pagetype) {
+		System.out.println("view controller");
 		String view="";
 		if(pagetype.equals("user"))
 				view= "ajax/userModalAjax";
 		else if(pagetype.equals("project"))
 			view ="ajax/projectModalAjax";
+		else if(pagetype.equals("userProject"))
+			view ="ajax/assignProjectModalAjax";
 		
 		return view;
 	}	

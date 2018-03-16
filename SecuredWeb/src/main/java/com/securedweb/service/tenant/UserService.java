@@ -3,6 +3,7 @@ package com.securedweb.service.tenant;
 import java.util.List;
 
 import com.securedweb.dto.tenant.UserDTO;
+import com.securedweb.model.tenant.User;
 
 public interface UserService {
 
@@ -17,6 +18,7 @@ public interface UserService {
 
 	List<UserDTO> getAllUsers();
 
-
 	boolean isUserSSOUnique(String ssoId);
+
+	User getUser(Integer id);
 }

@@ -15,4 +15,6 @@ public interface UserRepository extends CrudRepository<User, Integer>{
 	User findBySsoIdAndTenantId(String ssoId, String tenantId);
 
 	void deleteBySsoIdAndTenantId(String ssoId, String tenantId);
+
+	User findByIdAndTenantId(Integer id, String tenantId);
 }

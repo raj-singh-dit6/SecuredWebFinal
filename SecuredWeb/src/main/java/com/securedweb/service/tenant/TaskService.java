@@ -2,12 +2,12 @@ package com.securedweb.service.tenant;
 
 import java.util.List;
 
-import com.securedweb.model.tenant.Task;
+import com.securedweb.dto.tenant.TaskDTO;
 
 public interface TaskService {
 	
-	List<Task> findAll();
+	TaskDTO addTask(TaskDTO task);
 
-	void saveTask(Task task);
+	List<TaskDTO> getAllTasks();
 	
 }

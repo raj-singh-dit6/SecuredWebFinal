@@ -108,67 +108,22 @@ nav-link.dropdown-toggle:hover{
  </div>
   <!-- ---------------------Modal ends here----------------------- -->
 
+
+<!-- Project Modal -->
+ <div class="modal fade" id="AssignProjectModalAjax">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" id="AssignProjectModalBody">
+      
+      </div>
+   </div>
+ </div>
+  <!-- ---------------------Modal ends here----------------------- -->
+  
  <!-- The Modal -->
   <div class="modal fade" id="TaskModalAjax">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" id="TaskModalBody">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Add New Task</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-        	<form action="#" method="POST" name="addTaskForm">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskProject">Project</label>
-                    <div class="col-md-7">
-                        <select  class="form-control" id="taskProject">
-					    <c:forEach items="${projects}" var="project">    
-					        <option id="${project.id}" value="${project.id}">${project.name}</option>
-					     </c:forEach>   
-					      </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskName">Task Name</label>
-                    <div class="col-md-7">
-                        <input type="text" name="taskName" id="taskName" class="form-control input-sm"/>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskDesc">Task Description</label>
-                    <div class="col-md-7">
-                        <input type="text" name="taskDesc" id="taskDesc" class="form-control input-sm" />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskStatus">Task Status</label>
-                    <div class="col-md-7">
-						<select  class="form-control" id="taskStatus">
-					    <c:forEach items="${status}" var="status">    
-					        <option id="${status.id}" value="${status.id}">${status.status}</option>
-					     </c:forEach>   
-					      </select>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-        <!-- Modal footer -->
-        <div class="modal-footer">
-                <button id="addTask" type="button" class="btn btn-primary">Add</button>  
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>	
+       
       </div>
     </div>
   </div>
@@ -179,44 +134,6 @@ nav-link.dropdown-toggle:hover{
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" id="TaskStatusModalBody">
       
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Add New Task Status</h4>
-          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-        	<form action="#" method="POST" name="addTaskStatusForm">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskStatus">Status</label>
-                    <div class="col-md-7">
-                        <input type="text" name="taskStatusName" id="taskStatusName" class="form-control input-sm"/>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskStatusColour">Flag Color</label>
-                    <div class="col-md-7">
-                        <select id="statusColourPicker" type="text" class="form-control" >
-                        	<option id="orange" value="orange">Orange</option>
-                        	<option id="blue" value="blue">Blue</option>
-                        	<option id="purple" value="purple">Purple</option>
-                        	<option id="green" value="green">Green</option>
-                        </select>
-                        <!-- <input type="text" name="taskStatusColour" id="taskStatusColour" class="form-control input-sm" /> -->
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-        <!-- Modal footer -->
-        <div class="modal-footer">
-                <button id="addTaskStatus" type="button" class="btn btn-primary">Add</button>  
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>	
       </div>
     </div>
   </div>
@@ -231,12 +148,35 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var tenantId=$("#tenantId").val();
 
 $(document).ready(function() {
+	
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
+	
+	$('#AssignProjectModalAjax').on('shown.bs.modal', function() {
+		loadAjaxPage('userProject','add');
+	});
+	
+	$('#UserModalAjax').on('shown.bs.modal', function() {
+		loadAjaxPage('user','add');
+	});
+	
+	$('#ProjectModalAjax').on('shown.bs.modal', function() {
+		loadAjaxPage('project','add');
+	});
+	
+	$('#TaskModalAjax').on('shown.bs.modal', function() {
+		loadAjaxPage('task','add');
+	});
+	
+	$('#TaskStatusModalAjax').on('shown.bs.modal', function() {
+		loadAjaxPage('taskStatus','add');
+	});
+	
 });
 
 function loadAjaxPage(pageType,operation,id)
 {	
+	debugger
 	var reqURL= "view/ajaxPage/"+pageType+"?tenantId="+tenantId;
 	if(pageType=="user")
 	{   
@@ -363,68 +303,363 @@ function loadAjaxPage(pageType,operation,id)
 		            });
 		        }
 		    });
+		}
+	}else if(pageType=="userProject")
+	{
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: reqURL,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(response) {
+		        	$("#AssignProjectModalBody").html( response );
+		        }
+		    });
+			$('#AssignProjectModalAjax').modal('show');
+			if(operation=="add"){
+				$("#AssignProjectModalHeading").text("Assign Project to User");
+				$("#UpdateUserProjectSubmit").hide();
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "project/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(projects) {
+			        	 alert(projects);
+			        	projects.forEach(function(project){
+			            	$("select#assignProject").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+			            });
+			        }
+				});
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "user/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(users) {
+			        	users.forEach(function(user){
+			            	$("select#assignUser").append('<option id="'+user.id+'" value="'+user.id+'">'+user.firstName+'</option>"');
+			            });
+			        }
+				});
+			}	
 			
-		}else if(pageType=="task")
-		{
-			
-		}else if(pageType=="taskStatus")
-		{
+	}else if(pageType=="task")
+	{
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: reqURL,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(response) {
+		            $("#TaskModalBody").html( response );
+		        }
+		    });
+			$('#TaskModalAjax').modal('show');
+			if(operation=="add"){
+				$("#TaskModalHeading").text("Add New Task");
+				$("#UpdateTaskSubmit").hide();
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "project/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(projects) {
+			        	projects.forEach(function(project){
+			            	$("select#taskProject").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+			            });
+			        }
+				});
+				
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "taskStatus/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(taskStatuses) {
+			        	taskStatuses.forEach(function(taskStatus){
+			            	$("select#taskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'">'+taskStatus.status+'</option>"');
+			            });
+			        }
+				});    
+			}	
+			else if(operation=="edit")
+			{  	var taskId = id;
+				$("#TaskModalHeading").text("Update Task Details");
+				$("#AddTaskSubmit").hide();
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "task/"+taskId+"?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(task) {
+			        	$("#taskName").val(task.name);
+			        	$("#taskDesc").val(task.description);
+			        	$("#taskId").val(task.id);
+			        }
+			    });
+				
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "project/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(projects) {
+			        	projects.forEach(function(project){
+			            	$("select#taskProject").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+			            });
+			        }
+				});
+				
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "taskStatus/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(taskStatuses) {
+			        	taskStatuses.forEach(function(taskStatus){
+			            	$("select#taskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'">'+taskStatus.status+'</option>"');
+			            });
+			        }
+				});
+			}
+	}else if(pageType=="taskStatus")
+	{
+		
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	            $("#TaskStatusModalBody").html( response );
+	        }
+	    });
+		$('#TaskStatusModalAjax').modal('show');
+		if(operation=="add"){
+			$("#TaskStatusModalHeading").text("Add New Task Status");
+			$("#UpdateTaskStatusSubmit").hide();
+		}	
+		else if(operation=="edit")
+		{  	
+			var taskStatusId = id;
+			$("#TaskStatusModalHeading").text("Update Task Status Details");
+			$("#AddTaskStatusSubmit").hide();
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "taskStatus/"+taskId+"?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(task) {
+		        	$("#taskStatusName").val(task.name);
+		        	$("#taskStatusId").val(task.id);
+		        }
+		    });
 			
 		}
-	}
+		
+	}	
 }
 
 
-function deleteProjectById(id)
+function deleteById(pageType,id)
 {	
-	var action=bootbox.confirm({
-    message: "Are you sure , you want to delete record for this project ?",
-    buttons: {
-        confirm: {
-            label: 'Yes',
-            className: 'btn-success'
-        },
-        cancel: {
-            label: 'No',
-            className: 'btn-danger'
-        }
-    },
-    callback: function (result) {
-    	if(result)
-    	{
-    		$.ajax({
-    	    	async: false,
-    	    	type: "DELETE",
-    	        url: "project/delete/"+id+"",
-    	        beforeSend: function(xhr) {
-    		           xhr.setRequestHeader(header, token);
-    		       },
-    	        success: function(status) {
-    	        	if(status.status==200){
-    	        		$('#successMessage').html(status.message);
-    		            $('#successAlert').show();
-    		            $('#manageProjects').click();
-    	        	}else{
-    	        		$('#warningMessage').html(status.message);
-    	        		$('#warningAlert').show();
-    	        	}	
-    	        }
-    	    });
-    	}	
-    	}
-	});
+	if(pageType=="user")
+	{
+		var ssoId = id;
+		var action=bootbox.confirm({
+	    message: "Are you sure , you want to delete record for this user ?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if(result)
+	    	{
+	    		$.ajax({
+	    	    	async: false,
+	    	    	type: "DELETE",
+	    	        url: "user/delete/"+ssoId+"",
+	    	        beforeSend: function(xhr) {
+	    		           xhr.setRequestHeader(header, token);
+	    		       },
+	    	        success: function(status) {
+	    	        	if(status.status==200){
+	    	        		$('#successMessage').html(status.message);
+	    		            $('#successAlert').show();
+	    		            $('#manageUsers').click();
+	    	        	}else{
+	    	        		$('#warningMessage').html(status.message);
+	    	        		$('#warningAlert').show();
+	    		            $('#manageUsers').click();
+	    	        	}	
+	    	        }
+	    	    });
+	    	}	
+	    	}
+		});
+	}else if(pageType=="project")
+	{ 
+		var projectID= id;	
+		var action=bootbox.confirm({
+	    message: "Are you sure , you want to delete record for this project ?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if(result)
+	    	{
+	    		$.ajax({
+	    	    	async: false,
+	    	    	type: "DELETE",
+	    	        url: "project/delete/"+id+"",
+	    	        beforeSend: function(xhr) {
+	    		           xhr.setRequestHeader(header, token);
+	    		       },
+	    	        success: function(status) {
+	    	        	if(status.status==200){
+	    	        		$('#successMessage').html(status.message);
+	    		            $('#successAlert').show();
+	    		            $('#manageProjects').click();
+	    	        	}else{
+	    	        		$('#warningMessage').html(status.message);
+	    	        		$('#warningAlert').show();
+	    	        	}	
+	    	        }
+	    	    });
+	    	}	
+	    	}
+		});
+	}else if(pageType=="task")
+	{
+		
+		var taskId = id;
+		var action=bootbox.confirm({
+	    message: "Are you sure , you want to delete record for this task ?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if(result)
+	    	{
+	    		$.ajax({
+	    	    	async: false,
+	    	    	type: "DELETE",
+	    	        url: "task/delete/"+taskId+"",
+	    	        beforeSend: function(xhr) {
+	    		           xhr.setRequestHeader(header, token);
+	    		       },
+	    	        success: function(status) {
+	    	        	if(status.status==200){
+	    	        		$('#successMessage').html(status.message);
+	    		            $('#successAlert').show();
+	    		            $('#manageTasks').click();
+	    	        	}else{
+	    	        		$('#warningMessage').html(status.message);
+	    	        		$('#warningAlert').show();
+	    		            $('#manageTasks').click();
+	    	        	}	
+	    	        }
+	    	    });
+	    	}	
+	    	}
+		});
+	}else if(pageType=="taskStatus")
+	{
+		
+		var taskStatusId = id;
+		var action=bootbox.confirm({
+	    message: "Are you sure , you want to delete record for this task status ?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if(result)
+	    	{
+	    		$.ajax({
+	    	    	async: false,
+	    	    	type: "DELETE",
+	    	        url: "taskStatus/delete/"+taskStatusId+"",
+	    	        beforeSend: function(xhr) {
+	    		           xhr.setRequestHeader(header, token);
+	    		       },
+	    	        success: function(status) {
+	    	        	if(status.status==200){
+	    	        		$('#successMessage').html(status.message);
+	    		            $('#successAlert').show();
+	    		            $('#manageTaskStatus').click();
+	    	        	}else{
+	    	        		$('#warningMessage').html(status.message);
+	    	        		$('#warningAlert').show();
+	    		            $('#manageTaskStatus').click();
+	    	        	}	
+	    	        }
+	    	    });
+	    	}	
+	    	}
+		});
+	}else if(pageType=="userProject")
+	{
+		
+	}	
 }
 
 function addProject() {
 	var parentProject = {};
 	$('select#projParent option').each(function() {
-		if (this.selected)
+		if (this.selected && $(this).val()!="" )
 		{	
-	    	if($(this).val()!="")
-	    	{	
 		    	parentProject.id=$(this).val();
 		    	parentProject.name=$(this).text();
-	    	}
 		}
 	});
     
@@ -546,50 +781,8 @@ function updateUser()
 	 });
 }
 
-function deleteUserBySSOId(id)
-{	
-	var ssoId = id;
-	var action=bootbox.confirm({
-    message: "Are you sure , you want to delete record for this user ?",
-    buttons: {
-        confirm: {
-            label: 'Yes',
-            className: 'btn-success'
-        },
-        cancel: {
-            label: 'No',
-            className: 'btn-danger'
-        }
-    },
-    callback: function (result) {
-    	if(result)
-    	{
-    		$.ajax({
-    	    	async: false,
-    	    	type: "DELETE",
-    	        url: "user/delete/"+ssoId+"",
-    	        beforeSend: function(xhr) {
-    		           xhr.setRequestHeader(header, token);
-    		       },
-    	        success: function(status) {
-    	        	if(status.status==200){
-    	        		$('#successMessage').html(status.message);
-    		            $('#successAlert').show();
-    		            $('#manageUsers').click();
-    	        	}else{
-    	        		$('#warningMessage').html(status.message);
-    	        		$('#warningAlert').show();
-    		            $('#manageUsers').click();
-    	        	}	
-    	        }
-    	    });
-    	}	
- 	       console.log('This was logged in the callback: ' + result);
-    	}
-	});
-}
-
 function addUser(){
+	debugger
 	var userRoles = [];
 	$.each($("#userRoles option:selected"), function(){            
 		var role={};
@@ -631,10 +824,142 @@ function addUser(){
  });
 }
 
-$('#addTask').click(function(e) {
+
+function addUserProject(){
+
+	var userProject={};
+	var user ={};
+	var project ={};
+    
+	$('select#assignProject option').each(function(){
+		if(this.selected && $(this).val()!="" ){	
+			project.id=$(this).val();
+			project.name=$(this).text();
+		}
+	});
 	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
+	$('select#assignUser option').each(function(){
+		if(this.selected && $(this).val()!="" ){	
+			user.id=$(this).val();
+			user.fistName=$(this).text();
+		}
+	});
+	
+	debugger
+	
+	userProject.user=user
+	userProject.project= project;
+
+	alert(JSON.stringify(userProject));
+	
+    $.ajax({
+       type:'POST',
+       async: false,
+       url : 'userProject/add?tenanId='+tenantId,
+       contentType: 'application/json',
+       data : JSON.stringify(userProject),
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(status) {
+    	   if(status.status==200){
+    		   	$('#successMessage').html(status.message);
+    		    $('#AssignProjectModalAjax').modal('hide');
+	            $('#successAlert').show();
+	       	}else{
+	       		$('#warningMessage').html(status.message);
+	       		$('#warningAlert').show();
+	       	}
+       }
+ });
+}
+
+$('#manageUserProjects').click(function(e) {
+	
+	debugger
+    $.ajax({
+       type:'GET',
+       async: false,
+       url : 'userProject/all',
+       contentType: 'application/json',
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(userProjects) {
+    		debugger
+    	   alert(userProjects);
+    	   fillUserProjectsInDataTable(userProjects);
+       }
+ });
+}); 
+
+function fillUserProjectsInDataTable(userProjects){
+	debugger
+	var dataSet=[];
+	userProjects.forEach(function(userProject){
+		var dataEach = [];
+		dataEach.push(userProject.project.id);
+		dataEach.push(userProject.project.name);
+		dataEach.push(userProject.user.id);
+		dataEach.push(userProject.user.firstName);
+		dataSet.push(dataEach);
+	});
+
+	if ($.fn.DataTable.isDataTable("#dataTable")) {
+		  $('#dataTable').DataTable().clear().destroy();
+		}
+
+	$('#dataTable').DataTable( {
+        data: dataSet,
+        columns: [
+        	{ title: "Project Id" },
+            { title: "Project Name" },
+        	{ title: "User Id" },
+            { title: "User First Name" },
+            { "render": function (data, type, full, meta) {
+            	return '<a class="projectEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'project\',\'edit\',\'' + full[0] + '\',\''+full[2]+'\');" data-target="#ProjectModalAjax" >Edit</a>'} },
+           	{ "render": function (data, type, full, meta) {
+               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteUserProjectById(\'' + full[0] + '\',\''+full[2]+'\');" >Delete</a>'} },
+        ],
+        responsive: true,
+        scrollY:        450,
+        deferRender:    true,
+        scroller:       true,
+         responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal( {
+                    header: function ( row ) {
+                        var data = row.data();
+                        return 'Details for '+data[0]+' '+data[1];
+                    }
+                } ),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                    tableClass: 'table'
+                } )
+            }
+        }, 
+        "pagingType" : "full_numbers",
+	    select	   : true,
+	    rowReorder: true,
+	    colReorder: true,
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 2 ],
+                "visible": false,
+                "searchable": false
+            }
+		]
+    });
+}
+
+$('#addTask').click(function(e) {
 	
 	var taskStatus = {};
 	$("#taskStatus option:selected"), function(){            
@@ -676,35 +1001,27 @@ $('#addTask').click(function(e) {
 }); 
 
 $('#addTaskStatus').click(function(e) {
-	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-	
     var taskStatus = {};
     taskStatus.status 	= $('#taskStatusName').val();
     taskStatus.statusColour = $('#statusColourPicker option:selected').val();
-    taskStatus.tenantId 	= "";
     
     $.ajax({
        type:'POST',
        async: false,
-       url : 'taskStatus/addTaskStatus',
+       url : 'taskStatus/add',
        contentType: 'application/json',
        data : JSON.stringify(taskStatus),
        dataType : 'json',
        beforeSend: function(xhr) {
-           // here it is
            xhr.setRequestHeader(header, token);
        },
-       success : function(res) {
+       success : function(status) {
        
-          if(res=="success"){
-            //alert(res);
+          if(status.status==200){
             $('#newTaskStatusModal').modal('hide');
             $('#successAlert').show();
             $('#manageTaskStatus').click();
           }else{
-            //Set error messages
         	$('#newTaskStatusModal').modal('hide	');  
             $('#warningAlert').show();
           }
@@ -763,7 +1080,7 @@ function fillUsersInDataTable(users){
             { "render": function (data, type, full, meta) {
             	return '<a class="userEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[2] + '\' onClick="loadAjaxPage(\'user\',\'edit\',\'' + full[2] + '\');" data-target="#UserModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
-               	return '<a class="userDelete btn btn-danger custom-width" href=# id=\'' + full[2] + '\' onClick="deleteUserBySSOId(\'' + full[2] + '\');" >Delete</a>'} },	
+               	return '<a class="userDelete btn btn-danger custom-width" href=# id=\'' + full[2] + '\' onClick="deleteById(\'user\',\'' + full[2] + '\');" >Delete</a>'} },	
         ],
         responsive: true,
         scrollY:        450,
@@ -845,9 +1162,9 @@ function fillProjectsInDataTable(projects){
             { title: "Parent Project" },
             { title: "Child Projects" },
             { "render": function (data, type, full, meta) {
-            	return '<a class="projectEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'project\',\'edit\',\'' + full[0] + '\');" data-target="#ProjectModalAjax" >Edit</a>'} },
+            	return '<a class="projectEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'project\',\'edit\',\'' + full[0] + '\')" data-target="#ProjectModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
-               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteProjectById(\'' + full[0] + '\');" >Delete</a>'} },
+               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'project\',\'' + full[0] + '\')" >Delete</a>'} },
         ],
         responsive: true,
         scrollY:        450,
@@ -886,22 +1203,17 @@ function fillProjectsInDataTable(projects){
 }
 
 $('#manageTasks').click(function(e) {
-	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
     
     $.ajax({
        type:'GET',
        async: false,
-       url : 'task/manageTasks',
+       url : 'task/all',
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
-           // here it is
            xhr.setRequestHeader(header, token);
        },
        success : function(tasks) {
-       
     	   fillTasksInDataTable(tasks);
        }
  });
@@ -911,6 +1223,7 @@ function fillTasksInDataTable(tasks){
 	var dataSet=[];
 	tasks.forEach(function(task){
 		var dataEach = [];
+		dataEach.push(task.id);
 		dataEach.push(task.name);
 		dataEach.push(task.description);
 		dataEach.push(task.taskStatus.status);
@@ -925,59 +1238,44 @@ function fillTasksInDataTable(tasks){
 	$('#dataTable').DataTable( {
         data: dataSet,
         columns: [
+        	{ title: "Task Id" },
             { title: "Task Name" },
             { title: "Description" },
             { title: "Task Status"},
             { title: "Status Flag" },
+            { "render": function (data, type, full, meta) {
+            	return '<a class="taskEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'task\',\'edit\',\'' + full[0] + '\')" data-target="#TaskModalAjax" >Edit</a>'} },
+           	{ "render": function (data, type, full, meta) {
+               	return '<a class="taskDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'task\',\'' + full[0] + '\')" >Delete</a>'} },
         ],
         responsive: true,
         colReorder: true,
-       /*  responsive: {
-            details: {
-                display: $.fn.dataTable.Responsive.display.modal( {
-                    header: function ( row ) {
-                        var data = row.data();
-                        return 'Details for '+data[0]+' '+data[1];
-                    }
-                } ),
-                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
-                    tableClass: 'table'
-                } )
-            }
-        }, */
         "pagingType" : "full_numbers",
 	    select	   : true,
 	    rowReorder: true,
-	    /* "columnDefs": [ {
-	    	data : null,  
-	    	responsivePriority: 1 , 
-	    	orderable: false, 
-	    	width : '200px' , 
-	    	title : '' , 
-	    	class : 'form-control' , 
-	    	'defaultContent': '<button id="emailDeal"  style="  color : red ; color: rgb(201, 191, 197) ;  border-radius: 5px ; width: 100px; height: 100px; background-color: transparent; border-width: 0.5px; border-color: white;" >Click to Email Deal </button> <button id+"showDeal"  style="  margin-top: 10px color : red ; color: rgb(201, 191, 197) ; border-radius: 5px ; width: 100px; height: 100px; background-color: transparent; border-width: 0.5px; border-color: white;" >Click to Show Deal </button>'
-
-        } ], */
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            }
+		]
     });
 }
 
 $('#manageTaskStatus').click(function(e) {
 	
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
-    
     $.ajax({
        type:'GET',
        async: false,
-       url : 'taskStatus/manageTaskStatus',
+       url : 'taskStatus/all',
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
-           // here it is
            xhr.setRequestHeader(header, token);
        },
        success : function(taskStatus) {
-       
+    	   alert(taskStatus);
     	   fillTaskStatusInDataTable(taskStatus);
        }
  });
@@ -987,6 +1285,7 @@ function fillTaskStatusInDataTable(taskStatus){
 	var dataSet=[];
 	taskStatus.forEach(function(Status){
 		var dataEach = [];
+		dataEach.push(Status.id);
 		dataEach.push(Status.status);
 		dataEach.push(Status.statusColour);
 		dataSet.push(dataEach);
@@ -999,24 +1298,26 @@ function fillTaskStatusInDataTable(taskStatus){
 	$('#dataTable').DataTable( {
         data: dataSet,
         columns: [
+        	{ title: "Status Id" },
             { title: "Status" },
             { title: "Status Colour"},
+            { "render": function (data, type, full, meta) {
+            	return '<a class="taskStatusEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'taskStatus\',\'edit\',\'' + full[0] + '\')" data-target="#TaskStatusModalAjax" >Edit</a>'} },
+           	{ "render": function (data, type, full, meta) {
+               	return '<a class="taskStatusDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'taskStatus\',\'' + full[0] + '\')" >Delete</a>'} },
         ], 
         "pagingType" : "full_numbers",
 	    select	   : true,
 	    rowReorder: true,
 	    responsive: true,
         colReorder: true,
-	    /* "columnDefs": [ {
-	    	data : null,  
-	    	responsivePriority: 1 , 
-	    	orderable: false, 
-	    	width : '200px' , 
-	    	title : '' , 
-	    	class : 'form-control' , 
-	    	'defaultContent': '<button id="emailDeal"  style="  color : red ; color: rgb(201, 191, 197) ;  border-radius: 5px ; width: 100px; height: 100px; background-color: transparent; border-width: 0.5px; border-color: white;" >Click to Email Deal </button> <button id+"showDeal"  style="  margin-top: 10px color : red ; color: rgb(201, 191, 197) ; border-radius: 5px ; width: 100px; height: 100px; background-color: transparent; border-width: 0.5px; border-color: white;" >Click to Show Deal </button>'
-
-        } ], */
+        "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            }
+		]
     });
 }
 

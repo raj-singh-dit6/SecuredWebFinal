@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +20,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="USER")
@@ -67,10 +68,11 @@ public class User implements Serializable{
 	private LocalDateTime updateDateTime;
 	
 	
-	@OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL)
+	@JsonIgnore
+	@OneToMany(mappedBy = "project")
 	private Set<UserProject> userProjects = new HashSet<UserProject>(); 
 	
-	@OneToMany(mappedBy = "primaryKey.user",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "task")
 	private Set<UserTask> userTasks = new HashSet<UserTask>();
 	
 	@NotEmpty

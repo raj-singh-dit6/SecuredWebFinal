@@ -3,36 +3,35 @@ package com.securedweb.model.tenant;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="USER_PROJECT")
-@AssociationOverrides({
-	@AssociationOverride(name = "primaryKey.user",
-        joinColumns = @JoinColumn(name = "USER_ID")),
-    @AssociationOverride(name = "primaryKey.project",
-        joinColumns = @JoinColumn(name = "PROJECT_ID")) })
 public class UserProject implements Serializable {
-
-	@EmbeddedId
-	private UserProjectCompositeKey primaryKey = new UserProjectCompositeKey();
+	@Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "USER_PROJECT_ID")
+	private Integer id;
 	
-	@Transient
-	private User user;
+	 @ManyToOne(cascade = CascadeType.ALL)
+	    @JoinColumn(name = "USER_ID") 
+	 private User user;
 
-	@Transient
+	 @ManyToOne(cascade = CascadeType.ALL)
+	    @JoinColumn(name = "PROJECT_ID")
     private Project project;
 	
     @Column(name = "TENANT_ID")
@@ -46,12 +45,20 @@ public class UserProject implements Serializable {
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
-		this.user = user;
+		this.user=user;
 	}
 
 	public Project getProject() {
@@ -59,7 +66,7 @@ public class UserProject implements Serializable {
 	}
 
 	public void setProject(Project project) {
-		this.project = project;
+		this.project=project;
 	}
 
 	public LocalDateTime getCreateDateTime() {
@@ -76,14 +83,6 @@ public class UserProject implements Serializable {
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
-	}
-	
-	public UserProjectCompositeKey getPrimaryKey() {
-		return primaryKey;
-	}
-
-	public void setPrimaryKey(UserProjectCompositeKey primaryKey) {
-		this.primaryKey = primaryKey;
 	}
 
 	public String getTenantId() {

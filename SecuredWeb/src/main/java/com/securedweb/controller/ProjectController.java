@@ -27,7 +27,7 @@ public class ProjectController {
  
  @GetMapping(value="/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
  public ProjectDTO getUser(@PathVariable("projectId") String projectId){
-	 return projectService.getProject(Integer.parseInt(projectId));
+	 return projectService.getProjectDTO(Integer.parseInt(projectId));
  }
  
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
@@ -58,7 +58,6 @@ public class ProjectController {
 
  @GetMapping(value="/all",produces={MediaType.APPLICATION_JSON_VALUE})
  public List<ProjectDTO> getAllProjects(){
-	 System.err.println(projectService.getAllProjects().toString());
  return projectService.getAllProjects();
  }
  
