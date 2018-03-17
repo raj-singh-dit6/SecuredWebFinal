@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.securedweb.dto.tenant.StatusDTO;
 import com.securedweb.dto.tenant.TaskDTO;
-import com.securedweb.dto.tenant.TaskStatusDTO;
 import com.securedweb.service.tenant.TaskService;
 
 @RestController
@@ -51,19 +50,17 @@ public class TaskController {
 	
 	@PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
 	@DeleteMapping(value="/delete/{taskId}",produces= { MediaType.APPLICATION_JSON_VALUE })
-	public StatusDTO deleteTaskStatus(@PathVariable(value="taskId") Integer taskId)
+	public StatusDTO deleteTask(@PathVariable("taskId") Integer taskId)
 	{
 		taskService.deleteTask(taskId);
 		StatusDTO status = new StatusDTO();
 		status.setMessage("Task Status deleted successfully");
 		status.setStatus(200);
 		return status;
-		
 	}
 	
-	@PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
 	 @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
-	 public StatusDTO updateTaskStatus(@RequestBody TaskDTO task){
+	 public StatusDTO updateTask(@RequestBody TaskDTO task){
 		 taskService.updateTask(task);
 		 StatusDTO status = new StatusDTO();
 	     status.setMessage("Task details updated successfully");

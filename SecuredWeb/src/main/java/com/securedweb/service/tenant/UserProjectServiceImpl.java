@@ -40,18 +40,15 @@ public class UserProjectServiceImpl implements UserProjectService {
 	{
 		User user = userService.getUser(userProjectDTO.getUser().getId());
 		Project project = projectService.getProject(userProjectDTO.getProject().getId());
-		System.err.println(user);
-		System.err.println(project);
 		
 		UserProject userProject = new UserProject();
 		userProject.setProject(project);
 		userProject.setUser(user);
 		userProject.setTenantId(TenantHolder.getTenantId());
 		user.getUserProjects().add(userProject);
+
 		userRepository.save(user);
 		projectRepository.save(project);
-		
-		  System.out.println(user.getUserProjects().size());
 		  
 		return userProjectDTO;
 		

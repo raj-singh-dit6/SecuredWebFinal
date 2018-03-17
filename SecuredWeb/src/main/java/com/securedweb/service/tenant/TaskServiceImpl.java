@@ -12,7 +12,9 @@ import com.securedweb.dto.tenant.TaskDTO;
 import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Task;
 import com.securedweb.model.tenant.TaskStatus;
+import com.securedweb.repository.tenant.ProjectRepository;
 import com.securedweb.repository.tenant.TaskRepository;
+import com.securedweb.repository.tenant.TaskStatusRepository;
 import com.securedweb.util.TenantHolder;
 
 @Service("taskService")
@@ -23,6 +25,12 @@ public class TaskServiceImpl implements TaskService{
 	TaskRepository taskRepository;
 	
 	@Autowired
+	ProjectRepository projectRepository;
+	
+	@Autowired
+	TaskStatusRepository taskStatusRepository;
+	
+	@Autowired
 	ProjectService projectService;
 
 	@Autowired
@@ -31,21 +39,22 @@ public class TaskServiceImpl implements TaskService{
 	
 	@Override
 	public TaskDTO addTask(TaskDTO task) {
-		if(task.getProject().getId()!=null)
-		 {	 
-			Project taskProject =projectService.getProject(task.getProject().getId());
-			task.setProject(taskProject);
-		 }else if(task.getTaskStatus().getId()!=null)
-		 {
-			 TaskStatus taskStatus = taskStatusService.getTaskStatus(task.getTaskStatus().getId());
-			 task.setTaskStatus(taskStatus);
-		 }
+		Project taskProject =projectService.getProject(task.getProject().getId());
+		TaskStatus taskStatus = taskStatusService.getTaskStatus(task.getTaskStatus().getId());
 		
 		Task newTask = new Task();
 		newTask.setName(task.getName());
 		newTask.setDescription(task.getDescription());
-		newTask.setProject(task.getProject());
-		newTask.setTaskStatus(task.getTaskStatus());
+		newTask.setTenantId(TenantHolder.getTenantId());
+		newTask.setProject(taskProject);
+		newTask.setTaskStatus(taskStatus);
+		
+		taskProject.getTasks().add(newTask);
+		taskStatus.getTasks().add(newTask);
+		
+		projectRepository.save(taskProject);
+		taskStatusRepository.save(taskStatus);
+		
 		taskRepository.save(newTask);
 		
 		return task;
@@ -60,7 +69,7 @@ public class TaskServiceImpl implements TaskService{
 		{
 			 if(task!=null)
 			 {
-				 Hibernate.initialize(task.getUserTasks());
+				 //Hibernate.initialize(task.getUserTasks());
 				 Hibernate.initialize(task.getTaskStatus());
 				 Hibernate.initialize(task.getProject());
 				 	
@@ -78,7 +87,7 @@ public class TaskServiceImpl implements TaskService{
 
 	@Override
 	public void deleteTask(Integer taskId) {
-		taskRepository.deleteByIdAndTenantId(taskId,TenantHolder.getTenantId());		
+		taskRepository.deleteByIdAndTenantId(taskId, TenantHolder.getTenantId());
 	}
 
 	@Override
@@ -97,23 +106,29 @@ public class TaskServiceImpl implements TaskService{
 	@Override
 	public TaskDTO updateTask(TaskDTO task) {
 		Task updateTask = taskRepository.findByIdAndTenantId(task.getId(), TenantHolder.getTenantId());
+		
+		Project oldProject =updateTask.getProject();
+		TaskStatus oldTaskStatus = updateTask.getTaskStatus();
+		
+		oldProject.getTasks().remove(updateTask);
+		oldTaskStatus.getTasks().remove(updateTask);
+		
+		Project newProject =	projectRepository.findByIdAndTenantId(task.getProject().getId(), TenantHolder.getTenantId());
+		TaskStatus newTaskStatus =  taskStatusRepository.findByIdAndTenantId(task.getTaskStatus().getId(), TenantHolder.getTenantId());
+		
 		updateTask.setName(task.getName());
 		updateTask.setDescription(task.getDescription());
+		updateTask.setTenantId(TenantHolder.getTenantId());
+		updateTask.setProject(newProject);
+		updateTask.setTaskStatus(newTaskStatus);
+
+		newProject.getTasks().add(updateTask);
+		newTaskStatus.getTasks().add(updateTask);
 		
-		if(task.getProject().getId()!=null)
-		{	 
-			Project taskProject =projectService.getProject(task.getProject().getId());
-			task.setProject(taskProject);
-		 }else if(task.getTaskStatus().getId()!=null)
-		 {
-			 TaskStatus taskStatus = taskStatusService.getTaskStatus(task.getTaskStatus().getId());
-			 task.setTaskStatus(taskStatus);
-		 }
-		updateTask.setProject(task.getProject());
-		updateTask.setTaskStatus(task.getTaskStatus());
+		projectRepository.save(newProject);
+		taskStatusRepository.save(newTaskStatus);
 		
 		return task;
+	
 	}
-	
-	
 }

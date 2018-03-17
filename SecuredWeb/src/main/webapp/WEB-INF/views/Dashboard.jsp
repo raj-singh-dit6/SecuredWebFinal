@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
     <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
-   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
+   	<!-- <link href="/SecuredWeb/static/css/app.css" rel="stylesheet"> -->
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
@@ -725,17 +725,19 @@ function updateTask()
     
 	var task = {};
 	task.id = $('#taskId').val();
+	task.name = $('#taskName').val();
 	task.description = $('#taskDesc').val();
 	task.project = project;
 	task.taskStatus =taskStatus;
 	
+	alert(JSON.stringify(task));
 	
 	$.ajax({
        type:'POST',
        async: false,
-       url : 'taskStatus/update?tenantId='+tenantId,
+       url : 'task/update?tenantId='+tenantId,
        contentType: 'application/json',
-       data : JSON.stringify(taskStatus),
+       data : JSON.stringify(task),
        dataType : 'json',
        beforeSend: function(xhr) {
            xhr.setRequestHeader(header, token);
@@ -743,12 +745,12 @@ function updateTask()
        success : function(status) {
     	   if(status.status==200){
 	        	$('#successMessage').html(status.message);
-	        	$('#TaskStatusModalAjax').modal('hide');
+	        	$('#TaskModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageTaskStatus').click();
+	            $('#manageTasks').click();
 	          }else{
 	        	$('#warningMessage').html(status.message);
-	        	$('#TaskStatusModalAjax').modal('hide');  
+	        	$('#TaskModalAjax').modal('hide');  
 	            $('#warningAlert').show();
 	          }
        }
@@ -1078,7 +1080,7 @@ function addTask() {
     $.ajax({
        type:'POST',
        async: false,
-       url : 'task/addTask?tenantId='+tenantId,
+       url : 'task/add?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(task),
        dataType : 'json',
@@ -1307,7 +1309,7 @@ function fillProjectsInDataTable(projects){
 
 
 $('#manageTasks').click(function(e) {
-    
+    debugger
     $.ajax({
        type:'GET',
        async: false,
@@ -1318,6 +1320,7 @@ $('#manageTasks').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(tasks) {
+    	   alert(tasks);
     	   fillTasksInDataTable(tasks);
        }
  });
@@ -1328,10 +1331,11 @@ function fillTasksInDataTable(tasks){
 	tasks.forEach(function(task){
 		var dataEach = [];
 		dataEach.push(task.id);
+		dataEach.push(task.project.name);
 		dataEach.push(task.name);
 		dataEach.push(task.description);
 		dataEach.push(task.taskStatus.status);
-		dataEach.push(task.taskStatus.colour);
+		dataEach.push(task.taskStatus.statusColour);
 		dataSet.push(dataEach);
 	});
 
@@ -1343,7 +1347,8 @@ function fillTasksInDataTable(tasks){
         data: dataSet,
         columns: [
         	{ title: "Task Id" },
-            { title: "Task Name" },
+        	{ title: "Project Name"},
+        	{ title: "Task Name" },
             { title: "Description" },
             { title: "Task Status"},
             { title: "Status Flag" },
