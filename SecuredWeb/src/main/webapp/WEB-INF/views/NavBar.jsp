@@ -26,7 +26,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageUsers" class="dropdown-item" href="#" >Manage Users</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal"  data-target="#UserModalAjax">Add User</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('user','add')" data-target="#UserModalAjax">Add User</a>
 	      </div>
 	    </li>
 	    </sec:authorize>
@@ -36,8 +36,8 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageProjects" class="dropdown-item" href="#" >Manage Projects</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal"  data-target="#ProjectModalAjax">Add Project</a>
-	      	<a class="dropdown-item" href="#" data-toggle="modal"   data-target="#AssignProjectModalAjax">Assign Project</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('project','add')" data-target="#ProjectModalAjax">Add Project</a>
+	      	<a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('userProject','add')"  data-target="#AssignProjectModalAjax">Assign Project</a>
 	      	<a id="manageUserProjects" class="dropdown-item" href="#" >Manage Assigned Projects</a>
 	      </div>
 	    </li>
@@ -47,7 +47,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageTasks" class="dropdown-item" href="#" >Manage Tasks</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal"  data-target="#TaskModalAjax">Add Task</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('task','add')" data-target="#TaskModalAjax">Add Task</a>
 	      </div>
 	    </li>
 	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')"> 
@@ -57,7 +57,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a id="manageTaskStatus" class="dropdown-item" href="#" >Manage Task Status</a>
-	        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#TaskStatusModalAjax">Add Task Status</a>
+	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('taskStatus','add')" data-target="#TaskStatusModalAjax">Add Task Status</a>
 	      </div>
 	    </li>
 	    </sec:authorize>

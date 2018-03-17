@@ -42,12 +42,13 @@ public class Project implements Serializable{
 	private String description;
 	
 	@ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="PARENT_PROJECT_ID")
+	@JoinColumn(name="PARENT_PROJECT_ID",insertable = false, updatable = false)
 	@JsonBackReference
 	private Project parentProject;
 
-	@OneToMany(mappedBy="parentProject",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="parentProject",fetch=FetchType.EAGER)
 	@JsonManagedReference
+	/*@JsonIgnore*/
 	private Set<Project> childProjects = new HashSet<Project>(); 
 	
 	

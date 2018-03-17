@@ -93,6 +93,27 @@ public class TaskServiceImpl implements TaskService{
 		
 		return taskDTO;
 	}
+
+	@Override
+	public TaskDTO updateTask(TaskDTO task) {
+		Task updateTask = taskRepository.findByIdAndTenantId(task.getId(), TenantHolder.getTenantId());
+		updateTask.setName(task.getName());
+		updateTask.setDescription(task.getDescription());
+		
+		if(task.getProject().getId()!=null)
+		{	 
+			Project taskProject =projectService.getProject(task.getProject().getId());
+			task.setProject(taskProject);
+		 }else if(task.getTaskStatus().getId()!=null)
+		 {
+			 TaskStatus taskStatus = taskStatusService.getTaskStatus(task.getTaskStatus().getId());
+			 task.setTaskStatus(taskStatus);
+		 }
+		updateTask.setProject(task.getProject());
+		updateTask.setTaskStatus(task.getTaskStatus());
+		
+		return task;
+	}
 	
 	
 }

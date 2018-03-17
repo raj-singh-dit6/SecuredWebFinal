@@ -152,31 +152,10 @@ $(document).ready(function() {
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
 	
-	$('#AssignProjectModalAjax').on('shown.bs.modal', function() {
-		loadAjaxPage('userProject','add');
-	});
-	
-	$('#UserModalAjax').on('shown.bs.modal', function() {
-		loadAjaxPage('user','add');
-	});
-	
-	$('#ProjectModalAjax').on('shown.bs.modal', function() {
-		loadAjaxPage('project','add');
-	});
-	
-	$('#TaskModalAjax').on('shown.bs.modal', function() {
-		loadAjaxPage('task','add');
-	});
-	
-	$('#TaskStatusModalAjax').on('shown.bs.modal', function() {
-		loadAjaxPage('taskStatus','add');
-	});
-	
 });
 
 function loadAjaxPage(pageType,operation,id)
 {	
-	debugger
 	var reqURL= "view/ajaxPage/"+pageType+"?tenantId="+tenantId;
 	if(pageType=="user")
 	{   
@@ -212,8 +191,8 @@ function loadAjaxPage(pageType,operation,id)
 		else if(operation=="edit")
 		{  	var ssoId = id;
 			$("#UserModalHeading").text("Update User Details");
-			$("div #userPassword").hide();
-			$("div #userSsoId").hide();
+			$("#userPasswordDiv").hide();
+			$("#userSsoIdDiv").hide();
 			$("#AddUserSubmit").hide();
 			$.ajax({
 		    	async: false,
@@ -244,6 +223,7 @@ function loadAjaxPage(pageType,operation,id)
 		}	
 	}else if(pageType=="project")
 	{
+		debugger
 		$.ajax({
 	    	async: false,
 	    	type: "GET",
@@ -329,7 +309,6 @@ function loadAjaxPage(pageType,operation,id)
 				           xhr.setRequestHeader(header, token);
 				       },
 			        success: function(projects) {
-			        	 alert(projects);
 			        	projects.forEach(function(project){
 			            	$("select#assignProject").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
 			            });
@@ -441,9 +420,10 @@ function loadAjaxPage(pageType,operation,id)
 			        }
 				});
 			}
+			
 	}else if(pageType=="taskStatus")
 	{
-		debugger
+		
 		$.ajax({
 	    	async: false,
 	    	type: "GET",
@@ -463,17 +443,18 @@ function loadAjaxPage(pageType,operation,id)
 		else if(operation=="edit")
 		{  	
 			var taskStatusId = id;
+			debugger;
 			$("#TaskStatusModalHeading").text("Update Task Status Details");
 			$("#AddTaskStatusSubmit").hide();
 			$.ajax({
 		    	async: false,
 		    	type: "GET",
-		        url: "taskStatus/"+taskId+"?tenantId="+tenantId,
+		        url: "taskStatus/"+taskStatusId+"?tenantId="+tenantId,
 		        beforeSend: function(xhr) {
 			           xhr.setRequestHeader(header, token);
 			       },
 		        success: function(taskStatus) {
-		        	$("#taskStatusName").val(taskStatus.name);
+		        	$("#taskStatusName").val(taskStatus.status);
 		        	$("#taskStatusId").val(taskStatus.id);
 		        }
 		    });
@@ -507,7 +488,7 @@ function deleteById(pageType,id)
 	    		$.ajax({
 	    	    	async: false,
 	    	    	type: "DELETE",
-	    	        url: "user/delete/"+ssoId+"",
+	    	        url: "user/delete/"+ssoId+"?tenantId="+tenantId,
 	    	        beforeSend: function(xhr) {
 	    		           xhr.setRequestHeader(header, token);
 	    		       },
@@ -547,7 +528,7 @@ function deleteById(pageType,id)
 	    		$.ajax({
 	    	    	async: false,
 	    	    	type: "DELETE",
-	    	        url: "project/delete/"+id+"",
+	    	        url: "project/delete/"+id+"?tenantId="+tenantId,
 	    	        beforeSend: function(xhr) {
 	    		           xhr.setRequestHeader(header, token);
 	    		       },
@@ -587,7 +568,7 @@ function deleteById(pageType,id)
 	    		$.ajax({
 	    	    	async: false,
 	    	    	type: "DELETE",
-	    	        url: "task/delete/"+taskId+"",
+	    	        url: "task/delete/"+taskId+"?tenantId="+tenantId,
 	    	        beforeSend: function(xhr) {
 	    		           xhr.setRequestHeader(header, token);
 	    		       },
@@ -608,7 +589,6 @@ function deleteById(pageType,id)
 		});
 	}else if(pageType=="taskStatus")
 	{
-		
 		var taskStatusId = id;
 		var action=bootbox.confirm({
 	    message: "Are you sure , you want to delete record for this task status ?",
@@ -628,7 +608,7 @@ function deleteById(pageType,id)
 	    		$.ajax({
 	    	    	async: false,
 	    	    	type: "DELETE",
-	    	        url: "taskStatus/delete/"+taskStatusId+"",
+	    	        url: "taskStatus/delete/"+taskStatusId+"?tenantId="+tenantId,
 	    	        beforeSend: function(xhr) {
 	    		           xhr.setRequestHeader(header, token);
 	    		       },
@@ -649,6 +629,44 @@ function deleteById(pageType,id)
 		});
 	}else if(pageType=="userProject")
 	{
+		var userProjectId = id;
+		var action=bootbox.confirm({
+	    message: "Are you sure , you want to deassign project for this user?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if(result)
+	    	{
+	    		$.ajax({
+	    	    	async: false,
+	    	    	type: "DELETE",
+	    	        url: "userProject/delete/"+userProjectId+"?tenantId="+tenantId,
+	    	        beforeSend: function(xhr) {
+	    		           xhr.setRequestHeader(header, token);
+	    		       },
+	    	        success: function(status) {
+	    	        	if(status.status==200){
+	    	        		 debugger
+	    	        		$('#successMessage').html(status.message);
+	    		            $('#successAlert').show();
+	    		            $('#manageUserProjects').click();
+	    	        	}else{
+	    	        		$('#warningMessage').html(status.message);
+	    	        		$('#warningAlert').show();
+	    	        	}	
+	    	        }
+	    	    });
+	    	}	
+	    	}
+		});
 		
 	}	
 }
@@ -670,7 +688,7 @@ function addProject() {
     $.ajax({
        type:'POST',
        async: false,
-       url : 'project/add',
+       url : 'project/add?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(project),
        dataType : 'json',
@@ -691,6 +709,83 @@ function addProject() {
 	          }
        }
  });
+}
+
+
+function updateTask()
+{	
+	
+	var taskStatus = {};
+	taskStatus.id = $('select#taskStatus option:selected').val(); 
+	taskStatus.status = $('select#taskStatus option:selected').text();
+		
+	var project = {};	
+	project.id 	= $('select#taskProject option:selected').val();
+	project.name = $('select#taskProject option:selected').text();
+    
+	var task = {};
+	task.id = $('#taskId').val();
+	task.description = $('#taskDesc').val();
+	task.project = project;
+	task.taskStatus =taskStatus;
+	
+	
+	$.ajax({
+       type:'POST',
+       async: false,
+       url : 'taskStatus/update?tenantId='+tenantId,
+       contentType: 'application/json',
+       data : JSON.stringify(taskStatus),
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(status) {
+    	   if(status.status==200){
+	        	$('#successMessage').html(status.message);
+	        	$('#TaskStatusModalAjax').modal('hide');
+	            $('#successAlert').show();
+	            $('#manageTaskStatus').click();
+	          }else{
+	        	$('#warningMessage').html(status.message);
+	        	$('#TaskStatusModalAjax').modal('hide');  
+	            $('#warningAlert').show();
+	          }
+       }
+ });
+} 
+
+function updateTaskStatus()
+{	
+	var taskStatus = {};
+	taskStatus.id 			= $('#taskStatusId').val();
+	taskStatus.status 		= $('#taskStatusName').val();
+	taskStatus.statusColour = $('select#taskStatusColour option:selected').val();
+    
+    $.ajax({
+       type:'POST',
+       async: false,
+       url : 'taskStatus/update?tenantId='+tenantId,
+       contentType: 'application/json',
+       data : JSON.stringify(taskStatus),
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(status) {
+    	   if(status.status==200){
+	        	$('#successMessage').html(status.message);
+	        	$('#TaskStatusModalAjax').modal('hide');
+	            $('#successAlert').show();
+	            $('#manageTaskStatus').click();
+	          }else{
+	        	$('#warningMessage').html(status.message);
+	        	$('#TaskStatusModalAjax').modal('hide');  
+	            $('#warningAlert').show();
+	          }
+       }
+ });
+	
 }
 
 function updateProject()
@@ -716,7 +811,7 @@ function updateProject()
     $.ajax({
        type:'POST',
        async: false,
-       url : 'project/update',
+       url : 'project/update?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(project),
        dataType : 'json',
@@ -849,8 +944,6 @@ function addUserProject(){
 	
 	userProject.user=user
 	userProject.project= project;
-
-	alert(JSON.stringify(userProject));
 	
     $.ajax({
        type:'POST',
@@ -867,6 +960,7 @@ function addUserProject(){
     		   	$('#successMessage').html(status.message);
     		    $('#AssignProjectModalAjax').modal('hide');
 	            $('#successAlert').show();
+	            $('#manageUserProjects').click();
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
@@ -881,7 +975,7 @@ $('#manageUserProjects').click(function(e) {
     $.ajax({
        type:'GET',
        async: false,
-       url : 'userProject/all',
+       url : 'userProject/all?tenantId='+tenantId,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
@@ -889,21 +983,22 @@ $('#manageUserProjects').click(function(e) {
        },
        success : function(userProjects) {
     		debugger
-    	   alert(userProjects);
     	   fillUserProjectsInDataTable(userProjects);
        }
  });
-}); 
+});
 
 function fillUserProjectsInDataTable(userProjects){
 	debugger
 	var dataSet=[];
 	userProjects.forEach(function(userProject){
 		var dataEach = [];
-		dataEach.push(userProject.project.id);
-		dataEach.push(userProject.project.name);
+		dataEach.push(userProject.id);
 		dataEach.push(userProject.user.id);
 		dataEach.push(userProject.user.firstName);
+		dataEach.push(userProject.project.id);
+		dataEach.push(userProject.project.name);
+		dataEach.push(userProject.project.description);
 		dataSet.push(dataEach);
 	});
 
@@ -914,14 +1009,14 @@ function fillUserProjectsInDataTable(userProjects){
 	$('#dataTable').DataTable( {
         data: dataSet,
         columns: [
+        	{ title: "User Project Id" },
+        	{ title: "User Id" },
+            { title: "User Name" },
         	{ title: "Project Id" },
             { title: "Project Name" },
-        	{ title: "User Id" },
-            { title: "User First Name" },
-            { "render": function (data, type, full, meta) {
-            	return '<a class="projectEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'project\',\'edit\',\'' + full[0] + '\',\''+full[2]+'\');" data-target="#ProjectModalAjax" >Edit</a>'} },
+            { title: "Description" },
            	{ "render": function (data, type, full, meta) {
-               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteUserProjectById(\'' + full[0] + '\',\''+full[2]+'\');" >Delete</a>'} },
+               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'userProject\',\'' + full[0] + '\')" >Deassign</a>'} },
         ],
         responsive: true,
         scrollY:        450,
@@ -932,7 +1027,7 @@ function fillUserProjectsInDataTable(userProjects){
                 display: $.fn.dataTable.Responsive.display.modal( {
                     header: function ( row ) {
                         var data = row.data();
-                        return 'Details for '+data[0]+' '+data[1];
+                        return 'Details for '+data[1]+' '+data[3];
                     }
                 } ),
                 renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
@@ -951,7 +1046,12 @@ function fillUserProjectsInDataTable(userProjects){
                 "searchable": false
             },
             {
-                "targets": [ 2 ],
+                "targets": [ 1 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 3 ],
                 "visible": false,
                 "searchable": false
             }
@@ -962,23 +1062,23 @@ function fillUserProjectsInDataTable(userProjects){
 function addTask() {
 	
 	var taskStatus = {};
-	$("#taskStatus option:selected"), function(){            
-		taskStatus.id=$(this).val();
-		taskStatus.status=$(this).text();
-	};
+	taskStatus.id=$('#taskStatus option:selected').val();
+	taskStatus.status=$('#taskStatus option:selected').text();
 	
-    var task = {};
-    task.project.id 	= $('#taskProject option:selected').val();
-    task.project.name 	= $('#taskProject option:selected').text();
-    task.name 			= $('#taskName').val();
-    task.description    = $('#taskDesc').val();
-    task.taskStatus 	= taskStatus;
-    task.tenantId 	= "";
+	var project={};
+	project.id 	= $('#taskProject option:selected').val();
+	project.name 	= $('#taskProject option:selected').text();
+    
+	var task = {};
+    task.name 		  = $('#taskName').val();
+    task.description  = $('#taskDesc').val();
+    task.taskStatus   = taskStatus;
+    task.project 	  = project;
     
     $.ajax({
        type:'POST',
        async: false,
-       url : 'task/addTask',
+       url : 'task/addTask?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(task),
        dataType : 'json',
@@ -1000,14 +1100,15 @@ function addTask() {
 } 
 
 function addTaskStatus() {
+	
     var taskStatus = {};
     taskStatus.status 	= $('#taskStatusName').val();
-    taskStatus.statusColour = $('#statusColourPicker option:selected').val();
+    taskStatus.statusColour = $('select#taskStatusColour option:selected').val();
     
     $.ajax({
        type:'POST',
        async: false,
-       url : 'taskStatus/add',
+       url : 'taskStatus/add?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(taskStatus),
        dataType : 'json',
@@ -1017,10 +1118,12 @@ function addTaskStatus() {
        success : function(status) {
        
           if(status.status==200){
+        	$('#successAlert').text(status.message);
             $('#TaskStatusModalAjax').modal('hide');
             $('#successAlert').show();
             $('#manageTaskStatus').click();
           }else{
+        	$('#warningAlert').text(status.message);
         	$('#TaskStatusModalAjax').modal('hide');  
             $('#warningAlert').show();
           }
@@ -1034,7 +1137,7 @@ $('#manageUsers').click(function(e) {
     $.ajax({
        type:'GET',
        async: false,
-       url : 'user/all',
+       url : 'user/all?tenantId='+tenantId,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
@@ -1111,7 +1214,7 @@ $('#manageProjects').click(function(e) {
     $.ajax({
        type:'GET',
        async: false,
-       url : 'project/all',
+       url : 'project/all?tenantId='+tenantId,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
@@ -1201,12 +1304,14 @@ function fillProjectsInDataTable(projects){
     });
 }
 
+
+
 $('#manageTasks').click(function(e) {
     
     $.ajax({
        type:'GET',
        async: false,
-       url : 'task/all',
+       url : 'task/all?tenantId='+tenantId,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
@@ -1267,14 +1372,13 @@ $('#manageTaskStatus').click(function(e) {
     $.ajax({
        type:'GET',
        async: false,
-       url : 'taskStatus/all',
+       url : 'taskStatus/all?tenantId='+tenantId,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
            xhr.setRequestHeader(header, token);
        },
        success : function(taskStatus) {
-    	   alert(taskStatus);
     	   fillTaskStatusInDataTable(taskStatus);
        }
  });

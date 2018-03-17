@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" id="userSsoId">
+            <div class="row" id="userSsoIdDiv">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="userSsoId">SSO ID</label>
                     <div class="col-md-7">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" id="userPassword">
+            <div class="row" id="userPasswordDiv">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="userPassword">Password</label>
                     <div class="col-md-7">

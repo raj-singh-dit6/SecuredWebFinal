@@ -58,7 +58,7 @@ public class UserServiceImp implements UserService{
 		 newUser.setEmail(user.getEmail());
 		 newUser.setSsoId(user.getSsoId());
 		 newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-		 newUser.setTenantId(user.getTenantId());
+		 newUser.setTenantId(TenantHolder.getTenantId());
 		 newUser.setUserRoles(user.getUserRoles());;
 		 userRepository.save(newUser);
 		 return user;
@@ -71,7 +71,6 @@ public class UserServiceImp implements UserService{
 		updateUser.setLastName(user.getLastName());
 		updateUser.setEmail(user.getEmail());
 		updateUser.setUserRoles(user.getUserRoles());;
-		updateUser=userRepository.save(updateUser);
 		return user;
 	}
 
@@ -84,13 +83,13 @@ public class UserServiceImp implements UserService{
 	@Override
 	public List<UserDTO> getAllUsers() {
 		
-		List<User> userList=new ArrayList<User>();
+		List<User> userList=(List<User>) userRepository.findByTenantId(TenantHolder.getTenantId());
 		List<UserDTO> userDTOList=new ArrayList<UserDTO>();
 		
-		if(TenantHolder.getTenantId().equals("1"))
+		/*if(TenantHolder.getTenantId().equals("1"))
 			userList=(List<User>) userRepository.findAll();
-		else
-			userList=(List<User>) userRepository.findByTenantId(TenantHolder.getTenantId());
+		else*/
+			
 
 		for(User user:userList)
 		{

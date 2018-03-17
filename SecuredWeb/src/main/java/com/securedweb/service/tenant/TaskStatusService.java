@@ -16,4 +16,6 @@ public interface TaskStatusService {
 	TaskStatusDTO getTaskStatusDTO(Integer id);
 
 	void deleteTaskStatus(Integer taskStatusId);
+
+	TaskStatusDTO updateTaskStatus(TaskStatusDTO taskStatus);
 }

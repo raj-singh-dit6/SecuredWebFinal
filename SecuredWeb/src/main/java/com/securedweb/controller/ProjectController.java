@@ -26,8 +26,8 @@ public class ProjectController {
  private ProjectService projectService;
  
  @GetMapping(value="/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
- public ProjectDTO getUser(@PathVariable("projectId") String projectId){
-	 return projectService.getProjectDTO(Integer.parseInt(projectId));
+ public ProjectDTO getUser(@PathVariable("projectId") Integer projectId){
+	 return projectService.getProjectDTO(projectId);
  }
  
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.securedweb.dto.tenant.TaskStatusDTO;
+import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.repository.tenant.TaskStatusRepository;
 import com.securedweb.util.TenantHolder;
@@ -68,5 +69,13 @@ public class TaskStatusServiceImpl implements TaskStatusService{
 	@Override
 	public void deleteTaskStatus(Integer id) {
 		taskStatusRepository.deleteByIdAndTenantId(id,TenantHolder.getTenantId());
+	}
+
+	@Override
+	public TaskStatusDTO updateTaskStatus(TaskStatusDTO taskStatus) {
+		TaskStatus updateTaskStatus = taskStatusRepository.findByIdAndTenantId(taskStatus.getId(), TenantHolder.getTenantId());
+		updateTaskStatus.setStatus(taskStatus.getStatus());
+		updateTaskStatus.setStatusColour(taskStatus.getStatusColour());
+		return taskStatus;
 	}
 }

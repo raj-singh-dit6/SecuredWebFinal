@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -69,7 +70,7 @@ public class User implements Serializable{
 	
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "project")
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserProject> userProjects = new HashSet<UserProject>(); 
 	
 	@JsonIgnore
@@ -77,7 +78,8 @@ public class User implements Serializable{
 	private Set<UserTask> userTasks = new HashSet<UserTask>();
 	
 	@NotEmpty
-    @ManyToMany(fetch = FetchType.LAZY)
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USER_ROLE", 
              joinColumns = { @JoinColumn(name = "USER_ID") }, 
              inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })

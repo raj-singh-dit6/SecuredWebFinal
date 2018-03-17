@@ -43,8 +43,8 @@ public class TaskController {
 		
 	}
 	
-	@GetMapping(value="/{taskId}",consumes= { MediaType.APPLICATION_JSON_VALUE },produces= { MediaType.APPLICATION_JSON_VALUE })
-	public TaskDTO getTask(@PathVariable(value="taskId") Integer taskId)
+	@GetMapping(value="/{taskId}",produces= { MediaType.APPLICATION_JSON_VALUE })
+	public TaskDTO getTask(@PathVariable("taskId") Integer taskId)
 	{
 		return taskService.getTaskDTO(taskId);
 	}
@@ -60,5 +60,15 @@ public class TaskController {
 		return status;
 		
 	}
+	
+	@PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
+	 @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
+	 public StatusDTO updateTaskStatus(@RequestBody TaskDTO task){
+		 taskService.updateTask(task);
+		 StatusDTO status = new StatusDTO();
+	     status.setMessage("Task details updated successfully");
+	     status.setStatus(200);
+	     return status;
+	 }
 	
 }

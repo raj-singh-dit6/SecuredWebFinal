@@ -20,7 +20,8 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="taskStatusColour">Flag Color</label>
                     <div class="col-md-7">
-                        <select id="statusColourPicker" type="text" class="form-control" >
+                        <select id="taskStatusColour" type="text" class="form-control" >
+                        	<option></option>
                         	<option id="orange" value="orange">Orange</option>
                         	<option id="blue" value="blue">Blue</option>
                         	<option id="purple" value="purple">Purple</option>

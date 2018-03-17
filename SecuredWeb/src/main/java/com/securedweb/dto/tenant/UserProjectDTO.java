@@ -5,9 +5,15 @@ import com.securedweb.model.tenant.User;
 
 public class UserProjectDTO {
 
-	
+	private Integer id;
 	private User user;
 	private Project project;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public User getUser() {
 		return user;
 	}

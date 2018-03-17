@@ -13,5 +13,7 @@ public interface TaskService {
 	void deleteTask(Integer taskId);
 
 	TaskDTO getTaskDTO(Integer taskId);
+
+	TaskDTO updateTask(TaskDTO task);
 	
 }

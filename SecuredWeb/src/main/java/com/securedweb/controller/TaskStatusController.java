@@ -32,17 +32,29 @@ public class TaskStatusController {
 		
 	}
 	
+	 @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
+	 @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
+	 public StatusDTO updateTaskStatus(@RequestBody TaskStatusDTO taskStatus){
+		 taskStatusService.updateTaskStatus(taskStatus);
+		 StatusDTO status = new StatusDTO();
+	     status.setMessage("Task Status details updated successfully");
+	     status.setStatus(200);
+	     return status;
+	 }
+	
 	@PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
 	@PostMapping(value="/add",consumes= { MediaType.APPLICATION_JSON_VALUE },produces= { MediaType.APPLICATION_JSON_VALUE })
 	public StatusDTO addTaskStatus(@RequestBody TaskStatusDTO taskStatus)
 	{
 		taskStatusService.addTaskStatus(taskStatus);
 		StatusDTO status = new StatusDTO();
+		status.setMessage("Task Status added successfully");
+	    status.setStatus(200);
 		return  status;
 	}
 	
-	@GetMapping(value="/{taskStatusId}",consumes= { MediaType.APPLICATION_JSON_VALUE },produces= { MediaType.APPLICATION_JSON_VALUE })
-	public TaskStatusDTO getTaskStatus(@PathVariable(value="taskStatusId") Integer taskStatusId)
+	@GetMapping(value="/{taskStatusId}",produces= { MediaType.APPLICATION_JSON_VALUE })
+	public TaskStatusDTO getTaskStatus(@PathVariable("taskStatusId") Integer taskStatusId)
 	{
 		return taskStatusService.getTaskStatusDTO(taskStatusId);
 	}

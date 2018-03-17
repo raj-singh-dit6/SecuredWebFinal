@@ -7,7 +7,7 @@ import com.securedweb.dto.tenant.UserProjectDTO;
 public interface UserProjectService {
 	
 	UserProjectDTO addUserProject(UserProjectDTO userProjectDTO);
-	void deleteUserProject(UserProjectDTO userProjectDTO);
 	List<UserProjectDTO> getAllUserProject();
+	void deleteUserProject(Integer userProjectId);
 
 }
