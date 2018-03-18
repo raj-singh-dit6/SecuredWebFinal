@@ -39,6 +39,8 @@ public class ViewController {
 			view ="ajax/assignTaskModalAjax";
 		else if(pagetype.equals("userTaskByUser"))
 			view ="ajax/assignTaskModalAjax";
+		else if(pagetype.equals("registerUser"))
+			view ="ajax/newUserModalAjax";
 		return view;
 	}	
 }

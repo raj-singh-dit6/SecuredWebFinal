@@ -33,7 +33,6 @@ public class UserController {
 	 return userService.getUser(ssoId);
  }
  
- @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/add",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO addUser(@RequestBody UserDTO user){
 	 StatusDTO status = new StatusDTO();

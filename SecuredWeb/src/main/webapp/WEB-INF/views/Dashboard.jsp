@@ -167,7 +167,6 @@ $(document).ready(function() {
 function loadAllTasksByProjectId(obj)
 {
 	var projId= obj.value;
-	debugger
 	$.ajax({
     	async: false,
     	type: "GET",
@@ -176,7 +175,7 @@ function loadAllTasksByProjectId(obj)
 	           xhr.setRequestHeader(header, token);
 	       },
         success: function(tasks) {
-        	alert(tasks);
+        	//alert(tasks);
         	tasks.forEach(function(task){
 	            	$("select#assignTask").append('<option id="'+task.id+'" value="'+task.id+'">'+task.name+'</option>"');
 	            });
@@ -187,7 +186,6 @@ function loadAllTasksByProjectId(obj)
 function loadAllUsersByProjectId(obj)
 {
 	var projId= obj.value;
-	debugger
 	$.ajax({
     	async: false,
     	type: "GET",
@@ -196,7 +194,7 @@ function loadAllUsersByProjectId(obj)
 	           xhr.setRequestHeader(header, token);
 	       },
         success: function(users) {
-        	alert(users);
+        	//alert(users);
         	users.forEach(function(user){
 	            	$("select#assignUser").append('<option id="'+user.id+'" value="'+user.id+'">'+user.firstName+'</option>"');
 	            });
@@ -273,7 +271,6 @@ function loadAjaxPage(pageType,operation,id)
 		}	
 	}else if(pageType=="project")
 	{
-		debugger
 		$.ajax({
 	    	async: false,
 	    	type: "GET",
@@ -526,7 +523,6 @@ function loadAjaxPage(pageType,operation,id)
 		else if(operation=="edit")
 		{  	
 			var taskStatusId = id;
-			debugger;
 			$("#TaskStatusModalHeading").text("Update Task Status Details");
 			$("#AddTaskStatusSubmit").hide();
 			$.ajax({
@@ -571,7 +567,7 @@ function loadAjaxPage(pageType,operation,id)
 			           xhr.setRequestHeader(header, token);
 			       },
 		        success: function(userProjects) {
-		        	alert(userProjects);
+		        	//alert(userProjects);
 		        	userProjects.forEach(function(userProject){
 		            	$("select#assignProject").append('<option id="'+userProject.project.id+'" value="'+userProject.project.id+'"  >'+userProject.project.name+'</option>"');
 		            });
@@ -772,7 +768,6 @@ function deleteById(pageType,id)
 	    		       },
 	    	        success: function(status) {
 	    	        	if(status.status==200){
-	    	        		 debugger
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
 	    		            $('#manageUserProjects').click();
@@ -971,7 +966,7 @@ function updateUser()
     user.email 		= $('#userEmail').val();
     user.userRoles	= userRoles;
 	
-    alert(JSON.stringify(user));
+    //alert(JSON.stringify(user));
     
     $.ajax({
 	       type:'POST',
@@ -1000,7 +995,6 @@ function updateUser()
 }
 
 function addUser(){
-	debugger
 	var userRoles = [];
 	$.each($("#userRoles option:selected"), function(){            
 		var role={};
@@ -1063,7 +1057,6 @@ function addUserProject(){
 		}
 	});
 	
-	debugger
 	
 	userProject.user=user
 	userProject.project= project;
@@ -1125,7 +1118,7 @@ function addUserTask(){
 	userTask.project= project;
 	userTask.task= task;
 
-	alert(JSON.stringify(userTask));
+	//alert(JSON.stringify(userTask));
 	
     $.ajax({
        type:'POST',
@@ -1153,7 +1146,6 @@ function addUserTask(){
 
 $('#manageUserProjects').click(function(e) {
 	
-	debugger
     $.ajax({
        type:'GET',
        async: false,
@@ -1164,7 +1156,6 @@ $('#manageUserProjects').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(userProjects) {
-    		debugger
     		fillUserProjectsInDataTable(userProjects);
        }
  });
@@ -1172,7 +1163,6 @@ $('#manageUserProjects').click(function(e) {
 
 $('#manageUserTasks').click(function(e) {
 	
-	debugger
     $.ajax({
        type:'GET',
        async: false,
@@ -1183,7 +1173,6 @@ $('#manageUserTasks').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(userTasks) {
-    		debugger
     		fillUserTasksInDataTable(userTasks);
        }
  });
@@ -1191,7 +1180,6 @@ $('#manageUserTasks').click(function(e) {
 
 
 function fillUserTasksInDataTable(userTasks){
-	alert(userTasks);
 	var dataSet=[];
 	userTasks.forEach(function(userTask){
 		var dataEach = [];
@@ -1270,7 +1258,6 @@ function fillUserTasksInDataTable(userTasks){
 
 
 function fillUserProjectsInDataTable(userProjects){
-	debugger
 	var dataSet=[];
 	userProjects.forEach(function(userProject){
 		var dataEach = [];
@@ -1425,7 +1412,7 @@ $('#loadProjectsForUser').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(userProjects) {
-        	alert(userProjects);
+        	//alert(userProjects);
     	   fillAssignedProjectsInDataTable(userProjects);
        }
  });
@@ -1497,7 +1484,7 @@ $('#loadTasksForUser').click(function(e) {
        },
        success : function(userTasks) {
        
-    	   alert(userTasks)
+    	   //alert(userTasks)
     	   fillAssignedTasksInDataTable(userTasks);
        }
  });
@@ -1641,7 +1628,6 @@ function fillUsersInDataTable(users){
 
 $('#manageProjects').click(function(e) {
 	
-	debugger
     $.ajax({
        type:'GET',
        async: false,
@@ -1658,7 +1644,6 @@ $('#manageProjects').click(function(e) {
 }); 
 
 function fillProjectsInDataTable(projects){
-	debugger
 	var dataSet=[];
 	projects.forEach(function(project){
 		var dataEach = [];
@@ -1738,7 +1723,6 @@ function fillProjectsInDataTable(projects){
 
 
 $('#manageTasks').click(function(e) {
-    debugger
     $.ajax({
        type:'GET',
        async: false,
@@ -1749,7 +1733,7 @@ $('#manageTasks').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(tasks) {
-    	   alert(tasks);
+    	   //alert(tasks);
     	   fillTasksInDataTable(tasks);
        }
  });

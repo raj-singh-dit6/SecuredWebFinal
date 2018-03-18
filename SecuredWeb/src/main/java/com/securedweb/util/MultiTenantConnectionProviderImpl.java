@@ -24,6 +24,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 
+import com.securedweb.dto.master.TenantDTO;
 import com.securedweb.model.master.Tenant;
 import com.securedweb.model.master.TenantDBDataSource;
 import com.securedweb.service.master.TenantDBDataSourceService;
@@ -54,12 +55,12 @@ public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMu
 	}
 	
 	public void init() {
-		   List<Tenant> tenants = tenantService.findAll();
+		   List<TenantDTO> tenants = tenantService.getAllTenants();
 		      System.out.println("----INITITALIZING TENANTS FROM DB ------------");
 		      System.out.println(tenants.size());
-		      for (Tenant tenant : tenants) {
-		    	  TenantDBDataSource tenantDBDataSource = tenantDBDataSourceService.findById(tenant.getTenantId()); 
-		          map.put(tenant.getTenantId().toString(),constructDataSource(tenantDBDataSource) );
+		      for (TenantDTO tenantDTO : tenants) {
+		    	  TenantDBDataSource tenantDBDataSource = tenantDBDataSourceService.findById(tenantDTO.getTenantId()); 
+		          map.put(tenantDTO.getTenantId().toString(),constructDataSource(tenantDBDataSource) );
 		      }
 	   }
 	
