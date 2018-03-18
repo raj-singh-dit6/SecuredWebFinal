@@ -71,6 +71,8 @@ public class MasterConfig {
               , "true"));
       properties.put("hibernate.hbm2ddl.auto", springEnvironment.getProperty("hibernate.hbm2ddl.auto"
               , "update"));
+      properties.put("hibernate.id.new_generator_mappings", springEnvironment.getProperty("hibernate.id.new_generator_mappings"
+              , "false"));
       return properties;
    }
 

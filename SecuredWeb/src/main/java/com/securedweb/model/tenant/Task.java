@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -133,6 +132,13 @@ public class Task implements Serializable {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	@Override
+	public String toString() {
+		return "Task [id=" + id + ", project=" + project + ", name=" + name + ", description=" + description
+				+ ", taskStatus=" + taskStatus + ", userTasks=" + userTasks + ", tenantId=" + tenantId
+				+ ", createDateTime=" + createDateTime + ", updateDateTime=" + updateDateTime + "]";
 	}
 
 }

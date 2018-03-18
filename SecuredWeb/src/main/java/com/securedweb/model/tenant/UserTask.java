@@ -24,11 +24,11 @@ public class UserTask implements Serializable{
     @Column(name = "USER_TASK_ID")
 	private Integer id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "USER_ID")
 	private User user;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "TASK_ID")
     private Task task;
 	

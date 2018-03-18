@@ -28,13 +28,7 @@ public class UserServiceImp implements UserService{
 	@Override
 	public UserDTO getUser(String ssoId) {
 		UserDTO userDTO = new UserDTO();
-		User user;
-		if(TenantHolder.getTenantId().equals("1")){
-			user=userRepository.findBySsoId(ssoId);
-		}else {
-			user=userRepository.findBySsoIdAndTenantId(ssoId,TenantHolder.getTenantId());
-			
-		}
+		User user=userRepository.findBySsoIdAndTenantId(ssoId,TenantHolder.getTenantId());
 		
 		if(user!=null){
 			Hibernate.initialize(user.getUserRoles());
@@ -86,11 +80,6 @@ public class UserServiceImp implements UserService{
 		List<User> userList=(List<User>) userRepository.findByTenantId(TenantHolder.getTenantId());
 		List<UserDTO> userDTOList=new ArrayList<UserDTO>();
 		
-		/*if(TenantHolder.getTenantId().equals("1"))
-			userList=(List<User>) userRepository.findAll();
-		else*/
-			
-
 		for(User user:userList)
 		{
 				
@@ -121,13 +110,7 @@ public class UserServiceImp implements UserService{
 	
 	@Override
 	public User getUser(Integer id) {
-		User user;
-		if(TenantHolder.getTenantId().equals("1")){
-			user=userRepository.findById(id).get();
-		}else {
-			user=userRepository.findByIdAndTenantId(id,TenantHolder.getTenantId());
-			
-		}
+		User user=userRepository.findByIdAndTenantId(id,TenantHolder.getTenantId());
 		
 		if(user!=null){
 			Hibernate.initialize(user.getUserRoles());

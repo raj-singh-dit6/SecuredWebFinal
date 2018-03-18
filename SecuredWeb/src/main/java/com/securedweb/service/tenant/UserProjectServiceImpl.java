@@ -2,8 +2,11 @@ package com.securedweb.service.tenant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,11 +48,11 @@ public class UserProjectServiceImpl implements UserProjectService {
 		userProject.setProject(project);
 		userProject.setUser(user);
 		userProject.setTenantId(TenantHolder.getTenantId());
+		
 		user.getUserProjects().add(userProject);
-
-		userRepository.save(user);
-		projectRepository.save(project);
 		  
+		System.err.println(user.getFirstName() + " : TOTAL PROJECTS : "+ user.getUserTasks().size());
+		
 		return userProjectDTO;
 		
 	}
@@ -58,10 +61,11 @@ public class UserProjectServiceImpl implements UserProjectService {
 	public void deleteUserProject(Integer userProjectId)
 	{
 		UserProject userProject=userProjectRepository.findByIdAndTenantId(userProjectId,TenantHolder.getTenantId());
-		System.err.println(userProject);
+		
 		User user = userService.getUser(userProject.getUser().getId());
 		user.getUserProjects().remove(userProject);
-		userRepository.save(user);
+		
+		System.err.println(user.getFirstName() + " : TOTAL PROJECTS : "+ user.getUserTasks().size());;
 	}
 
 	@Override
@@ -86,4 +90,32 @@ public class UserProjectServiceImpl implements UserProjectService {
 		return userProjectDTOList;
 	
 	}
-}
+	
+
+	@Override
+	public List<UserProjectDTO> getAllUserProjectBySsoId() {
+		
+		 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		 List<UserProjectDTO> userProjectDTOList= new ArrayList<UserProjectDTO>();
+		 if (principal instanceof UserDetails) {
+			 String  ssoId = ((UserDetails)principal).getUsername();
+			 System.err.println("User ssoId :"+ssoId);
+			 User user = userRepository.findBySsoIdAndTenantId(ssoId, TenantHolder.getTenantId());
+			 Set<UserProject> userProjectSet =user.getUserProjects() ;
+			 System.err.println(userProjectSet);
+			for(UserProject userProject:userProjectSet)
+			{
+				if(userProject!=null)
+				{
+					UserProjectDTO userProjectDTO = new UserProjectDTO();
+					userProjectDTO.setId((userProject.getId()));
+					userProjectDTO.setProject(userProject.getProject());
+					userProjectDTO.setUser(userProject.getUser());
+					userProjectDTOList.add(userProjectDTO);
+				}
+			 }
+		 }
+		 System.err.println(userProjectDTOList);
+		 return userProjectDTOList;
+	}
+}	

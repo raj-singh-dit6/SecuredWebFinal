@@ -15,11 +15,10 @@
 	  <!-- Links -->
 	<div class="collapse navbar-collapse" id="myNavbar">  
 	  <ul class="nav navbar-nav">
-	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">  
-	    <!-- Dropdown -->
 	    <li class="nav-item">
 	      <a class="nav-link" href="home">Home</a>
 	    </li>
+	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">  
 	    <li class="nav-item dropdown">
 	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 	        Admin
@@ -30,6 +29,7 @@
 	      </div>
 	    </li>
 	    </sec:authorize>
+	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')"> 
 	    <li class="nav-item dropdown">
 	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 	        Projects
@@ -48,9 +48,10 @@
 	      <div class="dropdown-menu">
 	        <a id="manageTasks" class="dropdown-item" href="#" >Manage Tasks</a>
 	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('task','add')" data-target="#TaskModalAjax">Add Task</a>
+			<a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('userTask','add')"  data-target="#AssignTaskModalAjax">Assign Task</a>
+	      	<a id="manageUserTasks" class="dropdown-item" href="#" >Manage Assigned Tasks</a>
 	      </div>
 	    </li>
-	    <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')"> 
 	    <li class="nav-item dropdown">
 	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 	        Task Status
@@ -62,8 +63,25 @@
 	    </li>
 	    </sec:authorize>
 	    <sec:authorize access="hasRole('USER')">  
-	    <li class="nav-item">
+	    <!-- <li class="nav-item">
 	      <a class="nav-link" href="#">Team Members</a>
+	    </li> -->
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Projects
+	      </a>
+	      <div class="dropdown-menu">
+	      	<a id="loadProjectsForUser" class="dropdown-item" href="#" >Assigned Projects</a>
+	      </div>
+	    </li>
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Tasks
+	      </a>
+	      <div class="dropdown-menu">
+	      	<a id="self-assign" class="dropdown-item" onClick="loadAjaxPage('userTaskByUser','add')" href="#" >Self-Assign</a>
+	      	<a id="loadTasksForUser" class="dropdown-item" href="#" >Assigned Tasks</a>
+	      </div>
 	    </li>
 	    </sec:authorize>
 	    <!-- Dropdown -->

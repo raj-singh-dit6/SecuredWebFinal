@@ -1,6 +1,7 @@
 package com.securedweb.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.securedweb.dto.tenant.ProjectDTO;
 import com.securedweb.dto.tenant.StatusDTO;
+import com.securedweb.dto.tenant.TaskDTO;
+import com.securedweb.dto.tenant.UserDTO;
 import com.securedweb.service.tenant.ProjectService;
 import com.securedweb.util.TenantHolder;
 
@@ -70,4 +73,15 @@ public class ProjectController {
      status.setStatus(200);
      return status;
  }
+ 
+ @GetMapping(value="/load/task/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
+ public Set<TaskDTO> loadAllTasksByProjectID(@PathVariable("projectId") Integer projectId){
+ return projectService.loadAllTasksByProjectID(projectId);
+ }
+ 
+ @GetMapping(value="/load/user/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
+ public Set<UserDTO> loadAllUsersByProjectID(@PathVariable("projectId") Integer projectId){
+ return projectService.loadAllUsersByProjectID(projectId);
+ }
+ 
 }

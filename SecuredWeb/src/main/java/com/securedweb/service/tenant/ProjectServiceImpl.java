@@ -1,16 +1,28 @@
 package com.securedweb.service.tenant;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.securedweb.dto.tenant.ProjectDTO;
+import com.securedweb.dto.tenant.TaskDTO;
+import com.securedweb.dto.tenant.UserDTO;
+import com.securedweb.dto.tenant.UserProjectDTO;
 import com.securedweb.model.tenant.Project;
+import com.securedweb.model.tenant.Task;
+import com.securedweb.model.tenant.User;
+import com.securedweb.model.tenant.UserProject;
 import com.securedweb.repository.tenant.ProjectRepository;
+import com.securedweb.repository.tenant.UserProjectRepository;
+import com.securedweb.repository.tenant.UserRepository;
 import com.securedweb.util.TenantHolder;
 
 @Service("projectService")
@@ -19,7 +31,13 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	ProjectRepository projectRepository;
+	
+	@Autowired
+	UserProjectRepository userProjectRepository;
 
+	@Autowired
+	UserRepository userRepository;
+	
 	@Override
 	public boolean isProjectNameUnique(String name, String tenantId) {
 		Project project = projectRepository.findByNameAndTenantId(name,tenantId);
@@ -140,6 +158,38 @@ public class ProjectServiceImpl implements ProjectService {
 			//Hibernate.initialize(project.getUserProjects());
 		}
 		return project;
+	}
+
+	@Override
+	public Set<TaskDTO> loadAllTasksByProjectID(Integer id) {
+		Project project=projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
+		Set<Task> projectTasks=project.getTasks();
+		Set<TaskDTO> projectTaskDTOs=new HashSet<TaskDTO>();		
+		for(Task task:projectTasks)
+		{
+			TaskDTO taskDTO = new TaskDTO();
+			taskDTO.setId(task.getId());
+			taskDTO.setName(task.getDescription());
+			taskDTO.setDescription(task.getDescription());
+			projectTaskDTOs.add(taskDTO);
+		}
+		return projectTaskDTOs;
+	}
+
+	@Override
+	public Set<UserDTO> loadAllUsersByProjectID(Integer id) {
+		Project project = projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
+		Set<UserProject> userProjectSet=project.getUserProjects();
+		Set<UserDTO> userDTOs = new HashSet<UserDTO>();
+		for(UserProject userProject:userProjectSet)
+		{
+			User user = userProject.getUser();
+			UserDTO userDTO = new UserDTO();
+			userDTO.setId(user.getId());
+			userDTO.setFirstName(user.getFirstName());
+			userDTOs.add(userDTO);
+		}
+		return userDTOs;		
 	}
 	
 }

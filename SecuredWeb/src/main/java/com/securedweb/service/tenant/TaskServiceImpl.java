@@ -131,4 +131,11 @@ public class TaskServiceImpl implements TaskService{
 		return task;
 	
 	}
+
+	@Override
+	public Task getTask(Integer id) {
+		Task task = taskRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
+		return task;
+	}
+	
 }

@@ -3,6 +3,7 @@ package com.securedweb.service.tenant;
 import java.util.List;
 
 import com.securedweb.dto.tenant.TaskDTO;
+import com.securedweb.model.tenant.Task;
 
 public interface TaskService {
 	
@@ -15,5 +16,7 @@ public interface TaskService {
 	TaskDTO getTaskDTO(Integer taskId);
 
 	TaskDTO updateTask(TaskDTO task);
+
+	Task getTask(Integer id);
 	
 }

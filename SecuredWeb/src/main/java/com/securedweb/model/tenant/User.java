@@ -74,7 +74,7 @@ public class User implements Serializable{
 	private Set<UserProject> userProjects = new HashSet<UserProject>(); 
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "task")
+	@OneToMany(mappedBy = "task",cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<UserTask> userTasks = new HashSet<UserTask>();
 	
 	@NotEmpty

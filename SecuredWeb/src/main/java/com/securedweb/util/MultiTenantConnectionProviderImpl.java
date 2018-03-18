@@ -112,6 +112,7 @@ public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMu
 		properties.put("hibernate.show_sql", springEnvironment.getProperty("hibernate.show_sql", "true"));
 		properties.put("hibernate.format_sql", springEnvironment.getProperty("hibernate.format_sql", "true"));
 		properties.put("hibernate.hbm2ddl.auto", springEnvironment.getProperty("hibernate.hbm2ddl.auto", "update"));
+		properties.put("hibernate.id.new_generator_mappings", springEnvironment.getProperty("hibernate.id.new_generator_mappings", "false"));
 		return properties;
 	}
 

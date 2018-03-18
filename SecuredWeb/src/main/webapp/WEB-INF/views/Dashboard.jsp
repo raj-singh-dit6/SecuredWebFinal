@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
     <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
-   	<!-- <link href="/SecuredWeb/static/css/app.css" rel="stylesheet"> -->
+   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
@@ -109,7 +109,7 @@ nav-link.dropdown-toggle:hover{
   <!-- ---------------------Modal ends here----------------------- -->
 
 
-<!-- Project Modal -->
+<!-- User Project Modal -->
  <div class="modal fade" id="AssignProjectModalAjax">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" id="AssignProjectModalBody">
@@ -119,7 +119,7 @@ nav-link.dropdown-toggle:hover{
  </div>
   <!-- ---------------------Modal ends here----------------------- -->
   
- <!-- The Modal -->
+ <!-- Task Modal -->
   <div class="modal fade" id="TaskModalAjax">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" id="TaskModalBody">
@@ -129,7 +129,19 @@ nav-link.dropdown-toggle:hover{
   </div>
   <!-- ---------------------Modal ends here----------------------- -->
 
- <!-- The Modal -->
+ <!-- User Task Modal -->
+ <div class="modal fade" id="AssignTaskModalAjax">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" id="AssignTaskModalBody">
+      
+      </div>
+   </div>
+ </div>
+  <!-- ---------------------Modal ends here----------------------- -->
+  
+  
+  
+ <!-- Task Status Modal -->
   <div class="modal fade" id="TaskStatusModalAjax">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" id="TaskStatusModalBody">
@@ -148,11 +160,49 @@ var header = $("meta[name='_csrf_header']").attr("content");
 var tenantId=$("#tenantId").val();
 
 $(document).ready(function() {
-	
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
-	
 });
+
+function loadAllTasksByProjectId(obj)
+{
+	var projId= obj.value;
+	debugger
+	$.ajax({
+    	async: false,
+    	type: "GET",
+        url: "project/load/task/"+projId+"?tenantId="+tenantId,
+        beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+        success: function(tasks) {
+        	alert(tasks);
+        	tasks.forEach(function(task){
+	            	$("select#assignTask").append('<option id="'+task.id+'" value="'+task.id+'">'+task.name+'</option>"');
+	            });
+        }
+    });
+}
+
+function loadAllUsersByProjectId(obj)
+{
+	var projId= obj.value;
+	debugger
+	$.ajax({
+    	async: false,
+    	type: "GET",
+        url: "project/load/user/"+projId+"?tenantId="+tenantId,
+        beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+        success: function(users) {
+        	alert(users);
+        	users.forEach(function(user){
+	            	$("select#assignUser").append('<option id="'+user.id+'" value="'+user.id+'">'+user.firstName+'</option>"');
+	            });
+        }
+    });
+}
 
 function loadAjaxPage(pageType,operation,id)
 {	
@@ -421,6 +471,39 @@ function loadAjaxPage(pageType,operation,id)
 				});
 			}
 			
+	}else if(pageType=="userTask")
+	{
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: reqURL,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(response) {
+		        	$("#AssignTaskModalBody").html( response );
+		        }
+		    });
+			$('#AssignTaskModalAjax').modal('show');
+			
+			if(operation=="add"){
+				$("#AssignTaskModalHeading").text("Assign Task to User");
+				$("#UpdateUserTaskSubmit").hide();
+				$.ajax({
+			    	async: false,
+			    	type: "GET",
+			        url: "project/all?tenantId="+tenantId,
+			        beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				       },
+			        success: function(projects) {
+			        	projects.forEach(function(project){
+			            	$("select#assignProject").append('<option id="'+project.id+'" value="'+project.id+'" >'+project.name+'</option>"');
+			            });
+			        }
+				});
+			}	
+			
 	}else if(pageType=="taskStatus")
 	{
 		
@@ -461,7 +544,42 @@ function loadAjaxPage(pageType,operation,id)
 			
 		}
 		
-	}	
+	}else if(pageType=="userTaskByUser")
+	{
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	        	$("#AssignTaskModalBody").html( response );
+	        }
+	    });
+		$('#AssignTaskModalAjax').modal('show');
+		
+		if(operation=="add"){
+			$("#AssignTaskModalHeading").text("Assign Task");
+			$("#UpdateUserTaskSubmit").hide();
+			$("#assignUserDiv").hide();
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "userProject/load/projects?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(userProjects) {
+		        	alert(userProjects);
+		        	userProjects.forEach(function(userProject){
+		            	$("select#assignProject").append('<option id="'+userProject.project.id+'" value="'+userProject.project.id+'"  >'+userProject.project.name+'</option>"');
+		            });
+		        }
+			});
+		}	
+		
+	}
 }
 
 
@@ -852,7 +970,10 @@ function updateUser()
     user.ssoId 		= $('#userSsoId').val();
     user.email 		= $('#userEmail').val();
     user.userRoles	= userRoles;
-	$.ajax({
+	
+    alert(JSON.stringify(user));
+    
+    $.ajax({
 	       type:'POST',
 	       async: false,
 	       url : 'user/update?tenantId='+tenantId,
@@ -899,7 +1020,7 @@ function addUser(){
     $.ajax({
        type:'POST',
        async: false,
-       url : 'user/add?tenanId='+tenantId,
+       url : 'user/add?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(user),
        dataType : 'json',
@@ -950,7 +1071,7 @@ function addUserProject(){
     $.ajax({
        type:'POST',
        async: false,
-       url : 'userProject/add?tenanId='+tenantId,
+       url : 'userProject/add?tenantId='+tenantId,
        contentType: 'application/json',
        data : JSON.stringify(userProject),
        dataType : 'json',
@@ -963,6 +1084,65 @@ function addUserProject(){
     		    $('#AssignProjectModalAjax').modal('hide');
 	            $('#successAlert').show();
 	            $('#manageUserProjects').click();
+	       	}else{
+	       		$('#warningMessage').html(status.message);
+	       		$('#warningAlert').show();
+	       	}
+       }
+ });
+}
+
+function addUserTask(){
+
+	var userTask={};
+	var user ={};
+	var project ={};
+	var task ={};
+    
+	$('select#assignProject option').each(function(){
+		if(this.selected && $(this).val()!="" ){	
+			project.id=$(this).val();
+			project.name=$(this).text();
+		}
+	});
+	
+	$('select#assignUser option').each(function(){
+		if(this.selected && $(this).val()!="" ){	
+			user.id=$(this).val();
+			user.firstName=$(this).text();
+		}
+	});
+	
+	$('select#assignTask option').each(function(){
+		if(this.selected && $(this).val()!="" ){	
+			task.id=$(this).val();
+			task.name=$(this).text();
+		}
+	});
+	
+	
+	userTask.user=user
+	userTask.project= project;
+	userTask.task= task;
+
+	alert(JSON.stringify(userTask));
+	
+    $.ajax({
+       type:'POST',
+       async: false,
+       url : 'userTask/add?tenantId='+tenantId,
+       contentType: 'application/json',
+       data : JSON.stringify(userTask),
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(status) {
+    	   if(status.status==200){
+    		   	$('#successMessage').html(status.message);
+    		    $('#AssignTaskModalAjax').modal('hide');
+	            $('#successAlert').show();
+	            $('#manageUserTasks').click();
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
@@ -985,10 +1165,109 @@ $('#manageUserProjects').click(function(e) {
        },
        success : function(userProjects) {
     		debugger
-    	   fillUserProjectsInDataTable(userProjects);
+    		fillUserProjectsInDataTable(userProjects);
        }
  });
 });
+
+$('#manageUserTasks').click(function(e) {
+	
+	debugger
+    $.ajax({
+       type:'GET',
+       async: false,
+       url : 'userTask/all?tenantId='+tenantId,
+       contentType: 'application/json',
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(userTasks) {
+    		debugger
+    		fillUserTasksInDataTable(userTasks);
+       }
+ });
+});
+
+
+function fillUserTasksInDataTable(userTasks){
+	alert(userTasks);
+	var dataSet=[];
+	userTasks.forEach(function(userTask){
+		var dataEach = [];
+		dataEach.push(userTask.id);
+		dataEach.push(userTask.user.id);
+		dataEach.push(userTask.user.firstName);
+		dataEach.push(userTask.project.id);
+		dataEach.push(userTask.project.name);
+		dataEach.push(userTask.task.id);
+		dataEach.push(userTask.task.name);
+		dataSet.push(dataEach);
+	});
+
+	if ($.fn.DataTable.isDataTable("#dataTable")) {
+		  $('#dataTable').DataTable().clear().destroy();
+		}
+
+	$('#dataTable').DataTable( {
+        data: dataSet,
+        columns: [
+        	{ title: "User Task Id" },
+        	{ title: "User Id" },
+            { title: "User Name" },
+        	{ title: "Project Id" },
+            { title: "Project Name" },
+            { title: "Task Id" },
+            { title: "Task Name" },
+           	{ "render": function (data, type, full, meta) {
+               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'userTask\',\'' + full[0] + '\')" >Deassign</a>'} },
+        ],
+        responsive: true,
+        scrollY:        450,
+        deferRender:    true,
+        scroller:       true,
+         responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal( {
+                    header: function ( row ) {
+                        var data = row.data();
+                        return 'Details for '+data[1]+' '+data[3];
+                    }
+                } ),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                    tableClass: 'table'
+                } )
+            }
+        }, 
+        "pagingType" : "full_numbers",
+	    select	   : true,
+	    rowReorder: true,
+	    colReorder: true,
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 1 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 3 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 5 ],
+                "visible": false,
+                "searchable": false
+            }
+		]
+    });
+}
+
 
 function fillUserProjectsInDataTable(userProjects){
 	debugger
@@ -1132,6 +1411,156 @@ function addTaskStatus() {
        }
  });
 } 
+
+
+$('#loadProjectsForUser').click(function(e) {
+    
+    $.ajax({
+       type:'GET',
+       async: false,
+       url : 'userProject/load/projects?tenantId='+tenantId,
+       contentType: 'application/json',
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(userProjects) {
+        	alert(userProjects);
+    	   fillAssignedProjectsInDataTable(userProjects);
+       }
+ });
+}); 
+
+function fillAssignedProjectsInDataTable(userProjects){
+	var dataSet=[];
+	userProjects.forEach(function(userProject){
+		var dataEach = [];
+		dataEach.push(userProject.project.id);
+		dataEach.push(userProject.project.name);
+		dataEach.push(userProject.project.description);
+		dataEach.push(userProject.project.createDateTime);
+		dataSet.push(dataEach);
+	});
+
+	if ($.fn.DataTable.isDataTable("#dataTable")) {
+		  $('#dataTable').DataTable().clear().destroy();
+		}
+       
+	$('#dataTable').DataTable( {
+		data: dataSet,
+		columns: [
+            { title: "Project Id" },
+            { title: "Project Name	" },
+            { title: "Project Description" },
+            { title: "Created TimeStamp" },
+        ],
+        responsive: true,
+        scrollY:        450,
+        deferRender:    true,
+        scroller:       true,
+         responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal( {
+                    header: function ( row ) {
+                        var data = row.data();
+                        return 'Details for '+data[0]+' '+data[1];
+                    }
+                } ),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                    tableClass: 'table'
+                } )
+            }
+        }, 
+        "pagingType" : "full_numbers",
+	    select	   : true,
+	    rowReorder: true,
+	    colReorder: true,
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            }]
+    });
+}
+
+$('#loadTasksForUser').click(function(e) {
+    
+    $.ajax({
+       type:'GET',
+       async: false,
+       url : 'userTask/load/tasks?tenantId='+tenantId,
+       contentType: 'application/json',
+       dataType : 'json',
+       beforeSend: function(xhr) {
+           xhr.setRequestHeader(header, token);
+       },
+       success : function(userTasks) {
+       
+    	   alert(userTasks)
+    	   fillAssignedTasksInDataTable(userTasks);
+       }
+ });
+}); 
+
+function fillAssignedTasksInDataTable(userTasks){
+	var dataSet=[];
+	userTasks.forEach(function(userTask){
+		var dataEach = [];
+		dataEach.push(userTask.task.id);
+		dataEach.push(userTask.project.name);
+		dataEach.push(userTask.task.name);
+		dataEach.push(userTask.task.description);
+		dataEach.push(userTask.task.taskStatus.status);
+		dataEach.push(userTask.task.taskStatus.statusColour);
+		dataEach.push(userTask.task.createDateTime);
+		dataSet.push(dataEach);
+	});
+
+	if ($.fn.DataTable.isDataTable("#dataTable")) {
+		  $('#dataTable').DataTable().clear().destroy();
+		}
+       
+	$('#dataTable').DataTable( {
+		data: dataSet,
+		columns: [
+            { title: "Task Id" },
+            { title: "Project Name" },
+            { title: "Task Name	" },
+            { title: "Task Description" },
+            { title: "Task Status" },
+            { title: "Task Status Flag" },
+            { title: "Created TimeStamp" },
+        ],
+        responsive: true,
+        scrollY:        450,
+        deferRender:    true,
+        scroller:       true,
+         responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal( {
+                    header: function ( row ) {
+                        var data = row.data();
+                        return 'Details for '+data[0]+' '+data[1];
+                    }
+                } ),
+                renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                    tableClass: 'table'
+                } )
+            }
+        }, 
+        "pagingType" : "full_numbers",
+	    select	   : true,
+	    rowReorder: true,
+	    colReorder: true,
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            }]
+    });
+}
 
 
 $('#manageUsers').click(function(e) {

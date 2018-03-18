@@ -9,5 +9,6 @@ public interface UserProjectService {
 	UserProjectDTO addUserProject(UserProjectDTO userProjectDTO);
 	List<UserProjectDTO> getAllUserProject();
 	void deleteUserProject(Integer userProjectId);
+	List<UserProjectDTO> getAllUserProjectBySsoId();
 
 }

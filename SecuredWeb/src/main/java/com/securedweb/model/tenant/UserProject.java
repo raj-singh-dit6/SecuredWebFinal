@@ -3,7 +3,6 @@ package com.securedweb.model.tenant;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,8 +15,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name="USER_PROJECT")
 public class UserProject implements Serializable {
@@ -26,11 +23,11 @@ public class UserProject implements Serializable {
     @Column(name = "USER_PROJECT_ID")
 	private Integer id;
 	
-	 @ManyToOne(cascade = CascadeType.ALL)
+	 @ManyToOne
 	    @JoinColumn(name = "USER_ID") 
 	 private User user;
 
-	 @ManyToOne(cascade = CascadeType.ALL)
+	 @ManyToOne
 	    @JoinColumn(name = "PROJECT_ID")
     private Project project;
 	
