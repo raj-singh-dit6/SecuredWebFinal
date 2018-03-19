@@ -1,5 +1,3 @@
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>    
-      
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title" id="AssignProjectModalHeading"></h4>

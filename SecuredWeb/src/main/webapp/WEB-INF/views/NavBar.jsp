@@ -13,7 +13,7 @@
 	  <a class="navbar-brand" href="home">${tenantName}</a>
 	</div>
 	  <!-- Links -->
-	<div class="collapse navbar-collapse" id="myNavbar">  
+	<div class="collapse navbar-collapse" id="myNavbar" style="padding-left:600;">  
 	  <ul class="nav navbar-nav">
 	    <li class="nav-item">
 	      <a class="nav-link" href="home">Home</a>

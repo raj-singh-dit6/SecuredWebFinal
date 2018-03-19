@@ -1,9 +1,11 @@
 package com.securedweb.repository.tenant;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.repository.CrudRepository;
 
+import com.securedweb.model.tenant.User;
 import com.securedweb.model.tenant.UserTask;
 
 public interface UserTaskRepository extends CrudRepository<UserTask, Integer> {
@@ -15,5 +17,8 @@ public interface UserTaskRepository extends CrudRepository<UserTask, Integer> {
 
 
 	void deleteByIdAndTenantId(Integer userTaskId, String tenantId);
+
+
+	Set<UserTask> findByUserAndTenantId(User user, String tenantId);
 
 }

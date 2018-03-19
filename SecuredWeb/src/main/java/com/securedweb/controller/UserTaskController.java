@@ -26,6 +26,12 @@ public class UserTaskController {
 	 @Autowired()
 	 private UserTaskService userTaskService;
 	 
+	
+	 @GetMapping(value="/{userTaskId}",produces={MediaType.APPLICATION_JSON_VALUE})
+	 public UserTaskDTO getAllUserTask(@PathVariable("userTaskId")Integer userTaskId){
+		 return userTaskService.getUserTask(userTaskId);
+	 }
+	 
 	 @GetMapping(value="/all",produces={MediaType.APPLICATION_JSON_VALUE})
 	 public List<UserTaskDTO> getAllUserTask(){
 		 return userTaskService.getAllUserTask();

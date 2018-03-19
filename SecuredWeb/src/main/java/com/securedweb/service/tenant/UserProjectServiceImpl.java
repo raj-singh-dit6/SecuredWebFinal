@@ -101,8 +101,7 @@ public class UserProjectServiceImpl implements UserProjectService {
 			 String  ssoId = ((UserDetails)principal).getUsername();
 			 System.err.println("User ssoId :"+ssoId);
 			 User user = userRepository.findBySsoIdAndTenantId(ssoId, TenantHolder.getTenantId());
-			 Set<UserProject> userProjectSet =user.getUserProjects() ;
-			 System.err.println(userProjectSet);
+			 Set<UserProject> userProjectSet=userProjectRepository.findByUserAndTenantId(user,TenantHolder.getTenantId());
 			for(UserProject userProject:userProjectSet)
 			{
 				if(userProject!=null)

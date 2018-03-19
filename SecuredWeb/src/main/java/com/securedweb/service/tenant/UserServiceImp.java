@@ -120,4 +120,15 @@ public class UserServiceImp implements UserService{
 		return user;
 	}
 
+	@Override
+	public User findUserByEmail(String userEmail) {
+		
+		return userRepository.findByEmail(userEmail);
+	}
+
+	@Override
+	public void updatePassword(String updatedPassword, Integer id) {
+		userRepository.updatePassword(updatedPassword,id);
+		
+	}
 }

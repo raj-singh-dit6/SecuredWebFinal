@@ -1,7 +1,6 @@
 package com.securedweb.service.tenant;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,12 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.securedweb.dto.tenant.UserProjectDTO;
 import com.securedweb.dto.tenant.UserTaskDTO;
 import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Task;
 import com.securedweb.model.tenant.User;
-import com.securedweb.model.tenant.UserProject;
 import com.securedweb.model.tenant.UserTask;
 import com.securedweb.repository.tenant.TaskRepository;
 import com.securedweb.repository.tenant.UserRepository;
@@ -84,26 +81,22 @@ public class UserTaskServiceImpl implements UserTaskService {
 				 	
 				
 			User user = userRepository.findBySsoIdAndTenantId(ssoId, TenantHolder.getTenantId());
+			Set<UserTask> userTaskSet = userTaskRepository.findByUserAndTenantId(user,TenantHolder.getTenantId());
+			for(UserTask userTask: userTaskSet)
 			{
-				Hibernate.initialize(user.getUserTasks());
-				
-				Set<UserTask> userTaskSet = new HashSet<UserTask>();
-				userTaskSet=user.getUserTasks();
-				for(UserTask userTask: userTaskSet)
-				{
-						Hibernate.initialize(userTask.getTask());
-						Task task =  userTask.getTask();
-						Project project = task.getProject();
+					Hibernate.initialize(userTask.getTask());
+					
+					Task task =  userTask.getTask();
+					Project project = task.getProject();
 
-						UserTaskDTO userTaskDTO = new UserTaskDTO();
-						userTaskDTO.setId(userTask.getId());
-						userTaskDTO.setUser(user);
-						userTaskDTO.setProject(project);
-						userTaskDTO.setTask(task);
-						userTaskDTOList.add(userTaskDTO);
-				}
+					UserTaskDTO userTaskDTO = new UserTaskDTO();
+					userTaskDTO.setId(userTask.getId());
+					userTaskDTO.setUser(user);
+					userTaskDTO.setProject(project);
+					userTaskDTO.setTask(task);
+					userTaskDTOList.add(userTaskDTO);
 			}
-		 }	
+		}
 		return userTaskDTOList;
 	}
 
@@ -121,9 +114,7 @@ public class UserTaskServiceImpl implements UserTaskService {
 		newUserTask.setTask(task);
 		newUserTask.setTenantId(TenantHolder.getTenantId());
 		user.getUserTasks().add(newUserTask);
-		
 		System.err.println(user.getFirstName() + " : TOTAL TASKS : "+ user.getUserTasks().size());
-		
 		return userTask;
 	}
 
@@ -136,6 +127,20 @@ public class UserTaskServiceImpl implements UserTaskService {
 		user.getUserTasks().remove(userTask);
 		
 		System.err.println(user.getFirstName() + " : TOTAL TASKS : "+ user.getUserTasks().size());
+	}
+
+	@Override
+	public UserTaskDTO getUserTask(Integer userTaskId) {
+		
+		UserTask userTask = userTaskRepository.findByIdAndTenantId(userTaskId, TenantHolder.getTenantId());
+		UserTaskDTO userTaskDTO = new UserTaskDTO();
+		if(userTask!=null)
+		{
+			userTaskDTO.setId(userTask.getId());
+			userTaskDTO.setTask(userTask.getTask());
+			userTaskDTO.setProject(userTask.getTask().getProject());
+		}
+		return userTaskDTO;
 	}
 
 	

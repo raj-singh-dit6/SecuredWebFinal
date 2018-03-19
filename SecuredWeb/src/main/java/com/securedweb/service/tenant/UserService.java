@@ -21,4 +21,9 @@ public interface UserService {
 	boolean isUserSSOUnique(String ssoId);
 
 	User getUser(Integer id);
+
+	User findUserByEmail(String userEmail);
+
+	void updatePassword(String updatedPassword, Integer id);
+
 }

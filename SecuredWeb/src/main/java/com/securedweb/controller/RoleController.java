@@ -24,6 +24,11 @@ public class RoleController {
  @Autowired()
  private RoleService roleService;
  
+ /**
+  * Adds a new role record.  
+  * @param role
+  * @return
+  */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/add",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO addRole(@RequestBody RoleDTO role){
@@ -31,6 +36,11 @@ public class RoleController {
 	 return null;
  }
  
+ /**
+  * Updates a particular role record for a given role id inside role dto.
+  * @param role
+  * @return
+  */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO updateRole(@RequestBody RoleDTO role){
@@ -40,12 +50,21 @@ public class RoleController {
      return status;
  }
 
+ /**
+  * Returns a list of roles
+  * @return
+  */
  @GetMapping(value="/all",produces={MediaType.APPLICATION_JSON_VALUE})
  public List<RoleDTO> getAllRoles(){
  return roleService.getAllRoles();
  
  }
  
+ /**
+  * Deletes a particular role record for a given role id.
+  * @param roleId
+  * @return
+  */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @DeleteMapping(value="/delete/{roleId}",produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO deleteRole(@PathVariable("roleId") String roleId){

@@ -82,6 +82,9 @@ public class AppController {
         }
     }
     
+    /*
+     * This method get redirected request and returns view "views/Dashboard.jsp"
+     */
     @GetMapping(value = "/Dashboard")
     public String getDashboard (Model model,HttpServletRequest req) {
     	String tenantId=req.getParameter("tenantId");
@@ -110,13 +113,21 @@ public class AppController {
         }
         return "redirect:/login?logout";
     }
-
+    
+    /**
+     * If spring security filters any unauthenticated or unauthorized request then redirects user to "accessDenied.jsp "
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/Access_Denied")
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loggedinuser", getPrincipal());
         return "accessDenied";
     }
 
+    /**
+     * This method initializes user roles and adds to the model as an attribute.
+     */
     @ModelAttribute("roles")
     public List<RoleDTO> initializeRoles() {
         return roleService.getAllRoles();
@@ -145,7 +156,5 @@ public class AppController {
         System.out.println(authentication.getPrincipal());
         return authenticationTrustResolver.isAnonymous(authentication);
     }
-    
- 
  
 }

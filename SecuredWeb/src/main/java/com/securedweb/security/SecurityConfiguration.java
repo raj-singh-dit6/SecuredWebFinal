@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .access("hasRole('ADMIN') or hasRole('DBA')").and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
-                .tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
+                .tokenValiditySeconds(31536000).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
     }
 	
 	/*To return PasswordEncoder P = BCryptPasswordEncoder*/

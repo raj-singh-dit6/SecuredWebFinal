@@ -15,4 +15,6 @@ public interface UserTaskService {
 
 	List<UserTaskDTO> getAllUserTaskBySsoId();
 
+	UserTaskDTO getUserTask(Integer userTaskId);
+
 }

@@ -1,4 +1,3 @@
-
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title" id="TaskStatusModalHeading">Add New Task Status</h4>

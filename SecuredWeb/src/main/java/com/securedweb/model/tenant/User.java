@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,7 +26,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="USER")
+@Table(name="USER",uniqueConstraints = @UniqueConstraint(columnNames = "EMAIL"))
 public class User implements Serializable{
 	
 	@Id 
@@ -49,7 +50,7 @@ public class User implements Serializable{
     private String lastName;
  
 	@NotEmpty
-    @Column(name="EMAIL", nullable=false)
+	@Column(name="EMAIL", nullable=false)
     private String email;
 	
 	@NotEmpty

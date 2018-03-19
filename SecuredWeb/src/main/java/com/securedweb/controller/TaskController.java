@@ -23,13 +23,21 @@ public class TaskController {
 
 	@Autowired
 	TaskService taskService;
-	
+	/**
+	 * Returns a list of task records.
+	 * @return
+	 */
 	@GetMapping(value="/all",produces= { MediaType.APPLICATION_JSON_VALUE })
 	public List<TaskDTO> getAllTasks()
 	{ 	
 		return taskService.getAllTasks();
 	}
 	
+	/**
+	 * Adds a new task record.
+	 * @param task
+	 * @return
+	 */
 	@PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
 	@PostMapping(value="/add",consumes= { MediaType.APPLICATION_JSON_VALUE },produces= { MediaType.APPLICATION_JSON_VALUE })
 	public StatusDTO addtask(@RequestBody TaskDTO task)
@@ -42,12 +50,22 @@ public class TaskController {
 		
 	}
 	
+	/**
+	 * Returns a particular task record  for a given task id.
+	 * @param taskId
+	 * @return
+	 */
 	@GetMapping(value="/{taskId}",produces= { MediaType.APPLICATION_JSON_VALUE })
 	public TaskDTO getTask(@PathVariable("taskId") Integer taskId)
 	{
 		return taskService.getTaskDTO(taskId);
 	}
 	
+	/**
+	 * Deletes a particular task record for a given task id.
+	 * @param taskId
+	 * @return
+	 */
 	@PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
 	@DeleteMapping(value="/delete/{taskId}",produces= { MediaType.APPLICATION_JSON_VALUE })
 	public StatusDTO deleteTask(@PathVariable("taskId") Integer taskId)
@@ -58,7 +76,11 @@ public class TaskController {
 		status.setStatus(200);
 		return status;
 	}
-	
+	/**
+	 * Updates a particular task record for a given task id inside task dto.
+	 * @param task
+	 * @return
+	 */
 	 @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
 	 public StatusDTO updateTask(@RequestBody TaskDTO task){
 		 taskService.updateTask(task);

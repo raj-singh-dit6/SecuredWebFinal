@@ -28,11 +28,21 @@ public class ProjectController {
  @Autowired()
  private ProjectService projectService;
  
+ /**
+  * This method returns a particular project dto for a given project id.
+  * @param projectId
+  * @return
+  */
  @GetMapping(value="/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
  public ProjectDTO getUser(@PathVariable("projectId") Integer projectId){
 	 return projectService.getProjectDTO(projectId);
  }
  
+ /**
+  * Adds new project record.
+  * @param project
+  * @return
+  */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/add",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO addProject(@RequestBody ProjectDTO project){
@@ -49,6 +59,11 @@ public class ProjectController {
 	}		 
  }
  
+ /**
+  * Updates  a particular project record for a given project id inside project dto.
+  * @param project
+  * @return
+  */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO updateUser(@RequestBody ProjectDTO project){
@@ -59,11 +74,20 @@ public class ProjectController {
      return status;
  }
 
+ /**
+  * Returns a list of project.
+  * @return
+  */
  @GetMapping(value="/all",produces={MediaType.APPLICATION_JSON_VALUE})
  public List<ProjectDTO> getAllProjects(){
  return projectService.getAllProjects();
  }
  
+ /**
+  * Deletes a particular project record for a given project id.
+  * @param projectId
+  * @return
+  */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @DeleteMapping(value="/delete/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO deleteUser(@PathVariable("projectId") Integer projectId){
@@ -73,12 +97,20 @@ public class ProjectController {
      status.setStatus(200);
      return status;
  }
- 
+ /**
+  * Returns a set of task records as task dto for a given project id.
+  * @param projectId
+  * @return
+  */
  @GetMapping(value="/load/task/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
  public Set<TaskDTO> loadAllTasksByProjectID(@PathVariable("projectId") Integer projectId){
  return projectService.loadAllTasksByProjectID(projectId);
  }
- 
+ /**
+  *  Returns a set of user records as user dto for a given project id.
+  * @param projectId
+  * @return
+  */
  @GetMapping(value="/load/user/{projectId}",produces={MediaType.APPLICATION_JSON_VALUE})
  public Set<UserDTO> loadAllUsersByProjectID(@PathVariable("projectId") Integer projectId){
  return projectService.loadAllUsersByProjectID(projectId);

@@ -1,5 +1,3 @@
-
-	      
 	        <!-- Modal Header -->
 	        <div class="modal-header">
 	          <h4 class="modal-title">Register New User</h4>
