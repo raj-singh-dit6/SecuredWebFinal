@@ -19,6 +19,9 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -31,6 +34,7 @@ import com.securedweb.util.MultiTenancyInterceptor;
 
 @Configuration
 @EnableWebMvc
+@EnableAsync
 @ComponentScan(basePackages = "com.securedweb")
 @PropertySource("classpath:application.properties")
 public class AppConfig implements WebMvcConfigurer{
@@ -115,8 +119,8 @@ public class AppConfig implements WebMvcConfigurer{
          
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("raj.singh.dit6@gmail.com");
-        mailSender.setPassword("the_futbol_9");
+        mailSender.setUsername("raj.singh.dit8@gmail.com");
+        mailSender.setPassword("ajax@200");
         
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
@@ -128,4 +132,12 @@ public class AppConfig implements WebMvcConfigurer{
         return mailSender;
     }
     
+    @Bean
+    public MultipartResolver multipartResolver() {
+       CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+       multipartResolver.setMaxUploadSize(1048576000 ); // 10MB
+       multipartResolver.setMaxUploadSizePerFile(1048576000 ); // 1MB
+       return multipartResolver;
+    }
+
 }

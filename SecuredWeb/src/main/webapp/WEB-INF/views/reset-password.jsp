@@ -4,9 +4,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <meta name="_csrf" content="${csrf_token}"/>
+        <meta name="_csrf" content="${_csrf.token}"/>
 		<meta name="_csrf_header" content="${_csrf.headerName}"/>
-        <title>Login page</title>
+        <title>Reset Password</title>
     	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 	    <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
 	    <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
@@ -29,17 +29,21 @@
 		                        <h3><i class="glyphicon glyphicon-lock" style="font-size:2em;"></i></h3>
 		                        <h2 class="text-center">Reset password</h2>
 		                        <div class="panel-body">
-									<c:if test="${param.error != null}">
+									<c:choose>
+									 <c:when test = "${error!=null}">
 		                            <div>
 		                                <div class="alert alert-danger">
-		                                    <span id="errorMessage">{error}</span>
+		                                    <span id="errorMessage">${error}</span>
 		                                </div>
+		                                <!-- <div class="alert alert-success">
+		                                	<button type="button" data-toggle="modal" data-target="#ForgotPasswordModalAjax" class="btn" onClick="loadAjaxPage('forgotPassword')">Forgot Password?</button>
+		                                </div> -->
 		                            </div>
-		                            </c:if>
+		                            </c:when>
+		                            <c:otherwise>
 		
 		                            <form  action="#" method="POST">
 		                                <input type="hidden" id="hiddenToken" name="token" value="${token}"/>
-		
 		                                <div class="form-group">
 		                                    <div class="input-group">
 		                                        <span class="input-group-addon">
@@ -57,10 +61,11 @@
 		                                    </div>
 		                                </div>
 		                                <div class="form-group">
-		                                    <button type="submit" class="btn btn-block btn-success" onClick="resetPass()" >Reset password</button>
+		                                    <button type="button"  class="btn btn-block btn-success" onClick="resetPasswordSubmit()" >Reset password</button>
 		                                </div>
 		                            </form>
-		
+		                            </c:otherwise>
+								</c:choose>	
 		                        </div>
 		                    </div>
 		                </div>
@@ -68,55 +73,61 @@
 		        </div>
     		  </div>
         	</div>
-        </div>	
+        </div>
+        
+        
+        <!-- Forgot Password Modal -->
+		 <div class="modal fade" id="ForgotPasswordModalAjax">
+		    <div class="modal-dialog modal-dialog-centered">
+		      <div class="modal-content" id="ForgotPasswordModalBody">
+		      
+		      </div>
+		   </div>
+		 </div>
+		  <!-- ---------------------Modal ends here----------------------- -->
+	    
+	    	
 	</body>
 </html>
 <script>
+function resetPasswordSubmit(){
 
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
-
-function resetPass(){
-	
-	alert(token);
-	alert(header);
-	
     var password = $("#password").val();
     var confirmPassword = $("#confirmPassword").val();
     var token = $("#hiddenToken").val();
-    var passwordForgotDTO ={};
-    
+   
+    var passwordResetDTO ={};
     passwordResetDTO.password=password;
-    passwordResetDTO.password=confirmPassword;
-    passwordResetDTO.password=token;
-    
-    alert(JSON.stringify(passwordResetDTO));
-    
-    if((password == "" || confirmPassword!="") && password!=confirmPassword)
+    passwordResetDTO.confirmPassword=confirmPassword;
+    passwordResetDTO.token=token;
+   
+    if(password == "" || confirmPassword=="")
+    {
+    	bootbox.alert("Please enter both passwords.");
+		return false;
+    }
+    else if(password!=confirmPassword)
 	{
 		bootbox.alert("Password did not match, please type correct password");
 		return false;
-	}else{
-    
-	    $.ajax({
+	}else{ 
+		
+		$.ajax({
 	    	async: false,
 	    	type: "POST",
-	        url: "service/resetPassword",
+	        url: "resetPassword",
 	        contentType: 'application/json',
 	        data : JSON.stringify(passwordResetDTO),
 	        dataType : 'json',
-	        beforeSend: function(xhr) {
-		           xhr.setRequestHeader(header, token);
-		       },
 	        success: function(status) {
 	        	if(status.status==200)
 	        	{
 	        		bootbox.alert(status.message, function(){ 
-	        			$('ForgotPasswordModalAjax').modal('hide'); 
-	        		});
-	        	}else
-	        	{
-	        		bootbox.alert(status.message, function(){ 
+	        		    });
+	        			
+	        	}else{
+	        		
+					bootbox.alert(status.message, function(){ 
 	        		});
 	        		
 	        	}	

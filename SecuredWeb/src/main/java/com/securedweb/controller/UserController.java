@@ -94,9 +94,6 @@ public class UserController {
  @PostMapping(value="/resetPassword",produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO sendResetPasswordMail(HttpServletRequest request, @RequestParam("email") String userEmail){
 	 
-	 CsrfToken csrfToken = new HttpSessionCsrfTokenRepository().loadToken(request);
-	 String srfTokenString= csrfToken.getToken();
-	 System.err.println(srfTokenString);
 	 
 	 StatusDTO status = new StatusDTO();
 	
@@ -104,7 +101,7 @@ public class UserController {
 	    if (user == null) {
 	    	status.setMessage("Email ID does not exist in out database, please enter correct email id.");
 	    }else
-	    {
+	    {		
 	    	 	PasswordResetToken token = new PasswordResetToken();
 	            token.setToken(UUID.randomUUID().toString());
 	            token.setUser(user);
@@ -112,11 +109,11 @@ public class UserController {
 	            tokenRepository.save(token);
 	            
 	            Mail mail = new Mail();
-	            mail.setFrom("raj.singh.dit6@gmail.com");
+	            mail.setFrom("raj.singh.dit8@gmail.com");
 	            mail.setTo(user.getEmail());
 	            mail.setSubject("Password reset request");
 
-	            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+"/SecuredWeb/view/reset-password?token=" + token.getToken()+"&csrf="+srfTokenString;
+	            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+"/SecuredWeb/service/reset-password?token=" + token.getToken();
 	            System.err.println(url);
 	            mail.setBody(url);
 	            

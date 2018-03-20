@@ -5,15 +5,15 @@
   <!-- Brand -->
   <div class="container-fluid">
 	<div class="navbar-header">
-	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
+	  <%-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar">${tenantName}</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
-      </button>
-	  <a class="navbar-brand" href="home">${tenantName}</a>
+      </button> --%>
+	 <a class="navbar-brand" href="home">${tenantName}</a> 
 	</div>
 	  <!-- Links -->
-	<div class="collapse navbar-collapse" id="myNavbar" style="padding-left:600;">  
+	<div class="collapse navbar-collapse" id="myNavbar">  
 	  <ul class="nav navbar-nav">
 	    <li class="nav-item">
 	      <a class="nav-link" href="home">Home</a>

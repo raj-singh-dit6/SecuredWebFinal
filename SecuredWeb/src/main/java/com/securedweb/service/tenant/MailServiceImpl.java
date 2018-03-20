@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.securedweb.model.tenant.Mail;
@@ -20,6 +21,7 @@ public class MailServiceImpl implements MailService {
     JavaMailSender mailSender;
  
     @Override
+    @Async
     public void sendEmail(Object object) {
  
         Mail mail = (Mail) object;
@@ -44,7 +46,7 @@ public class MailServiceImpl implements MailService {
                      new InternetAddress(mail.getTo()));
             	mimeMessage.setText("Please click on the link " + mail.getBody()
                      + ", to reset password.");
-            	mimeMessage.setSubject("Your order on Demoapp");
+            	mimeMessage.setSubject("Password Reset Request");
             }
         };
         return preparator;

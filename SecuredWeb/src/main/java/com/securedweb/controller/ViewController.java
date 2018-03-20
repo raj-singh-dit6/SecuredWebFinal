@@ -54,21 +54,5 @@ public class ViewController {
 			view ="ajax/forgotPasswordModalAjax";
 		return view;
 	}
-	
-	
-	@GetMapping(value="/reset-password")
-	public String displayResetPasswordPage(@RequestParam("token") String token,@RequestParam("csrf")String csrf ,Model model,HttpServletRequest request, HttpSession session) {
-		PasswordResetToken resetToken = tokenRepository.findByToken(token);
-		model.addAttribute("csrf_token", csrf);
-		if (resetToken == null){
-	        model.addAttribute("error", "Could not find password reset token.");
-	    } else if (resetToken.isExpired()){
-	        model.addAttribute("error", "Token has expired, please request a new password reset.");
-	    } else {
-	        model.addAttribute("token", resetToken.getToken());
-	    }
 
-    return "reset-password";
-
-    }
 }

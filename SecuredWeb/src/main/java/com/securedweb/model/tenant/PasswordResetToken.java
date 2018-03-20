@@ -1,6 +1,8 @@
 package com.securedweb.model.tenant;
 
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name="PASSWORD_RESET_TOKEN")
@@ -31,6 +36,14 @@ public class PasswordResetToken {
 
     @Column(name="EXPIRY_DATE",nullable = false)
     private Date expiryDate;
+    
+    @Column(name="CREATED_ON")
+	@CreationTimestamp
+	private LocalDateTime createDateTime;
+
+	@Column(name="UPDATED_ON")
+	@UpdateTimestamp
+	private LocalDateTime updateDateTime;
 
     public Integer getId() {
         return id;
@@ -68,9 +81,42 @@ public class PasswordResetToken {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, minutes);
         this.expiryDate =  now.getTime();
+        System.err.println(now.getTime());
+        System.err.println(expiryDate);
     }
 
     public boolean isExpired() {
-        return new Date().after(this.expiryDate);
+    	SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    	Date d1 = null;
+		Date d2 = null;
+		long diffMinutes=0;
+		String currentTime =  formatter.format(new Date());
+		String expiryTime =  formatter.format(this.getExpiryDate());		
+    	try {
+			d1 = formatter.parse(currentTime);
+			d2 = formatter.parse(expiryTime);
+			long diff = d2.getTime() - d1.getTime();
+			diffMinutes = diff / (60 * 1000) % 60;
+			System.err.print(diffMinutes + " minutes, ");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return diffMinutes>30;
     }
+
+	public LocalDateTime getCreateDateTime() {
+		return createDateTime;
+	}
+
+	public void setCreateDateTime(LocalDateTime createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+
+	public LocalDateTime getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(LocalDateTime updateDateTime) {
+		this.updateDateTime = updateDateTime;
+	}
 }
