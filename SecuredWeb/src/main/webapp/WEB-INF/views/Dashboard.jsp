@@ -829,45 +829,71 @@ function deleteById(pageType,id)
 	}	
 }
 
-function addProject() {
-	var parentProject = {};
-	$('select#projParent option').each(function() {
-		if (this.selected && $(this).val()!="" )
-		{	
-		    	parentProject.id=$(this).val();
-		    	parentProject.name=$(this).text();
-		}
-	});
-    
-	var project = {};
-    project.name 	= $('#projName').val();
-    project.description 	= $('#projDesc').val();
-    project.parentProject	= parentProject;
-    $.ajax({
-       type:'POST',
-       async: false,
-       url : 'project/add?tenantId='+tenantId,
-       contentType: 'application/json',
-       data : JSON.stringify(project),
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(status) {
-    	   
-    	   if(status.status==200){
-	        	$('#successMessage').html(status.message);
-	        	$('#ProjectModalAjax').modal('hide');
-	            $('#successAlert').show();
-	            $('#manageProjects').click();
-	          }else{
-	        	$('#warningMessage').html(status.message);
-	        	$('#ProjectModalAjax').modal('hide');  
-	            $('#warningAlert').show();
-	          }
-       }
- });
-}
+function addProject(){
+
+	    $("#AddProjectSubmit").prop('disabled',true);
+	    var parentProject = {};
+		$('select#projParent option').each(function() {
+			if (this.selected && $(this).val()!="" )
+			{	
+			    	parentProject.id=$(this).val();
+			    	parentProject.name=$(this).text();
+			}
+		});
+		var project = {};
+	    project.name 	= $('#projName').val();
+	    project.description 	= $('#projDesc').val();
+	    project.parentProject	= parentProject;
+	    
+	    var formData = new FormData();
+	    var files = $("#projFile").get(0).files;    
+	    
+	    formData.append("file", files[0]);
+	    formData.append("project", JSON.stringify(project));
+	    alert(JSON.stringify(project));
+	    
+	    
+	    // Ajax call for file uploaling
+	$.ajax({
+	      type : 'POST',
+	      enctype: 'multipart/form-data',
+	      url : 'project/add?tenantId='+tenantId,
+	      data: formData,
+	      contentType: false, // Not to set any content header  
+          processData: false, //
+	      xhr: function(){
+	        //Get XmlHttpRequest object
+	         var xhr = $.ajaxSettings.xhr() ;
+	        
+	        //Set onprogress event handler 
+	         xhr.upload.onprogress = function(event){
+	          	var perc = Math.round((event.loaded / event.total) * 100);
+	          	$('#progressBar').text(perc + '%');
+	          	$('#progressBar').css('width',perc + '%');
+	         };
+	         return xhr ;
+	    	},
+	    	beforeSend: function( xhr ) {
+	    		 xhr.setRequestHeader(header, token);
+	    		//Reset alert message and progress bar
+	    		$('#alertMsg').text('');
+	    		$('#progressBar').text('');
+	    		$('#progressBar').css('width','0%');
+	    	},	
+	    	success : function(status){
+	    		if(status.status==200){
+	    			$('#ProjectModalAjax').click();
+	    			$('#successMessage').html(status.message);
+		            $('#successAlert').show();
+		            $('#manageProjects').click();
+	        	}else{
+	        		$('#warningMessage').html(status.message);
+	        		$('#warningAlert').show();
+	        	}	
+	    		
+	    	}	
+	    });
+	}
 
 
 function updateTask()

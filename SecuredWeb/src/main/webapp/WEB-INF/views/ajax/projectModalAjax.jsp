@@ -6,7 +6,7 @@
         
         <!-- Modal body -->
         <div class="modal-body">
-        	<form action="#" method="POST" name="ProjectForm">
+        	<form action="#" method="POST" name="ProjectForm" enctype="multipart/form-data">
             <div class="row">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="projName">Project Name</label>
@@ -33,10 +33,29 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-lable" for="projFile">Select File</label>
+                    <div class="col-md-8">
+						<input class="form-control" type="file" name="file" id="projFile">
+                    </div>
+                </div>
+            </div>
             <input type="hidden" id="projId"/>
             </form>
-        </div>
-        <!-- Modal footer -->
+            
+            <br/>
+            
+            <div class="progress">
+		      <div id="progressBar" class="progress-bar progress-bar-success" role="progressbar"
+		        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+		    </div>
+
+		    <!-- Alert -->
+		    <div id="alertMsg" style="color: red;font-size: 18px;"></div>
+		    </div>
+		
+		 <!-- Modal footer -->
         <div class="modal-footer">
                 <button id="AddProjectSubmit" type="button" class="btn btn-primary" onCLick="addProject()">Add</button>  
                 <button id="UpdateProjectSubmit" type="button" class="btn btn-primary" onCLick="updateProject()">Update</button>  

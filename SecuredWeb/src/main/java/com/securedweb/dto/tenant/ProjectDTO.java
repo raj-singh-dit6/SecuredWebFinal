@@ -20,13 +20,14 @@ public class ProjectDTO {
 	private String name;
 	private String description;
 	private Project parentProject;
+	private byte[] projectFile;
+	
 	private Set<Project> childProjects = new HashSet<Project>(); 
     private Set<Task> tasks;
 	private String tenantId;
 	private Set<UserProject> userProjects = new HashSet<UserProject>();
 	private LocalDateTime createDateTime;
 	private LocalDateTime updateDateTime;
-	
 	public Integer getId() {
 		return id;
 	}
@@ -44,6 +45,12 @@ public class ProjectDTO {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public byte[] getProjectFile() {
+		return projectFile;
+	}
+	public void setProjectFile(byte[] projectFile) {
+		this.projectFile = projectFile;
 	}
 	public Project getParentProject() {
 		return parentProject;

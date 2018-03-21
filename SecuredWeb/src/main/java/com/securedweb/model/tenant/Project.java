@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -51,7 +53,10 @@ public class Project implements Serializable{
 	/*@JsonIgnore*/
 	private Set<Project> childProjects = new HashSet<Project>(); 
 	
-	
+	 @Lob @Basic(fetch = FetchType.LAZY)
+	@Column(name = "PROJECT_FILE")
+	private byte[] projectFile;
+	 
 	@Column(name="CREATED_ON")
 	@CreationTimestamp
 	private LocalDateTime createDateTime;
@@ -153,6 +158,16 @@ public class Project implements Serializable{
 
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+
+	public byte[] getProjectFile() {
+		return projectFile;
+	}
+
+
+	public void setProjectFile(byte[] projectFile) {
+		this.projectFile = projectFile;
 	}
 	
 }

@@ -46,7 +46,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	public ProjectDTO addProject(ProjectDTO project) {
-		System.out.print(project.getParentProject());
 		if(project.getParentProject().getName()==null)
 		 {	 
 			project.setParentProject(null);
@@ -61,6 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
 		newProject.setDescription(project.getDescription());
 		newProject.setParentProject(project.getParentProject());
 		newProject.setTenantId(TenantHolder.getTenantId());
+		newProject.setProjectFile(project.getProjectFile());
 		projectRepository.save(newProject);
 		return project;
 	}
@@ -68,7 +68,6 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectDTO updateProject(ProjectDTO project) {
 		Project updateProject = projectRepository.findByIdAndTenantId(project.getId(), TenantHolder.getTenantId());
-		System.out.print(project.getParentProject());
 		if(project.getParentProject().getName()==null)
 		 {	 
 			project.setParentProject(null);
@@ -105,6 +104,7 @@ public class ProjectServiceImpl implements ProjectService {
 						projectDTO.setChildProjects(project.getChildProjects());
 						projectDTO.setDescription(project.getDescription());
 						projectDTOList.add(projectDTO);
+						
 			}	
 		}
 		return projectDTOList;
