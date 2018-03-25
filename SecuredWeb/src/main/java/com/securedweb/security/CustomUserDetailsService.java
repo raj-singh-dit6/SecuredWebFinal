@@ -22,7 +22,7 @@ import com.securedweb.repository.tenant.UserRepository;
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService{
 	
-	static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CustomUserDetailsService.class);
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -31,9 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String ssoId)
 	{
 		User user = userRepository.findBySsoId(ssoId);
-		logger.info("User { } ",user);
+		LOG.info("User { } ",user);
 		if(user==null) {
-			logger.info("user not found");
+			LOG.info("user not found");
 			throw new UsernameNotFoundException("Username not found");
 		}
 		
@@ -44,10 +44,10 @@ public class CustomUserDetailsService implements UserDetailsService{
 	private List<GrantedAuthority> getGrantedAuthorities(User user){
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for(Role role : user.getUserRoles()){
-            logger.info("Role : {}", role);
+        	LOG.info("Role : {}", role);
             authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getType()));
         }
-        logger.info("authorities : {}", authorities);
+        LOG.info("authorities : {}", authorities);
         return authorities;
     }
 }

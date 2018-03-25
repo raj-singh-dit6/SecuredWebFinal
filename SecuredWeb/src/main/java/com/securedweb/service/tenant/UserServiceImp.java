@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import com.securedweb.util.TenantHolder;
 @Service("userService")
 @Transactional("tenantTransactionManager")
 public class UserServiceImp implements UserService{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(UserServiceImp.class);
 
 	
 	@Autowired

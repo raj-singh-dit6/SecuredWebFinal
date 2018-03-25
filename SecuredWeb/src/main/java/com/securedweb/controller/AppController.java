@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.securedweb.configuration.TenantConfig;
 import com.securedweb.dto.tenant.ProjectDTO;
 import com.securedweb.dto.tenant.RoleDTO;
 import com.securedweb.dto.tenant.TaskStatusDTO;
@@ -37,6 +40,8 @@ import com.securedweb.service.tenant.UserService;
 @SessionAttributes("roles")
 public class AppController {
 
+	private static final Logger LOG = LoggerFactory.getLogger(AppController.class);
+	
 	@Autowired
     UserService userService;
     

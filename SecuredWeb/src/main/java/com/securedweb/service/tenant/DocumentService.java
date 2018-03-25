@@ -13,7 +13,6 @@ public interface DocumentService {
 	
 	void deleteDocumentById(Integer documentId);
 
-
 	List<DocumentDTO> getAllDocuments(String type, Integer id);
 
 	void uploadDocument(String type, Integer id, String description, MultipartFile[] files) throws IOException;

@@ -3,6 +3,8 @@ package com.securedweb.service.tenant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import com.securedweb.repository.tenant.RoleRepository;
 @Service("roleService")
 @Transactional("tenantTransactionManager")
 public class RoleServiceImp implements RoleService{
+	
+	private static final Logger LOG = LoggerFactory.getLogger(RoleServiceImp.class);
 
 	@Autowired
 	RoleRepository roleRepository;

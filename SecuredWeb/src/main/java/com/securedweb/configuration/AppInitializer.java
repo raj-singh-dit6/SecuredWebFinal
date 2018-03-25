@@ -10,7 +10,17 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
  
 	private static final Logger LOG = LoggerFactory.getLogger(AppInitializer.class);
-	
+
+	/*Set these variables for your project needs*/
+    
+    private static final String LOCATION = "/home/rajendra/Downloads/temp";
+ 
+    private static final long MAX_FILE_SIZE = 1024 * 1024 * 20; //20MB
+     
+    private static final long MAX_REQUEST_SIZE = 1024 * 1024 * 30;//30MB
+ 
+    private static final int FILE_SIZE_THRESHOLD = 0;
+    
 	@Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class[] { AppConfig.class };
@@ -36,13 +46,4 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return multipartConfigElement;
     }
      
-    /*Set these variables for your project needs*/
-     
-    private static final String LOCATION = "/home/rajendra/Downloads/temp";
- 
-    private static final long MAX_FILE_SIZE = 1024 * 1024 * 20; //20MB
-     
-    private static final long MAX_REQUEST_SIZE = 1024 * 1024 * 30;//30MB
- 
-    private static final int FILE_SIZE_THRESHOLD = 0;
 }

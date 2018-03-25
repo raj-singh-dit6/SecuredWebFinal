@@ -2,6 +2,8 @@ package com.securedweb.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,8 +23,10 @@ import com.securedweb.service.tenant.RoleService;
 @RequestMapping("/role")
 public class RoleController {
  
- @Autowired()
+ @Autowired
  private RoleService roleService;
+ 
+ private static final Logger LOG = LoggerFactory.getLogger(RoleController.class);
  
  /**
   * Adds a new role record.  

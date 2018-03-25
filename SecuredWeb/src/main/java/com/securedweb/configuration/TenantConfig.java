@@ -39,6 +39,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:application.properties")
 public class TenantConfig {
 
+	private static final Logger LOG = LoggerFactory.getLogger(TenantConfig.class);
+	
    @Autowired
    private Environment springEnvironment;
 

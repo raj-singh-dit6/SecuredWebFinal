@@ -12,9 +12,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @Component("multiTenancyInterceptor")
 public class MultiTenancyInterceptor extends HandlerInterceptorAdapter {
  
- /*@Autowired
- TenantRepository tenantRepository;*/
- 
  private static final Logger LOG = LoggerFactory.getLogger(MultiTenancyInterceptor.class);
 	
  @Override

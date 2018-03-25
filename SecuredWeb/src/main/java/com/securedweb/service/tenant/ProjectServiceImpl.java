@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +30,8 @@ import com.securedweb.util.TenantHolder;
 @Service("projectService")
 @Transactional("tenantTransactionManager")
 public class ProjectServiceImpl implements ProjectService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ProjectServiceImpl.class);
 
 	@Autowired
 	ProjectRepository projectRepository;

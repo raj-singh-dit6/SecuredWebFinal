@@ -12,6 +12,8 @@ import org.hibernate.engine.jdbc.connections.spi.AbstractDataSourceBasedMultiTen
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.hibernate.service.spi.ServiceRegistryAwareService;
 import org.hibernate.service.spi.ServiceRegistryImplementor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
@@ -24,6 +26,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
 
+import com.securedweb.controller.ViewController;
 import com.securedweb.dto.master.TenantDTO;
 import com.securedweb.model.master.Tenant;
 import com.securedweb.model.master.TenantDBDataSource;
@@ -34,6 +37,9 @@ import com.securedweb.service.master.TenantService;
 @SuppressWarnings("serial")
 @PropertySource("classpath:application.properties")
 public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMultiTenantConnectionProviderImpl implements ApplicationListener<ContextRefreshedEvent>,ServiceRegistryAwareService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(MultiTenantConnectionProviderImpl.class);
+	
 	@Autowired
 	private Environment springEnvironment;
 

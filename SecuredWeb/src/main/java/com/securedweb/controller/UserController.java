@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,8 @@ import com.securedweb.service.tenant.UserService;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+	
+ private static final Logger LOG = LoggerFactory.getLogger(UserController.class);	
  
  @Autowired
  private UserService userService;

@@ -17,15 +17,14 @@ import com.securedweb.repository.tenant.PersistentLoginRespository;
 @Transactional("tenantTransactionManager")
 public class HibernateTokenRepositoryImpl implements PersistentTokenRepository{
 
+	private static final Logger LOG = LoggerFactory.getLogger(HibernateTokenRepositoryImpl.class);
 
-    static final Logger logger = LoggerFactory.getLogger(HibernateTokenRepositoryImpl.class);
- 
     @Autowired
     PersistentLoginRespository persistentLoginRepository;
     
     @Override
     public void createNewToken(PersistentRememberMeToken token) {
-        logger.info("Creating Token for user : {}", token.getUsername());
+    	LOG.info("Creating Token for user : {}", token.getUsername());
         PersistentLogin persistentLogin = new PersistentLogin();
         persistentLogin.setUsername(token.getUsername());
         persistentLogin.setSeries(token.getSeries());
@@ -37,22 +36,22 @@ public class HibernateTokenRepositoryImpl implements PersistentTokenRepository{
     @Override
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
      try {
-    	logger.info("Fetch Token if any for seriesId : {}", seriesId);
+    	 LOG.info("Fetch Token if any for seriesId : {}", seriesId);
         PersistentLogin persistentLogin = persistentLoginRepository.findById(seriesId).get();
         return new PersistentRememberMeToken(persistentLogin.getUsername(), persistentLogin.getSeries(),
         										persistentLogin.getToken(), persistentLogin.getLast_used());
 	    } catch (Exception e) {
-	        logger.info("Token not found...");
+	    	LOG.info("Token not found...");
 	        return null;
 	    }
     }
  
     @Override
     public void removeUserTokens(String username) {
-        logger.info("Removing Token if any for user : {}", username);
+    	LOG.info("Removing Token if any for user : {}", username);
         PersistentLogin persistentLogin = persistentLoginRepository.findByUsername(username);
         if (persistentLogin != null) {
-            logger.info("rememberMe was selected");
+        	LOG.info("rememberMe was selected");
             persistentLoginRepository.delete(persistentLogin);
         }
  
@@ -60,7 +59,7 @@ public class HibernateTokenRepositoryImpl implements PersistentTokenRepository{
  
     @Override
     public void updateToken(String seriesId, String tokenValue, Date lastUsed) {
-        logger.info("Updating Token for seriesId : {}", seriesId);
+    	LOG.info("Updating Token for seriesId : {}", seriesId);
         PersistentLogin persistentLogin = persistentLoginRepository.findById(seriesId).get();
         persistentLogin.setToken(tokenValue);
         persistentLogin.setLast_used(lastUsed);
