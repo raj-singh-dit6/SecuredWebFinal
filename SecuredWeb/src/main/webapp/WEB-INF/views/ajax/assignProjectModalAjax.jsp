@@ -11,7 +11,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="assignProject">Projects</label>
                     <div class="col-md-7">
-						<select class="form-control" id="assignProject">
+						<select class="form-control" id="assignProject" autofocus>
 						<option></option>
 					    </select>
                     </div>
@@ -32,7 +32,7 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer">
-                <button id="AddUserProjectSubmit" type="button" class="btn btn-primary" onCLick="addUserProject()">Add</button>  
+                <button id="AddUserProjectSubmit" type="button" class="btn btn-primary" onCLick="addUserProject()">Assign</button>  
                 <button id="UpdateUserProjectSubmit" type="button" class="btn btn-primary" onCLick="updateUserProject()">Update</button>  
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>	

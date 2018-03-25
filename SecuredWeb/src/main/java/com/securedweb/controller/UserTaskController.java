@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.securedweb.dto.tenant.StatusDTO;
-import com.securedweb.dto.tenant.UserProjectDTO;
 import com.securedweb.dto.tenant.UserTaskDTO;
 import com.securedweb.service.tenant.UserTaskService;
 
@@ -61,5 +60,15 @@ public class UserTaskController {
 	 @GetMapping(value="/load/tasks",produces={MediaType.APPLICATION_JSON_VALUE})
 	 public List<UserTaskDTO> loadUserTasks(){
 		 return userTaskService.getAllUserTaskBySsoId();
+	 }
+	 
+	 @PreAuthorize("hasRole('USER')")
+	 @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
+	 public StatusDTO updateUserTask(@RequestBody UserTaskDTO userTask){
+		 StatusDTO status = new StatusDTO();
+		 userTaskService.updateUserTask(userTask);
+		 status.setMessage("User task update successfully");
+	     status.setStatus(200);
+	     return status;
 	 }
 }

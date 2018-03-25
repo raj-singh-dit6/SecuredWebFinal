@@ -14,14 +14,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -132,12 +132,11 @@ public class AppConfig implements WebMvcConfigurer{
         return mailSender;
     }
     
-    @Bean
-    public MultipartResolver multipartResolver() {
-       CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-       multipartResolver.setMaxUploadSize(1048576000 ); // 10MB
-       multipartResolver.setMaxUploadSizePerFile(1048576000 ); // 1MB
-       return multipartResolver;
+    
+    @Bean(name="multipartResolver")
+    public StandardServletMultipartResolver resolver(){
+        return new StandardServletMultipartResolver();
     }
+    
 
 }

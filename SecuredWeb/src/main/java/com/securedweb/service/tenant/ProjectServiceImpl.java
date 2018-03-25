@@ -129,6 +129,7 @@ public class ProjectServiceImpl implements ProjectService {
 				projectDTO.setName(project.getName());
 				projectDTO.setId(project.getId());
 				projectDTO.setDescription(project.getDescription());
+				projectDTO.setParentProject(project.getParentProject());
 		}
 		return projectDTO;
 	}
@@ -152,8 +153,8 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
 		if(project!=null)
 		{
-			Hibernate.initialize(project.getChildProjects());
-			Hibernate.initialize(project.getParentProject());
+			//Hibernate.initialize(project.getChildProjects());
+			//Hibernate.initialize(project.getParentProject());
 			//Hibernate.initialize(project.getTasks());
 			//Hibernate.initialize(project.getUserProjects());
 		}

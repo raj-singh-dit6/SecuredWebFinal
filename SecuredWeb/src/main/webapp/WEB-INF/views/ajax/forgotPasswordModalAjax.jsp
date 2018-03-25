@@ -9,9 +9,9 @@
         	<form action="#" method="POST" name="ForgotPasswordForm">
             <div class="row">
                 <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="Email">Email</label>
+                    <label class="col-md-3 control-lable" for="Email"  >Email</label>
                     <div class="col-md-7">
-						<input class="form-control" id="Email"/>
+						<input class="form-control" id="Email" autofocus/>
                     </div>
                 </div>
             </div>

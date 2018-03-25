@@ -24,7 +24,7 @@
 	        Admin
 	      </a>
 	      <div class="dropdown-menu">
-	        <a id="manageUsers" class="dropdown-item" href="#" >Manage Users</a>
+	        <a id="manageUsers" class="dropdown-item" href="#" onClick="manageUsers()" >Manage Users</a>
 	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('user','add')" data-target="#UserModalAjax">Add User</a>
 	      </div>
 	    </li>
@@ -35,10 +35,10 @@
 	        Projects
 	      </a>
 	      <div class="dropdown-menu">
-	        <a id="manageProjects" class="dropdown-item" href="#" >Manage Projects</a>
+	        <a id="manageProjects" class="dropdown-item" href="#" onClick="manageProjects()">Manage Projects</a>
 	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('project','add')" data-target="#ProjectModalAjax">Add Project</a>
 	      	<a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('userProject','add')"  data-target="#AssignProjectModalAjax">Assign Project</a>
-	      	<a id="manageUserProjects" class="dropdown-item" href="#" >Manage Assigned Projects</a>
+	      	<a id="manageUserProjects" class="dropdown-item" href="#" onClick="manageUserProjects()">Manage Assigned Projects</a>
 	      </div>
 	    </li>
 	    <li class="nav-item dropdown">
@@ -46,10 +46,10 @@
 	        Tasks
 	      </a>
 	      <div class="dropdown-menu">
-	        <a id="manageTasks" class="dropdown-item" href="#" >Manage Tasks</a>
+	        <a id="manageTasks" class="dropdown-item" href="#" onClick="manageTasks()">Manage Tasks</a>
 	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('task','add')" data-target="#TaskModalAjax">Add Task</a>
 			<a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('userTask','add')"  data-target="#AssignTaskModalAjax">Assign Task</a>
-	      	<a id="manageUserTasks" class="dropdown-item" href="#" >Manage Assigned Tasks</a>
+	      	<a id="manageUserTasks" class="dropdown-item" href="#" onClick="manageUserTasks()">Manage Assigned Tasks</a>
 	      </div>
 	    </li>
 	    <li class="nav-item dropdown">
@@ -57,7 +57,7 @@
 	        Task Status
 	      </a>
 	      <div class="dropdown-menu">
-	        <a id="manageTaskStatus" class="dropdown-item" href="#" >Manage Task Status</a>
+	        <a id="manageTaskStatus" class="dropdown-item" href="#" onClick="manageTaskStatus()">Manage Task Status</a>
 	        <a class="dropdown-item" href="#" data-toggle="modal" onClick="loadAjaxPage('taskStatus','add')" data-target="#TaskStatusModalAjax">Add Task Status</a>
 	      </div>
 	    </li>
@@ -71,7 +71,7 @@
 	        Projects
 	      </a>
 	      <div class="dropdown-menu">
-	      	<a id="loadProjectsForUser" class="dropdown-item" href="#" >Assigned Projects</a>
+	      	<a id="loadProjectsForUser" class="dropdown-item" href="#" onClick="loadProjectsForUser()">Assigned Projects</a>
 	      </div>
 	    </li>
 	    <li class="nav-item dropdown">
@@ -80,7 +80,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	      	<a id="self-assign" class="dropdown-item" onClick="loadAjaxPage('userTaskByUser','add')" href="#" >Self-Assign</a>
-	      	<a id="loadTasksForUser" class="dropdown-item" href="#" >Assigned Tasks</a>
+	      	<a id="loadTasksForUser" class="dropdown-item" href="#" onClick="loadTasksForUser()">Assigned Tasks</a>
 	      </div>
 	    </li>
 	    </sec:authorize>

@@ -74,6 +74,10 @@ public class Project implements Serializable{
 	private String tenantId;
 	
 	@JsonIgnore
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private Set<Document> projectDocuments = new HashSet<Document>();
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "project")
 	private Set<UserProject> userProjects = new HashSet<UserProject>();
 	

@@ -11,7 +11,7 @@
 	                <div class="form-group col-md-12">
 	                    <label class="col-md-3 control-lable" for="newFirstName">First Name</label>
 	                    <div class="col-md-7">
-	                        <input type="text" name="newFirstName" id="newFirstName" class="form-control input-sm"/>
+	                        <input type="text" name="newFirstName" id="newFirstName" class="form-control input-sm" autofocus/>
 	                    </div>
 	                </div>
 	            </div>
@@ -25,7 +25,7 @@
 	            </div>
 	            <div class="row">
 	                <div class="form-group col-md-12">
-	                    <label class="col-md-3 control-lable" for="newSsoId">SSO ID</label>
+	                    <label class="col-md-3 control-lable" for="newSsoId">User ID</label>
 	                    <div class="col-md-7">
 							<input type="text" name="newSsoId" id="newSsoId" class="form-control input-sm" />
 	                    </div>
@@ -43,7 +43,7 @@
 	                <div class="form-group col-md-12">
 	                    <label class="col-md-3 control-lable" for="confirmPassword">Confirm Password</label>
 	                    <div class="col-md-7">
-	                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control input-sm" />
+	                        <input type="password" name="newConfirmPassword" id="newConfirmPassword" class="form-control input-sm" />
 	                    </div>
 	                </div>
 	            </div>

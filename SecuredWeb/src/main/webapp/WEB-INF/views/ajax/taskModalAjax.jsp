@@ -11,7 +11,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="taskProject">Project</label>
                     <div class="col-md-7">
-                        <select  class="form-control" id="taskProject">
+                        <select  class="form-control" id="taskProject" autofocus>
 					    <option></option>
 					    </select>
                     </div>

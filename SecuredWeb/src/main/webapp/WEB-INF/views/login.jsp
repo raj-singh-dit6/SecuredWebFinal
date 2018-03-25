@@ -14,9 +14,7 @@
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
-		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
     </head>
     <body>
         <div id="mainWrapper">
@@ -92,6 +90,8 @@
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
+
+
 function loadAjaxPage(pageType){	
 	var reqURL= "view/ajaxPage/"+pageType;
 	
@@ -141,19 +141,68 @@ function loadAjaxPage(pageType){
 function registerUserSubmit()
 {
 	
-	var firstName 	=$('#newFirstName').val();
-	var lastName  	=$('#newLastName').val();
-	var ssoId	 	=$('#newSsoId').val();
-	var password	=$('#newPassword').val();
-	var confirmPassword=$('#confirmPassword').val();
-	var email		=$('#newEmail').val();
-	var tenantId 	=$('select#tenants option:selected').val();
+    var firstName 		= $('#newFirstName').val();
+    var lastName 		= $('#newLastName').val();
+    var ssoId 			= $('#newSsoId').val();
+    var password 		= $('#newPassword').val();
+    var confirmPassword = $('#newConfirmPassword').val();
+    var email 			= $('#newEmail').val();	
+    var tenantId 		= $('select#tenants option:selected').val();
+    var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 	
-	if(password!=confirmPassword)
+    
+    if(firstName=="")
+	{
+		bootbox.alert("Please enter first name.");
+		$('#newFirstName').focus();
+		return false;
+	}else if(lastName==""){
+		bootbox.alert("Please enter last name.");
+		$('#newLastName').focus();
+		return false;
+			
+	}else if(ssoId==""){
+		bootbox.alert("Please enter user id.");
+		$('#newSsoId').focus();
+		return false;
+		
+	}else if(password==""){
+		bootbox.alert("Please enter password.");
+		$('#newPassword').focus();
+		return false;
+		
+	}else if(confirmPassword==""){
+		bootbox.alert("Please enter confirm password.");
+		$('#newConfirmPassword').focus();
+		return false;
+		
+	}else if(email==""){
+		bootbox.alert("Please enter email id.");
+		$('#newEmail').focus();
+		return false;
+		
+	}else if(tenantId==""){
+		bootbox.alert("Please select atleast one tenant");
+		$('#newEmail').focus();
+		return false;
+		
+	}else if(password!=confirmPassword){
+		bootbox.alert("Passwords did not match, please enter correct passwords.");
+		$('#newPassword').focus();
+		$('#newConfirmPassword').focus();
+		return false;
+		
+	}else if(!emailRegex.test(email)){
+		bootbox.alert("Please enter a valid email address.");
+		$('#newEmail').focus();
+		return false;
+	}
+	else if(password!=confirmPassword)
 	{
 		bootbox.alert("Password did not match, please type correct password");
 		return false;
-	}else{
+	}
+    
 	
 		var user={};
 		user.firstName=firstName;
@@ -195,7 +244,6 @@ function registerUserSubmit()
 	        	 
 	        }
 	    });
-	}
 }
 
 function resetPass(){
@@ -223,5 +271,4 @@ function resetPass(){
         }
     });
 }
-
 </script>

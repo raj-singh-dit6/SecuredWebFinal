@@ -11,7 +11,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="taskStatus">Status</label>
                     <div class="col-md-7">
-                        <input type="text" name="taskStatusName" id="taskStatusName" class="form-control input-sm"/>
+                        <input type="text" name="taskStatusName" id="taskStatusName" class="form-control input-sm" autofocus/>
                     </div>
                 </div>
             </div>

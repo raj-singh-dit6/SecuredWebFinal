@@ -52,6 +52,10 @@ public class ViewController {
 			view ="ajax/newUserModalAjax";
 		else if(pagetype.equals("forgotPassword"))
 			view ="ajax/forgotPasswordModalAjax";
+		else if(pagetype.equals("projectDocuments"))
+			view ="ajax/documentsModalAjax";
+		else if(pagetype.equals("uploadDocuments"))
+			view ="ajax/uploadDocumentsModalAjax";
 		return view;
 	}
 

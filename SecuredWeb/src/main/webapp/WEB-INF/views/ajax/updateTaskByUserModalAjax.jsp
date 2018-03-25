@@ -11,7 +11,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="userProjectName">Project</label>
                     <div class="col-md-7">
-                    	<input class="form-control" id="userProjectName" value="" disabled/>
+                    	<input class="form-control" id="userProjectName" value="" disabled />
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 <div class="form-group col-md-12" >
                     <label class="col-md-3 control-lable" for="userTaskDesc">Task Description</label>
                     <div class="col-md-7">
-						<input  class="form-control" id="userTaskDesc" value=""/>
+						<input  class="form-control" id="userTaskDesc" value="" autofocus/>
 					</div>
                 </div>
             </div>

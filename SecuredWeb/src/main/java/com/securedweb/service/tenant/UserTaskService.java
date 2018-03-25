@@ -17,4 +17,6 @@ public interface UserTaskService {
 
 	UserTaskDTO getUserTask(Integer userTaskId);
 
+	UserTaskDTO updateUserTask(UserTaskDTO userTask);
+
 }

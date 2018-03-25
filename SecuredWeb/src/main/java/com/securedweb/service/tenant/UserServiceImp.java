@@ -32,13 +32,14 @@ public class UserServiceImp implements UserService{
 		
 		if(user!=null){
 			Hibernate.initialize(user.getUserRoles());
-            Hibernate.initialize(user.getUserProjects());
-            Hibernate.initialize(user.getUserTasks());
+            //Hibernate.initialize(user.getUserProjects());
+            //Hibernate.initialize(user.getUserTasks());
             
             userDTO.setFirstName(user.getFirstName());
 			userDTO.setLastName(user.getLastName());
 			userDTO.setEmail(user.getEmail());
 			userDTO.setSsoId(user.getSsoId());
+			userDTO.setUserRoles(user.getUserRoles());
 			userDTO.setTenantId(user.getTenantId());
         }
 		return userDTO;

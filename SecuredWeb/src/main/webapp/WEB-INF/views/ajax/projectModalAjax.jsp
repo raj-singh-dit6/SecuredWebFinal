@@ -11,7 +11,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable" for="projName">Project Name</label>
                     <div class="col-md-7">
-                        <input type="text" name="projName" id="projName" class="form-control input-sm"/>
+                        <input type="text" name="projName" id="projName" class="form-control input-sm" autofocus/>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
 
 		    <!-- Alert -->
 		    <div id="alertMsg" style="color: red;font-size: 18px;"></div>
-		    </div>
+	   </div>
 		
 		 <!-- Modal footer -->
         <div class="modal-footer">

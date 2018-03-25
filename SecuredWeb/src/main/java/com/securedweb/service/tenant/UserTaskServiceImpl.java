@@ -14,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.securedweb.dto.tenant.UserTaskDTO;
 import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Task;
+import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.model.tenant.User;
 import com.securedweb.model.tenant.UserTask;
 import com.securedweb.repository.tenant.TaskRepository;
+import com.securedweb.repository.tenant.TaskStatusRepository;
 import com.securedweb.repository.tenant.UserRepository;
 import com.securedweb.repository.tenant.UserTaskRepository;
 import com.securedweb.util.TenantHolder;
@@ -42,6 +44,9 @@ public class UserTaskServiceImpl implements UserTaskService {
 
 	@Autowired
 	TaskRepository taskRepository;
+	
+	@Autowired
+	TaskStatusService taskStatusService;
 	
 	@Override
 	public List<UserTaskDTO> getAllUserTask() {
@@ -106,9 +111,6 @@ public class UserTaskServiceImpl implements UserTaskService {
 		User user = userService.getUser(userTask.getUser().getId());
 		Task task = taskService.getTask(userTask.getTask().getId());
 		
-		System.err.println(user);
-		System.err.println(task);
-		
 		UserTask newUserTask = new UserTask();
 		newUserTask.setUser(user);
 		newUserTask.setTask(task);
@@ -141,6 +143,20 @@ public class UserTaskServiceImpl implements UserTaskService {
 			userTaskDTO.setProject(userTask.getTask().getProject());
 		}
 		return userTaskDTO;
+	}
+
+	@Override
+	public UserTaskDTO updateUserTask(UserTaskDTO userTask) {
+		UserTask updateUserTask = userTaskRepository.findByIdAndTenantId(userTask.getId(), TenantHolder.getTenantId());
+		Task task = taskService.getTask(updateUserTask.getTask().getId());
+		TaskStatus taskStatus = taskStatusService.getTaskStatus(userTask.getTask().getTaskStatus().getId());
+				
+		task.setDescription(userTask.getTask().getDescription());
+		task.setTaskStatus(taskStatus);
+		updateUserTask.setTask(task);
+
+		return userTask;
+		
 	}
 
 	
