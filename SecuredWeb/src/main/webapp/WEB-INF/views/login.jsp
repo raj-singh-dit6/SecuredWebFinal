@@ -7,14 +7,12 @@
         <meta name="_csrf" content="${_csrf.token}"/>
 		<meta name="_csrf_header" content="${_csrf.headerName}"/>
         <title>Login page</title>
-    	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-	    <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
 	    <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
 	   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
+	   	<link href="/SecuredWeb/static/css/securedWeb.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+		
     </head>
     <body>
         <div id="mainWrapper">
@@ -86,6 +84,16 @@
 		  <!-- ---------------------Modal ends here----------------------- -->
 	    </body>
 </html>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+ -->
+ 
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script src="/SecuredWeb/static/js/bootbox.min.js"></script>
 <script>
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
@@ -159,7 +167,6 @@ function registerUserSubmit()
             $("#newFirstName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter first name..</div>");
         }
 		$('#newFirstName').focus();
-		//bootbox.alert("Please enter first name.");
 		return false;
 	}else{
 		$("#newFirstName").parent().next(".validation").remove(); // remove it
@@ -167,7 +174,6 @@ function registerUserSubmit()
     
     
     if(lastName==""){
-		//bootbox.alert("Please enter last name.");
 		if ($("#newLastName").parent().next(".validation").length == 0) // only add if not added
         {
             $("#newLastName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter last name.</div>");
@@ -180,7 +186,6 @@ function registerUserSubmit()
     
     
     if(ssoId==""){
-		//bootbox.alert("Please enter user id.");
 		if ($("#newSsoId").parent().next(".validation").length == 0) // only add if not added
         {
             $("#newSsoId").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter user id for your account.</div>");
@@ -193,7 +198,6 @@ function registerUserSubmit()
 	}
     
     if(password==""){
-		//bootbox.alert("Please enter password.");
 		if ($("#newPassword").parent().next(".validation").length == 0) // only add if not added
         {
             $("#newPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password.</div>");
@@ -206,7 +210,6 @@ function registerUserSubmit()
 	}
     
     if(confirmPassword==""){
-		//bootbox.alert("Please enter confirm password.");
 		if ($("#newConfirmPassword").parent().next(".validation").length == 0) // only add if not added
         {
             $("#newConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password to confirm.</div>");
@@ -223,7 +226,6 @@ function registerUserSubmit()
         {
             $("#newEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter email.</div>");
         }
-		//bootbox.alert("Please enter email id.");
 		$('#newEmail').focus();
 		return false;
 		
@@ -232,20 +234,18 @@ function registerUserSubmit()
 	}
 
     if(tenantId==""){
-		//bootbox.alert("Please select atleast one tenant");
-		if ($("#select#tenants").parent().next(".validation").length == 0) // only add if not added
+		if ($("select#tenants").parent().next(".validation").length == 0) // only add if not added
         {
-            $("#select#tenants").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select atleast one tenant.</div>");
+            $("select#tenants").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select atleast one tenant.</div>");
         }
-		$('#select#tenants').focus();
+		$('select#tenants').focus();
 		return false;
 		
 	}else{
-		$("#select#tenants").parent().next(".validation").remove(); // remove it
+		$("select#tenants").parent().next(".validation").remove(); // remove it
 	}
 
     if(password!=confirmPassword){
-		//bootbox.alert("Passwords did not match, please enter correct passwords.");
 		if ($("#newConfirmPassword").parent().next(".validation").length == 0) // only add if not added
         {
             $("#newConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Passwords did not match, please enter correct passwords.</div>");
@@ -259,7 +259,6 @@ function registerUserSubmit()
 	}
 
     if(!emailRegex.test(email)){
-		//bootbox.alert("Please enter a valid email address.");
 		if ($("#newEmail").parent().next(".validation").length == 0) // only add if not added
         {
             $("#newEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a valid email address.</div>");
