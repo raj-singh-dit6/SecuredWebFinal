@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,6 +75,23 @@ public class UserController {
      status.setMessage("User details updated successfully");
      status.setStatus(200);
      return status;
+ }
+ 
+ @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
+ @PostMapping(value="/changePassword",produces={MediaType.APPLICATION_JSON_VALUE},consumes={MediaType.APPLICATION_JSON_VALUE})
+ public StatusDTO changePassowrd(@RequestBody UserDTO user){
+	 StatusDTO status = new StatusDTO();
+	 boolean result=userService.changePassword(user);
+	 if(result)
+	 {
+	     status.setMessage("Password changed successfully.");
+	     status.setStatus(200);
+	     return status;
+	 }else
+	 {
+		 status.setMessage("Current passoword entered was not correct.");
+	     return status;
+	 }
  }
 
  @GetMapping(value="/all",produces={MediaType.APPLICATION_JSON_VALUE})

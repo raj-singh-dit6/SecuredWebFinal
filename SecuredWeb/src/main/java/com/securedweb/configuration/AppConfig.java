@@ -68,9 +68,9 @@ public class AppConfig implements WebMvcConfigurer{
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+        registry.addResourceHandler("/files/**").addResourceLocations("file:///home/rajendra/SecuredWeb/Uploads/");
     }
      
- 
     /**
      * Configure MessageSource to lookup any validation/error message in internationalized property files
      */

@@ -53,8 +53,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 	@Column(name="EMAIL", nullable=false)
     private String email;
 	
-	@NotEmpty
-    @Column(name="TENANT_ID")
+    @Column(name="TENANT_ID", nullable=false)
     private String tenantId;
 	
     @Column(name="FORGOT_TOKEN",nullable=false)

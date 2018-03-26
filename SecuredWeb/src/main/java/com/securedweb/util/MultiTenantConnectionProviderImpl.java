@@ -126,7 +126,6 @@ public class MultiTenantConnectionProviderImpl extends AbstractDataSourceBasedMu
 	@Override
 	protected DataSource selectAnyDataSource() {
 		System.out.println("MultiTenantConnectionProvider : DEFAULT");
-		/*return map.get("1")==null?dataSource:map.get("1");*/
 		return dataSource;
 	}
 

@@ -55,6 +55,9 @@ public class ViewController {
 			view ="ajax/documentsModalAjax";
 		else if(pagetype.equals("uploadDocuments"))
 			view ="ajax/uploadDocumentsModalAjax";
+		else if(pagetype.equals("changePassword"))
+			view ="ajax/changePasswordModalAjax";
+		
 		return view;
 	}
 

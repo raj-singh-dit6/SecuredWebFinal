@@ -53,9 +53,6 @@ public class Project implements Serializable{
 	/*@JsonIgnore*/
 	private Set<Project> childProjects = new HashSet<Project>(); 
 	
-	 @Lob @Basic(fetch = FetchType.LAZY)
-	@Column(name = "PROJECT_FILE")
-	private byte[] projectFile;
 	 
 	@Column(name="CREATED_ON")
 	@CreationTimestamp
@@ -69,7 +66,6 @@ public class Project implements Serializable{
 	@OneToMany(mappedBy="project",fetch=FetchType.LAZY)
     private Set<Task> tasks;
 	
-	@NotEmpty
 	@Column(name="TENANT_ID", nullable=false)
 	private String tenantId;
 	
@@ -164,14 +160,4 @@ public class Project implements Serializable{
 		this.tasks = tasks;
 	}
 
-
-	public byte[] getProjectFile() {
-		return projectFile;
-	}
-
-
-	public void setProjectFile(byte[] projectFile) {
-		this.projectFile = projectFile;
-	}
-	
 }

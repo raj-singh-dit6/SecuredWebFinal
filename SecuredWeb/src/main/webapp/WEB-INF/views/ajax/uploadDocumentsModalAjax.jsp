@@ -7,14 +7,15 @@
         <!-- Modal body -->
         <div class="modal-body">
         	<form action="#" method="POST" name="UserForm" id="UploadDocumentForm" enctype="multipart/form-data">
-                <div class="document0 form-group col-md-12">
-                    <div class="input-group col-md-12">
+                <div class="document0 form-group col-lg-12">
+                    <div class="input-group col-lg-12">
                         <input id="multipleFiles" type="file" multiple name="files" class="form-control input-sm" accept="application/pdf,image/*"/>
                     </div>
-                    <!-- <div class="input-group col-md-3">
+                    <!-- <div class="input-group col-lg-3">
                         <input type="text" name="description" class="description form-control input-sm" placeholder="description"/>
                     </div> -->
-                    <div class="input-group col-md-12">
+                    <div class="input-group col-lg-12">
+                    	<label class="col-lg-5 control-lable" for="description">Description<span style="color:red;">*</span></label>
                         <textarea id="description" name="description" rows="4" cols="45"></textarea>
                     </div>
                     

@@ -45,17 +45,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .tokenValiditySeconds(31536000).and().csrf().ignoringAntMatchers("/service/resetPassword").and().exceptionHandling().accessDeniedPage("/Access_Denied");
     }
 	
-	/*To return PasswordEncoder P = BCryptPasswordEncoder*/
+	/*To return PasswordEncoder P = CustomPasswordEncoder*/
 	@Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new CustomPasswordEncoder();
     }
  
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setPasswordEncoder(new CustomPasswordEncoder());
         return authenticationProvider;
     }
  

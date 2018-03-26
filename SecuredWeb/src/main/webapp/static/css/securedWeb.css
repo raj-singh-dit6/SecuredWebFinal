@@ -40,6 +40,12 @@ div.dataTables_length>label{
 	float : left;
 }
 
+.validation
+    {
+      color: red;
+      margin-bottom: 20px;
+    }
+
 
 
 

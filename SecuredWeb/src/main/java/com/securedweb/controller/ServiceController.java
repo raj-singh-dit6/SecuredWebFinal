@@ -1,5 +1,8 @@
 package com.securedweb.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -7,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +36,6 @@ public class ServiceController {
 	 private PasswordResetTokenRepository tokenRepository;
 	 
 	 @Autowired
-	private PasswordEncoder passwordEncoder;
-	 
-	 @Autowired
 	 UserService userService;
 	 
 	 @PostMapping(value="/resetPassword",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
@@ -47,7 +46,12 @@ public class ServiceController {
 		PasswordResetToken token = tokenRepository.findByToken(passwordResetDTO.getToken());
         if(token!=null) {
 			User user = token.getUser();
-	        String updatedPassword = passwordEncoder.encode(passwordResetDTO.getPassword());
+			String updatedPassword = "";
+			try {
+				updatedPassword = Base64.getEncoder().encodeToString(passwordResetDTO.getPassword().getBytes("utf-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 	        userService.updatePassword(updatedPassword, user.getId());
 	        tokenRepository.delete(token);
 	        status.setMessage("Password updated, please login to visit your account.");

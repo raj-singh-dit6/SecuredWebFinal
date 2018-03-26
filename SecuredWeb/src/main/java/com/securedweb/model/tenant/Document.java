@@ -33,9 +33,8 @@ public class Document {
     @Column(name="TYPE", length=100, nullable=false)
     private String type;
      
-    @Lob @Basic(fetch = FetchType.LAZY)
-    @Column(name="CONTENT", nullable=false)
-    private byte[] content;
+    @Column(name="LOCATION", length=255, nullable=false)
+    private String location;
  
     @ManyToOne(optional = false)
     @JoinColumn(name = "USER_ID")
@@ -85,15 +84,16 @@ public class Document {
         this.type = type;
     }
  
-    public byte[] getContent() {
-        return content;
-    }
  
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
- 
-    public User getUser() {
+    public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public User getUser() {
         return user;
     }
  

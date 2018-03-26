@@ -27,7 +27,6 @@ public class MultiTenancyInterceptor extends HandlerInterceptorAdapter {
 	  {
 		  TenantHolder.setTenantId("1");
 	  }
-	  
 	  return true;
  }
 }

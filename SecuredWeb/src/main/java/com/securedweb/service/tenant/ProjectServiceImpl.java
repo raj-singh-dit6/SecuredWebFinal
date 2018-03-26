@@ -64,7 +64,6 @@ public class ProjectServiceImpl implements ProjectService {
 		newProject.setDescription(project.getDescription());
 		newProject.setParentProject(project.getParentProject());
 		newProject.setTenantId(TenantHolder.getTenantId());
-		newProject.setProjectFile(project.getProjectFile());
 		projectRepository.save(newProject);
 		return project;
 	}

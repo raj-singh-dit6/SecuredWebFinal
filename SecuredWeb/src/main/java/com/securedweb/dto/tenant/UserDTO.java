@@ -19,6 +19,7 @@ public class UserDTO implements Serializable{
 	 private String forgotToken;
 	 private String ssoId;
 	 private String password;
+	 private String newPassword;
 	 private Set<UserProject> userProjects;
 	 private Set<UserTask> userTasks;
 	 private Set<Role> userRoles;
@@ -88,5 +89,11 @@ public class UserDTO implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getNewPassword() {
+		return newPassword;
+	}
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 }

@@ -10,7 +10,9 @@ public class DocumentDTO {
 	    private String name;
 	     
 	    private String description;
-	     
+	    
+	    private String location;
+	    
 	    private User user;
 	    
 	    private Project  project;
@@ -54,7 +56,14 @@ public class DocumentDTO {
 		public void setProject(Project project) {
 			this.project = project;
 		}
-	    
-	    
+
+		public String getLocation() {
+			return location;
+		}
+
+		public void setLocation(String location) {
+			this.location = location;
+		}
+
 	     
 }

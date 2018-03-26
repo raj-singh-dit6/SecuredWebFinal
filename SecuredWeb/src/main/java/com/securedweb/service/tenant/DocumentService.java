@@ -15,8 +15,6 @@ public interface DocumentService {
 
 	List<DocumentDTO> getAllDocuments(String type, Integer id);
 
-	void uploadDocument(String type, Integer id, String description, MultipartFile[] files) throws IOException;
-
-	Document getDocument(Integer documentId, Integer projectId);
+	void uploadDocument(String type, Integer id, String description, MultipartFile file, String fileLocation) throws IOException;
 
 }

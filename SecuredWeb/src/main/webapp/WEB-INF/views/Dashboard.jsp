@@ -11,6 +11,8 @@
     <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
     <link href="/SecuredWeb/static/css/securedWeb.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" />
 	<!--CSS For Data Tables -->
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.5/css/select.bootstrap4.min.css">
@@ -18,7 +20,8 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.3/css/rowReorder.bootstrap4.min.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.4.1/css/colReorder.dataTables.min.css">
 	<!-- FOR COLOUR PICKER -->
-	<link href="/SecuredWeb/static/css/bootstrap-colorpicker.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    
 </head>
  
 <body>
@@ -46,6 +49,7 @@
 	<footer class="container-fluid text-center bg-dark">
 	  <p>${tenantName}</p>
 	  <input type="hidden" id="tenantId" value="${tenantId}">
+	  <input type="hidden" id="userId" value="${userId}">
 	</footer>
 
 <!--  User Modal -->
@@ -140,24 +144,45 @@
     </div>
   </div>
   <!-- ---------------------Modal ends here----------------------- -->
+  
+  <!--  UPLOAD DOCUMENTS Modal -->
+  <div class="modal fade" id="ChangePasswordModalAjax">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" id="ChangePasswordModalBody">
+    
+      </div>
+    </div>
+  </div>
+  <!-- ---------------------Modal ends here----------------------- -->
  		
 </body>
 </html>
+    <!-- Datatable extensions js -->
 	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-    <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	
+	<!-- Datatable extensions js -->
 	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 	
+	<!-- Datatable extensions js -->
 	<script src="https://cdn.datatables.net/select/1.2.5/js/dataTables.select.min.js"></script>
 	<script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
 	<script src="https://cdn.datatables.net/responsive/2.2.1/js/responsive.bootstrap4.min.js"></script>
 	<script src="https://cdn.datatables.net/rowreorder/1.2.3/js/dataTables.rowReorder.min.js"></script>
 	<script src="https://cdn.datatables.net/colreorder/1.4.1/js/dataTables.colReorder.min.js"></script>
 	
+	<!--Application   -->
 	<script src="/SecuredWeb/static/js/securedWeb.js"></script>
+	
+	<!-- Bootbox -->
+	<script src="/SecuredWeb/static/js/bootbox.min.js"></script>
+	
+	<!--Fancy Box  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js"></script>
+	<!--Bootstrap Colour Picker  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>  
 <script>
 
 var token = $("meta[name='_csrf']").attr("content");
@@ -167,7 +192,15 @@ var tenantId=$("#tenantId").val();
 $(document).ready(function() {
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
+	
+	$('#taskStatusColour').colorpicker({});
+	
+	$(".fancybox").fancybox({
+	    width  : 600,
+	    height : 300,
+	    type   :'iframe'
+	});
+
+    
 });
-
-
 </script>

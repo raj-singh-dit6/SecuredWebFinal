@@ -7,29 +7,26 @@
         <!-- Modal body -->
         <div class="modal-body">
         	<form action="#" method="POST" name="addTaskStatusForm">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskStatus">Status</label>
-                    <div class="col-md-7">
+                <div class="form-group col-lg-12">
+                    <label class="col-lg-5 control-lable" for="taskStatus">Status<span style="color:red;">*</span></label>
+                    <div class="col-lg-7">
                         <input type="text" name="taskStatusName" id="taskStatusName" class="form-control input-sm" autofocus/>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="taskStatusColour">Flag Color</label>
-                    <div class="col-md-7">
-                        <select id="taskStatusColour" type="text" class="form-control" >
+                <div class="form-group col-lg-12">
+                    <label class="col-lg-5 control-lable" for="taskStatusColour">Flag Color<span style="color:red;">*</span></label>
+                    <div class="col-lg-7">
+                        <input class="form-control" type="text" id="taskStatusColour"/>
+                        <!-- <select id="taskStatusColour" type="text" class="form-control" >
                         	<option></option>
                         	<option id="orange" value="orange">Orange</option>
                         	<option id="blue" value="blue">Blue</option>
                         	<option id="purple" value="purple">Purple</option>
                         	<option id="green" value="green">Green</option>
-                        </select>
+                        </select> -->
                         <!-- <input type="text" name="taskStatusColour" id="taskStatusColour" class="form-control input-sm" /> -->
                     </div>
                 </div>
-            </div>
             <input type="hidden" id="taskStatusId">
             </form>
         </div>

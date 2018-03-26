@@ -100,6 +100,7 @@ public class AppController {
     	System.err.println("CONTROLLER TENANT FROM SESSION :"+req.getSession().getAttribute("tenantId"));
         model.addAttribute("tenantName", tenantName);
         model.addAttribute("tenantId", tenantId);
+        model.addAttribute("userId", getPrincipal());
         model.addAttribute("loggedinuser", getPrincipal());
     	return "Dashboard";
     }

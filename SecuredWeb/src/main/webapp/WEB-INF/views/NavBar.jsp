@@ -91,7 +91,7 @@
 	      </a>
 	      <div class="dropdown-menu">
 	        <a class="dropdown-item" href="#">View Profile</a>
-	        <a class="dropdown-item" href="#">Change Password</a>
+	        <a class="dropdown-item" href="#" onClick="loadAjaxPage('changePassword')">Change Password</a>
 	      </div>
 	    </li>
 	  </ul>

@@ -153,54 +153,121 @@ function registerUserSubmit()
     
     if(firstName=="")
 	{
-		bootbox.alert("Please enter first name.");
+    	
+    	if ($("#newFirstName").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newFirstName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter first name..</div>");
+        }
 		$('#newFirstName').focus();
+		//bootbox.alert("Please enter first name.");
 		return false;
-	}else if(lastName==""){
-		bootbox.alert("Please enter last name.");
+	}else{
+		$("#newFirstName").parent().next(".validation").remove(); // remove it
+	}
+    
+    
+    if(lastName==""){
+		//bootbox.alert("Please enter last name.");
+		if ($("#newLastName").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newLastName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter last name.</div>");
+        }
 		$('#newLastName').focus();
 		return false;
-			
-	}else if(ssoId==""){
-		bootbox.alert("Please enter user id.");
+	}else{
+		$("#newLastName").parent().next(".validation").remove(); // remove it
+	}
+    
+    
+    if(ssoId==""){
+		//bootbox.alert("Please enter user id.");
+		if ($("#newSsoId").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newSsoId").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter user id for your account.</div>");
+        }
 		$('#newSsoId').focus();
 		return false;
 		
-	}else if(password==""){
-		bootbox.alert("Please enter password.");
-		$('#newPassword').focus();
-		return false;
-		
-	}else if(confirmPassword==""){
-		bootbox.alert("Please enter confirm password.");
-		$('#newConfirmPassword').focus();
-		return false;
-		
-	}else if(email==""){
-		bootbox.alert("Please enter email id.");
-		$('#newEmail').focus();
-		return false;
-		
-	}else if(tenantId==""){
-		bootbox.alert("Please select atleast one tenant");
-		$('#newEmail').focus();
-		return false;
-		
-	}else if(password!=confirmPassword){
-		bootbox.alert("Passwords did not match, please enter correct passwords.");
-		$('#newPassword').focus();
-		$('#newConfirmPassword').focus();
-		return false;
-		
-	}else if(!emailRegex.test(email)){
-		bootbox.alert("Please enter a valid email address.");
-		$('#newEmail').focus();
-		return false;
+	}else{
+		$("#newSsoId").parent().next(".validation").remove(); // remove it
 	}
-	else if(password!=confirmPassword)
-	{
-		bootbox.alert("Password did not match, please type correct password");
+    
+    if(password==""){
+		//bootbox.alert("Please enter password.");
+		if ($("#newPassword").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password.</div>");
+        }
+		$('#newPassword').focus();
 		return false;
+		
+	}else{
+		$("#newPassword").parent().next(".validation").remove(); // remove it
+	}
+    
+    if(confirmPassword==""){
+		//bootbox.alert("Please enter confirm password.");
+		if ($("#newConfirmPassword").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password to confirm.</div>");
+        }
+		$('#newConfirmPassword').focus();
+		return false;
+		
+	}else{
+		$("#newConfirmPassword").parent().next(".validation").remove(); // remove it
+	}
+
+    if(email==""){
+    	if ($("#newEmail").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter email.</div>");
+        }
+		//bootbox.alert("Please enter email id.");
+		$('#newEmail').focus();
+		return false;
+		
+	}else{
+		$("#newEmail").parent().next(".validation").remove(); // remove it
+	}
+
+    if(tenantId==""){
+		//bootbox.alert("Please select atleast one tenant");
+		if ($("#select#tenants").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#select#tenants").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select atleast one tenant.</div>");
+        }
+		$('#select#tenants').focus();
+		return false;
+		
+	}else{
+		$("#select#tenants").parent().next(".validation").remove(); // remove it
+	}
+
+    if(password!=confirmPassword){
+		//bootbox.alert("Passwords did not match, please enter correct passwords.");
+		if ($("#newConfirmPassword").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Passwords did not match, please enter correct passwords.</div>");
+        }
+		
+		$('#newPassword').focus();
+		$('#newConfirmPassword').focus();
+		return false;
+	}else{
+		$("#newConfirmPassword").parent().next(".validation").remove(); // remove it
+	}
+
+    if(!emailRegex.test(email)){
+		//bootbox.alert("Please enter a valid email address.");
+		if ($("#newEmail").parent().next(".validation").length == 0) // only add if not added
+        {
+            $("#newEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a valid email address.</div>");
+        }
+		$('#newEmail').focus();
+		return false;
+	}else{
+		$("#newEmail").parent().next(".validation").remove(); // remove it
 	}
     
 	

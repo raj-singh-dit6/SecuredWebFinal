@@ -1,13 +1,14 @@
 package com.securedweb.service.tenant;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,14 +22,10 @@ import com.securedweb.util.TenantHolder;
 public class UserServiceImp implements UserService{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserServiceImp.class);
-
 	
 	@Autowired
 	UserRepository userRepository;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
 	@Override
 	public UserDTO getUser(String ssoId) {
 		UserDTO userDTO = new UserDTO();
@@ -56,7 +53,13 @@ public class UserServiceImp implements UserService{
 		 newUser.setLastName(user.getLastName());
 		 newUser.setEmail(user.getEmail());
 		 newUser.setSsoId(user.getSsoId());
-		 newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+		 String encodedPassword="";
+		try {
+			encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		 newUser.setPassword(encodedPassword);
 		 newUser.setTenantId(TenantHolder.getTenantId());
 		 newUser.setUserRoles(user.getUserRoles());;
 		 userRepository.save(newUser);
@@ -134,6 +137,39 @@ public class UserServiceImp implements UserService{
 	@Override
 	public void updatePassword(String updatedPassword, Integer id) {
 		userRepository.updatePassword(updatedPassword,id);
+		
+	}
+
+	@Override
+	public boolean changePassword(UserDTO user) {
+		User updateUser = userRepository.findBySsoIdAndTenantId(user.getSsoId(),TenantHolder.getTenantId());
+		
+		byte[] base64decodedBytes = Base64.getDecoder().decode(updateUser.getPassword());
+		String oldPassword="";
+		try {
+			oldPassword = new String(base64decodedBytes, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+        
+		System.err.println("NEW :"+user.getPassword() +" &  OLD :" + oldPassword);
+		if(oldPassword.equals(user.getPassword()))
+		{	
+			
+			 String encodedPassword="";
+			try {
+				encodedPassword = Base64.getEncoder().encodeToString(user.getNewPassword().getBytes("utf-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+			updateUser.setPassword(encodedPassword);
+			return true;
+		}
+		else
+		{
+			return false;
+		}	
 		
 	}
 }

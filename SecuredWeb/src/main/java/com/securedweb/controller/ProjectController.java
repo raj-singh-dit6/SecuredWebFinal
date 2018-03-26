@@ -15,13 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.securedweb.dto.tenant.ProjectDTO;
 import com.securedweb.dto.tenant.StatusDTO;
 import com.securedweb.dto.tenant.TaskDTO;
@@ -57,19 +54,12 @@ private static final Logger LOG = LoggerFactory.getLogger(ProjectController.clas
  * @throws JsonParseException 
   */
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
- @PostMapping(value="/add",produces={MediaType.APPLICATION_JSON_VALUE},consumes={MediaType.ALL_VALUE})
- public StatusDTO addProject(@RequestParam("project")String project, @RequestParam("file") MultipartFile file) throws JsonParseException, JsonMappingException, IOException{
-	 System.out.println(project);
-	 ObjectMapper objectMapper = new ObjectMapper();
-	 ProjectDTO projectDTO 	= objectMapper.readValue(project,ProjectDTO.class);
+ @PostMapping(value="/add",produces={MediaType.APPLICATION_JSON_VALUE},consumes={MediaType.APPLICATION_JSON_VALUE})
+ public StatusDTO addProject(@RequestBody ProjectDTO project) {
 	 StatusDTO status = new StatusDTO();
-	 if(projectService.isProjectNameUnique(projectDTO.getName(),TenantHolder.getTenantId()))
+	 if(projectService.isProjectNameUnique(project.getName(),TenantHolder.getTenantId()))
 	{
-		if (file!=null && !file.getOriginalFilename().isEmpty()) {
-			projectDTO.setProjectFile(file.getBytes());
-			System.err.println(file.getOriginalFilename());
-	      }
-		 projectService.addProject(projectDTO);
+		 projectService.addProject(project);
 	     status.setMessage("Project added successfully");
 	     status.setStatus(200);
 	     return status;
@@ -77,7 +67,6 @@ private static final Logger LOG = LoggerFactory.getLogger(ProjectController.clas
 		status.setMessage("Please enter a unique project name.");
 		return status;
 	} 
-	 
  }
  
  /**

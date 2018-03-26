@@ -49,6 +49,7 @@ public class DocumentServiceImpl implements DocumentService{
 			documentDTO.setId(document.getId());
 			documentDTO.setName(document.getName());
 			documentDTO.setDescription(document.getDescription());
+			documentDTO.setLocation(document.getLocation());
 			documentDTO.setUser(document.getUser());
 			documentDTO.setProject(document.getProject());
 			documentDTOList.add(documentDTO);
@@ -58,24 +59,13 @@ public class DocumentServiceImpl implements DocumentService{
 	}
 
 	@Override
-	public void uploadDocument(String type,Integer id, String description, MultipartFile[] files) throws IOException {
+	public void uploadDocument(String type,Integer id, String description, MultipartFile file,String fileLocation) throws IOException {
 		Object obj=null;
 		if(type.equals("user"))
 			obj=userService.getUser(id);
 		else if(type.equals("project"))	
 			obj = projectService.getProject(id);
-		
-		for(int i=0;i<files.length;i++)
-		{
-			saveDocument(files[i],description,obj);
-		}	
-		
-	}
-
-	@Override
-	public Document getDocument(Integer documentId,Integer projectId) {
-		Project project = projectService.getProject(projectId);	
-		return documentRepository.findByIdAndProject(documentId,project);
+		saveDocument(file,description,obj,fileLocation);
 	}
 
 	@Override
@@ -83,14 +73,13 @@ public class DocumentServiceImpl implements DocumentService{
 		
 		documentRepository.deleteById(documentId);
 	}
-
-	private void saveDocument(MultipartFile multipartFile, String description,Object obj) throws IOException{
+	private void saveDocument(MultipartFile multipartFile, String description,Object obj,String fileLocation) throws IOException{
         
 		Document newDocument = new Document();
 		newDocument.setName(multipartFile.getOriginalFilename());
 		newDocument.setDescription(description);
 		newDocument.setType(multipartFile.getContentType());
-		newDocument.setContent(multipartFile.getBytes());
+		newDocument.setLocation(fileLocation);
 		if(obj instanceof Project)
 			newDocument.setProject((Project)obj);
 		else if(obj instanceof User)

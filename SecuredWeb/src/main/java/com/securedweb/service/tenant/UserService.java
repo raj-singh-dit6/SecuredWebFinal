@@ -26,4 +26,6 @@ public interface UserService {
 
 	void updatePassword(String updatedPassword, Integer id);
 
+	boolean changePassword(UserDTO user);
+
 }
