@@ -124,7 +124,7 @@ public class UserController {
 	    	 	PasswordResetToken token = new PasswordResetToken();
 	            token.setToken(UUID.randomUUID().toString());
 	            token.setUser(user);
-	            token.setExpiryDate(30);
+	            token.setExpiryDate(72);
 	            tokenRepository.save(token);
 	            
 	            Mail mail = new Mail();

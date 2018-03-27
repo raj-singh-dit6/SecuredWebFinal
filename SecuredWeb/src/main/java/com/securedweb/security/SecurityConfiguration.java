@@ -43,7 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
                 .tokenValiditySeconds(31536000).and().csrf().ignoringAntMatchers("/service/resetPassword").and().exceptionHandling().accessDeniedPage("/Access_Denied");
-    }
+		http.headers().frameOptions().sameOrigin();
+	}
 	
 	/*To return PasswordEncoder P = CustomPasswordEncoder*/
 	@Bean

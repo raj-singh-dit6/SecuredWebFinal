@@ -14,13 +14,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
-import org.springframework.http.converter.BufferedImageHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -30,11 +30,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.securedweb.service.tenant.TaskStatusCheckerServiceImpl;
 import com.securedweb.util.MultiTenancyInterceptor;
 
 @Configuration
 @EnableWebMvc
 @EnableAsync
+@EnableScheduling
 @ComponentScan(basePackages = "com.securedweb")
 @PropertySource("classpath:application.properties")
 public class AppConfig implements WebMvcConfigurer{
@@ -47,7 +49,6 @@ public class AppConfig implements WebMvcConfigurer{
 	@Autowired
 	@Qualifier("multiTenancyInterceptor")
 	private MultiTenancyInterceptor multiTenancyInterceptor;
-    
     
     /**
      * Configures ViewResolvers to deliver preferred views.
@@ -131,5 +132,9 @@ public class AppConfig implements WebMvcConfigurer{
         return new StandardServletMultipartResolver();
     }
     
-
+    @Bean
+    public TaskStatusCheckerServiceImpl taskStatusCheckerService() {
+        return new TaskStatusCheckerServiceImpl();
+    }
+    
 }

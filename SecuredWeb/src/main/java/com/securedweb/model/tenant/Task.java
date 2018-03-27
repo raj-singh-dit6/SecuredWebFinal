@@ -2,6 +2,7 @@ package com.securedweb.model.tenant;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,10 @@ public class Task implements Serializable {
 
 	@Column(name="DESCRIPTION")
 	private String description;
+	
+	@Column(name="STATUS_SET_DATE")
+	private Date statusSetDate;
+	
 	
 	@ManyToOne
 	@JoinColumn(name="TASK_STATUS_ID", nullable=false)
@@ -132,6 +137,14 @@ public class Task implements Serializable {
 
 	public void setProject(Project project) {
 		this.project = project;
+	}
+
+	public Date getStatusSetDate() {
+		return statusSetDate;
+	}
+
+	public void setStatusSetDate(Date statusSetDate) {
+		this.statusSetDate = statusSetDate;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.securedweb.service.tenant;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -52,7 +53,8 @@ public class TaskServiceImpl implements TaskService{
 		newTask.setTenantId(TenantHolder.getTenantId());
 		newTask.setProject(taskProject);
 		newTask.setTaskStatus(taskStatus);
-		
+		if(taskStatus.getStatus().equals("In Progress"))
+			newTask.setStatusSetDate(new Date());	
 		taskProject.getTasks().add(newTask);
 		taskStatus.getTasks().add(newTask);
 		
@@ -125,7 +127,8 @@ public class TaskServiceImpl implements TaskService{
 		updateTask.setTenantId(TenantHolder.getTenantId());
 		updateTask.setProject(newProject);
 		updateTask.setTaskStatus(newTaskStatus);
-
+		if(newTaskStatus.getStatus().equals("In Progress"))
+			updateTask.setStatusSetDate(new Date());
 		newProject.getTasks().add(updateTask);
 		newTaskStatus.getTasks().add(updateTask);
 		

@@ -17,7 +17,7 @@ public class MultiTenancyInterceptor extends HandlerInterceptorAdapter {
  @Override
  public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler)
    throws Exception {
-	  String attrValue=(String)req.getSession().getAttribute("tenandtId");
+	  String attrValue=(String)req.getSession().getAttribute("tenantId");
 	  if (attrValue!=null && attrValue!="") {
 	   req.setAttribute("CURRENT_TENANT_IDENTIFIER", attrValue);
 	   TenantHolder.setTenantId(attrValue);

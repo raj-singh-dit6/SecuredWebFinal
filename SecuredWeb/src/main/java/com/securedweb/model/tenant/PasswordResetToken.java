@@ -77,9 +77,9 @@ public class PasswordResetToken {
         this.expiryDate = expiryDate;
     }
 
-    public void setExpiryDate(int minutes){
+    public void setExpiryDate(int hours){
         Calendar now = Calendar.getInstance();
-        now.add(Calendar.MINUTE, minutes);
+        now.add(Calendar.HOUR, hours);
         this.expiryDate =  now.getTime();
         System.err.println(now.getTime());
         System.err.println(expiryDate);
@@ -89,19 +89,19 @@ public class PasswordResetToken {
     	SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     	Date d1 = null;
 		Date d2 = null;
-		long diffMinutes=0;
+		long diffHours=0;
 		String currentTime =  formatter.format(new Date());
 		String expiryTime =  formatter.format(this.getExpiryDate());		
     	try {
 			d1 = formatter.parse(currentTime);
 			d2 = formatter.parse(expiryTime);
 			long diff = d2.getTime() - d1.getTime();
-			diffMinutes = diff / (60 * 1000) % 60;
-			System.err.print(diffMinutes + " minutes, ");
+			diffHours = diff / (60 * 60 * 1000) % 24;
+			System.err.print(diffHours + " hours, ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        return diffMinutes>30;
+        return diffHours>72;
     }
 
 	public LocalDateTime getCreateDateTime() {
