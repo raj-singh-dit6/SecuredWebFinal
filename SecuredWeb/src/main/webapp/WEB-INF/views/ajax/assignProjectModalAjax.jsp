@@ -8,19 +8,19 @@
         <div class="modal-body">
         	<form action="#" method="POST" name="AssignProjectForm">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="assignProject">Project<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="assignProject">Project</label>
                     <div class="col-lg-7">
-						<select class="form-control" id="assignProject" autofocus>
+						<select class="form-control" id="assignProject" autofocus required>
 						<option></option>
 					    </select>
                     </div>
                 </div>
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="assignUser">User<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="assignUser">User</label>
                     <div class="col-lg-7">
-                    <select class="form-control" id="assignUser">
-						<option></option>
-					</select>
+	                    <select class="form-control" id="assignUser" required>
+							<option></option>
+						</select>
 					</div>
                 </div>
             <input type="hidden" id="assignProjId"/>

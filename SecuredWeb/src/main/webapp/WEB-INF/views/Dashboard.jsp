@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<meta name="_csrf" content="${_csrf.token}"/>
 	<meta name="_csrf_header" content="${_csrf.headerName}"/>
-    <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="/SecuredWeb/static/css/securedWeb.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 	
@@ -20,12 +20,12 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.3/css/rowReorder.bootstrap4.min.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.4.1/css/colReorder.dataTables.min.css">
 	<!-- FOR COLOUR PICKER -->
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/css/bootstrap-colorpicker.css" rel="stylesheet">
+
 </head>
  
 <body>
-	<%@include file="NavBar.jsp" %>
+	<%@include file="NavBar.jsp" %>	
 	<div class="container-fluid text-center" style="height:100%">    
 	  <div class="row content">
 	    <div class="col-sm-12 text-left">
@@ -160,8 +160,8 @@
     <!-- Datatable extensions js -->
 	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
 	<!-- Datatable extensions js -->
 	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
@@ -182,25 +182,37 @@
 	<!--Fancy Box  -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js"></script>
 	<!--Bootstrap Colour Picker  -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>  
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/js/bootstrap-colorpicker.js"></script>  
+	
+	<!-- jquery form validator -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 <script>
+
+$.validate({
+    modules : 'location, date, security, file',
+    onModulesLoaded : function() {
+      $('#country').suggestCountry();
+    }
+  });
 
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 var tenantId=$("#tenantId").val();
 
+
+$(function () {
+	$('#taskStatusColour').colorpicker();
+  });
+
 $(document).ready(function() {
 	$('#successAlert').hide();
 	$('#warningAlert').hide();
 	
-	$('#taskStatusColour').colorpicker({});
-	
 	$(".fancybox").fancybox({
 	    width  : 600,
 	    height : 300,
-	    type   :'iframe'
 	});
-
     
 });
+
 </script>

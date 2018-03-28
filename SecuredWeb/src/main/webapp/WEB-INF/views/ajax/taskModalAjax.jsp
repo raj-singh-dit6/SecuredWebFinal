@@ -9,19 +9,19 @@
         	<form action="#" method="POST" name="addTaskForm">
             <div class="row">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="taskProject">Project<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="taskProject">Project</label>
                     <div class="col-lg-7">
-                        <select  class="form-control" id="taskProject" autofocus>
-					    <option></option>
+                        <select  class="form-control" id="taskProject" autofocus required>
+					    	<option></option>
 					    </select>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="taskName">Task Name<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="taskName">Task Name</label>
                     <div class="col-lg-7">
-                        <input type="text" name="taskName" id="taskName" class="form-control input-sm"/>
+                        <input type="text" name="taskName" id="taskName" class="form-control input-sm" required/>
                     </div>
                 </div>
             </div>
@@ -35,9 +35,9 @@
             </div>
             <div class="row">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="taskStatus">Task Status<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="taskStatus">Task Status</label>
                     <div class="col-lg-7">
-						<select  class="form-control" id="taskStatus">
+						<select  class="form-control" id="taskStatus" required>
 							<option></option>   
 					      </select>
                     </div>

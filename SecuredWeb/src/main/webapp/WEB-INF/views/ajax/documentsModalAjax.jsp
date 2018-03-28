@@ -15,6 +15,5 @@
         </div>
         <!-- Modal footer -->
         <div class="modal-footer" id="addDocumentsFooter">
-                <!-- <button id="UploadDocuments" type="button" class="btn btn-primary" data-toggle="modal" onCLick="loadAjaxPage('uploadDocuments',document.getElementById())" data-target="#UploadDocumentsModalAjax">Upload Documents</button> -->  
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Go to project list</button>
         </div>	

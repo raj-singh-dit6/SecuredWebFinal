@@ -9,17 +9,17 @@
         	<form action="#" method="POST" name="ProjectForm">
             <div class="row">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="projName">Project Name<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="projName">Project Name</label>
                     <div class="col-lg-7">
-                        <input type="text" name="projName" id="projName" class="form-control input-sm" autofocus/>
+                        <input type="text" name="projName" id="projName" class="form-control input-sm" autofocus required/>
                     </div>
                 </div>
             </div>
             <div class="row" id="userSsoId">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="projDesc">Project Description<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="projDesc">Project Description</label>
                     <div class="col-lg-7">
-                           <input type="text" name="projDesc" id="projDesc" class="form-control input-sm" />
+                           <input type="text" name="projDesc" id="projDesc" class="form-control input-sm" required/>
                     </div>
                 </div>
             </div>

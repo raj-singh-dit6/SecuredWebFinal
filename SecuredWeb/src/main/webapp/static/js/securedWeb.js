@@ -469,6 +469,9 @@ function loadAjaxPage(pageType,operation,id)
 	        }
 	    });
 		$('#TaskStatusModalAjax').modal('show');
+		
+		$('#taskStatusColour').colorpicker();
+		
 		if(operation=="add"){
 			$("#TaskStatusModalHeading").text("Add New Task Status");
 			$("#UpdateTaskStatusSubmit").hide();
@@ -487,7 +490,9 @@ function loadAjaxPage(pageType,operation,id)
 			       },
 		        success: function(taskStatus) {
 		        	$("#taskStatusName").val(taskStatus.status);
-		        	$("select#taskStatusColour").val(taskStatus.statusColour);
+		        	$("#taskStatusColour").val(taskStatus.statusColour);
+		        	$("#taskStatusColour").trigger('change');
+		        	
 		        	$("#taskStatusId").val(taskStatus.id);
 		        }
 		    });
@@ -601,7 +606,7 @@ function loadAjaxPage(pageType,operation,id)
 		$("#DocumentsModalHeading").text("Manage Project Documents");
 		$("#DocumentsModalAjax").modal('show');
 		$('#addDocumentsFooter').prepend('<button id="UploadDocuments" type="button" class="btn btn-primary" data-toggle="modal" onCLick="loadAjaxPage(\'uploadDocuments\',\'\',\''+projectId+'\')" data-target="#UploadDocumentsModalAjax">Upload Documents</button>');
-		
+		$('#documentsTable').html('');
 		fillProjectDocumentsInDataTable(projectId);
 		
 	}else if(pageType=="uploadDocuments"){
@@ -636,10 +641,12 @@ function loadAjaxPage(pageType,operation,id)
 	            $("#ChangePasswordModalBody").html( response );
 	        }
 	    });
-		$("#ChangePasswordModalAjax").modal('show');
+			$("#ChangePasswordModalAjax").modal('show');
 	}
 	
-}
+	$('input,select,textarea').filter('[required]').each(function(){ 
+		$(this).parent().prev().append('<span style="color:red;">*</span>');
+	});}
 
 
 function fillProjectDocumentsInDataTable(projectId)
@@ -668,10 +675,6 @@ function fillProjectDocumentsInDataTable(projectId)
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#documentsTable")) {
-		  $('#documentsTable').DataTable().clear().destroy();
-		}
-       
 	$('#documentsTable').DataTable( {
 		data: dataSet,
 		columns: [
@@ -680,7 +683,7 @@ function fillProjectDocumentsInDataTable(projectId)
             { title: "Document Description" },
             { title: "Document Location" },
             { "render": function (data, type, full, meta) {
-               	return '<a data-fancybox="'+full[1]+'"  data-type="iframe" data-src="files/'+full[3]+'" class="fancybox btn btn-success custom-width" href="javascript:;" )">Download</a>'} },
+               	return '<a data-fancybox="'+full[1]+'"  href="files/'+full[3]+'" class="fancybox btn btn-success custom-width" )">Download</a>'} },
             { "render": function (data, type, full, meta) {
                	return '<a class="btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'projectDocument\',\'' + full[0] + '\')" >Delete</a>'} },
         ],
@@ -751,11 +754,11 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            manageUsers();
+	    		            manageList('user');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
-	    		            manageUsers();
+	    	        		manageList('user');
 	    	        	}	
 	    	        }
 	    	    });
@@ -791,7 +794,7 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            manageProjects();
+	    		            manageList('project');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
@@ -831,11 +834,11 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            manageTasks();
+	    		            manageList('task');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
-	    	        		manageTasks();
+	    	        		manageList('task');
 	    	        	}	
 	    	        }
 	    	    });
@@ -871,11 +874,11 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            manageTaskStatus();
+	    		            manageList('taskStatus');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
-	    	        		 manageTaskStatus();
+	    	        		manageList('taskStatus');
 	    	        	}	
 	    	        }
 	    	    });
@@ -911,7 +914,7 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            manageUserProjects();	
+	    		            manageList('userProject');	
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
@@ -1103,7 +1106,7 @@ function addProject(){
 		        	$('#successMessage').html(status.message);
 		        	$('#ProjectModalAjax').modal('hide');
 		            $('#successAlert').show();
-		            manageProjects();
+		            manageList('project');
 		          }else{
 		        	$('#warningMessage').html(status.message);
 		        	$('#ProjectModalAjax').modal('hide');  
@@ -1206,11 +1209,11 @@ function updateTask()
 	        	$('#successMessage').html(status.message);
 	        	$('#TaskModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageTasks();
+	            manageList('task');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#TaskModalAjax').modal('hide');  
-	        	manageTasks();
+	        	manageList('task');
 	          }
        }
  });
@@ -1221,8 +1224,8 @@ function updateTaskStatus()
 	var taskStatus = {};
 	taskStatus.id 			= $('#taskStatusId').val();
 	taskStatus.status 		= $('#taskStatusName').val();
-	taskStatus.statusColour = $('select#taskStatusColour option:selected').val();
-    
+	taskStatus.statusColour = $('#taskStatusColour').val();
+    debugger
 	if(taskStatus.status =="")
 	{
 		if ($("#taskStatusName").parent().next(".validation").length == 0) // only add if not added
@@ -1264,7 +1267,7 @@ function updateTaskStatus()
 	        	$('#successMessage').html(status.message);
 	        	$('#TaskStatusModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageTaskStatus()
+	            manageList('taskStatus');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#TaskStatusModalAjax').modal('hide');  
@@ -1338,7 +1341,7 @@ function updateProject()
 	        	$('#successMessage').html(status.message);
 	        	$('#ProjectModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageProjects();
+	            manageList('project');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#ProjectModalAjax').modal('hide');  
@@ -1435,7 +1438,7 @@ function updateUser()
 	        	$('#successMessage').html(status.message);
 	        	$('#UserModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageUsers();
+	            manageList('user');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#UserModalAjax').modal('hide');  
@@ -1586,11 +1589,11 @@ function addUser(){
     		   	$('#successMessage').html(status.message);
     		    $('#UserModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageUsers();
+	            manageList('user');
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
-	       		manageUsers();
+	       		manageList('user');
 	       	}
        }
  });
@@ -1660,7 +1663,7 @@ function addUserProject(){
     		   	$('#successMessage').html(status.message);
     		    $('#AssignProjectModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageUserProjects();
+	            manageList('userProject');
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
@@ -1753,45 +1756,11 @@ function addUserTask(){
     		   	$('#successMessage').html(status.message);
     		    $('#AssignTaskModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            manageUserTasks();
+	            manageList('userTask');
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
 	       	}
-       }
- });
-}
-
-function manageUserProjects(){
-	
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'userProject/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(userProjects) {
-    		fillUserProjectsInDataTable(userProjects);
-       }
- });
-}
-
-function manageUserTasks() {
-	
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'userTask/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(userTasks) {
-    		fillUserTasksInDataTable(userTasks);
        }
  });
 }
@@ -1811,9 +1780,6 @@ function fillUserTasksInDataTable(userTasks){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
@@ -1888,9 +1854,6 @@ function fillUserProjectsInDataTable(userProjects){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
@@ -2027,7 +1990,7 @@ function addTask() {
           if(status.status==200){
             $('#TaskModalAjax').modal('hide');
             $('#successAlert').show();
-            manageTasks();
+            manageList('task');
           }else{
         	$('#TaskModalAjax').modal('hide');  
             $('#warningAlert').show();
@@ -2040,8 +2003,9 @@ function addTaskStatus() {
 	
     var taskStatus = {};
     taskStatus.status 	= $('#taskStatusName').val();
-    taskStatus.statusColour = $('select#taskStatusColour option:selected').val();
+    taskStatus.statusColour = $('#taskStatusColour').val();
     
+    debugger
     if(taskStatus.status==""){
 		 $('#taskStatusName').focus();
 		 if ($("#taskStatusName").parent().next(".validation").length == 0) // only add if not added
@@ -2057,15 +2021,15 @@ function addTaskStatus() {
     
 
     if(taskStatus.statusColour==""){
-		if ($("select#taskStatusColour").parent().next(".validation").length == 0) // only add if not added
+		if ($("#taskStatusColour").parent().next(".validation").length == 0) // only add if not added
         {
-            $("select#taskStatusColour").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select task status for the task.</div>");
+            $("#taskStatusColour").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select task status for the task.</div>");
         }
-		$('select#taskStatusColour').focus();
+		$('#taskStatusColour').focus();
 		return false;
 		
 	}else{
-		$("select#taskStatusColour").parent().next(".validation").remove(); // remove it
+		$("#taskStatusColour").parent().next(".validation").remove(); // remove it
 	}
     
     $.ajax({
@@ -2084,7 +2048,7 @@ function addTaskStatus() {
         	$('#successAlert').text(status.message);
             $('#TaskStatusModalAjax').modal('hide');
             $('#successAlert').show();
-            manageTaskStatus();
+            manageList('taskStatus');
           }else{
         	$('#warningAlert').text(status.message);
         	$('#TaskStatusModalAjax').modal('hide');  
@@ -2107,6 +2071,7 @@ function loadProjectsForUser() {
            xhr.setRequestHeader(header, token);
        },
        success : function(userProjects) {
+    	   $('#dataTable').html('');
     	   fillAssignedProjectsInDataTable(userProjects);
        }
  });
@@ -2122,10 +2087,6 @@ function fillAssignedProjectsInDataTable(userProjects){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
-       
 	$('#dataTable').DataTable( {
 		data: dataSet,
 		columns: [
@@ -2175,6 +2136,7 @@ function loadTasksForUser() {
            xhr.setRequestHeader(header, token);
        },
        success : function(userTasks) {
+    	   $('#dataTable').html('');
     	   fillAssignedTasksInDataTable(userTasks);
        }
  });
@@ -2194,19 +2156,19 @@ function fillAssignedTasksInDataTable(userTasks){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
        
 	$('#dataTable').DataTable( {
 		data: dataSet,
 		columns: [
             { title: "userTask Id" },
             { title: "Project Name" },
+            { title: "Project Description" },
             { title: "Task Name	" },
             { title: "Task Description" },
             { title: "Task Status" },
-            { title: "Task Status Flag" },
+            { title: "Status Flag",
+            	"render": function (data, type, full, meta) {
+            		return '<div class="w3-half" style="background:'+full[6] +'"><p></p></div>'} },
             { "render": function (data, type, full, meta) {
             	return '<a class="btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'updateTaskByUser\',\'edit\',\'' + full[0] + '\')" data-target="#UpdateTaskByUserModalAjax" >Edit</a>'} },
         ],
@@ -2240,25 +2202,6 @@ function fillAssignedTasksInDataTable(userTasks){
     });
 }
 
-
-function manageUsers () {
-    
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'user/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(users) {
-       
-    	   fillUsersInDataTable(users);
-       }
- });
-}
-
 function fillUsersInDataTable(users){
 	var dataSet=[];
 	users.forEach(function(user){
@@ -2276,11 +2219,8 @@ function fillUsersInDataTable(users){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
        
-	$('#dataTable').DataTable( {
+	dt=$('#dataTable').DataTable( {
 		data: dataSet,
 		columns: [
             { title: "First Name" },
@@ -2317,23 +2257,6 @@ function fillUsersInDataTable(users){
     });
 }
 
-function manageProjects() {
-	
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'project/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(projects) {
-    	   fillProjectsInDataTable(projects);
-       }
- });
-}
-
 function fillProjectsInDataTable(projects){
 	var dataSet=[];
 	projects.forEach(function(project){
@@ -2357,9 +2280,6 @@ function fillProjectsInDataTable(projects){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
@@ -2414,25 +2334,6 @@ function fillProjectsInDataTable(projects){
     });
 }
 
-
-
-function manageTasks() {
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'task/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(tasks) {
-    	   //alert(tasks);
-    	   fillTasksInDataTable(tasks);
-       }
- });
-}
-
 function fillTasksInDataTable(tasks){
 	var dataSet=[];
 	tasks.forEach(function(task){
@@ -2446,11 +2347,8 @@ function fillTasksInDataTable(tasks){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
-	$('#dataTable').DataTable( {
+	 $('#dataTable').DataTable( {
         data: dataSet,
         columns: [
         	{ title: "Task Id" },
@@ -2458,7 +2356,9 @@ function fillTasksInDataTable(tasks){
         	{ title: "Task Name" },
             { title: "Description" },
             { title: "Task Status"},
-            { title: "Status Flag" },
+        	{ title: "Status Flag",
+            	"render": function (data, type, full, meta) {
+            		return '<div class="w3-half" style="background:'+full[5] +'"><p></p></div>'} },
             { "render": function (data, type, full, meta) {
             	return '<a class="taskEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'task\',\'edit\',\'' + full[0] + '\')" data-target="#TaskModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
@@ -2479,20 +2379,44 @@ function fillTasksInDataTable(tasks){
     });
 }
 
-function manageTaskStatus() {
+function manageList(pageType) {
+
+	if ($.fn.DataTable.isDataTable("#dataTable")) {
+		  $('#dataTable').DataTable().clear().destroy();
+		  $('#dataTable').html('');
+	}
+	
+	var reqURL = pageType+'/all?tenantId='+tenantId;
 	
     $.ajax({
        type:'GET',
        async: false,
-       url : 'taskStatus/all?tenantId='+tenantId,
+       url : reqURL,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
            xhr.setRequestHeader(header, token);
        },
-       success : function(taskStatus) {
-    	   fillTaskStatusInDataTable(taskStatus);
-       }
+       success : function(response) {
+    	   if(pageType=="user"){
+    		   fillUsersInDataTable(response);
+    	   }
+    	   else if(pageType=="project"){
+    		   fillProjectsInDataTable(response);
+    	   }
+    	   else if(pageType=="task"){
+    		   fillTasksInDataTable(response);
+    	   }
+    	   else if(pageType=="taskStatus"){
+	    	   fillTaskStatusInDataTable(response);
+    	   }
+    	   else if(pageType="userProject"){
+    		   fillUserProjectsInDataTable(response);	
+	    	}
+    	   else if(pageType="userTask"){
+    		   fillUserTasksInDataTable(response);	
+	    	}
+       } 
  });
 }
 
@@ -2506,16 +2430,15 @@ function fillTaskStatusInDataTable(taskStatus){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
         columns: [
         	{ title: "Status Id" },
             { title: "Status" },
-            { title: "Status Colour"},
+            { title: "Status Flag",
+               "render": function (data, type, full, meta) {
+               return '<div class="w3-half" style="background:'+full[2] +'"><p></p></div>'} },
             { "render": function (data, type, full, meta) {
             	return '<a class="taskStatusEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'taskStatus\',\'edit\',\'' + full[0] + '\')" data-target="#TaskStatusModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
@@ -2595,7 +2518,7 @@ function updateTaskByUser(){
 		        	$('#successMessage').html(status.message);
 		        	$('#UpdateTaskByUserModalAjax').modal('hide');
 		            $('#successAlert').show();
-		            manageTaskStatus()
+		            manageList('taskStatus');
 		          }else{
 		        	$('#warningMessage').html(status.message);
 		        	$('#UpdateTaskByUserModalAjax').modal('hide');  

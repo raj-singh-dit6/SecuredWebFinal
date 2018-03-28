@@ -8,9 +8,9 @@
         <div class="modal-body">
         	<form action="#" method="POST" name="ForgotPasswordForm">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="Email">Email<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="Email">Email</label>
                     <div class="col-lg-7">
-						<input class="form-control" id="Email" autofocus/>
+						<input class="form-control" id="Email" autofocus required/>
                     </div>
                 </div>
             </form>

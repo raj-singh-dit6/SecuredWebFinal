@@ -8,28 +8,28 @@
         <div class="modal-body">
         	<form action="#" method="POST" name="AssignTaskForm">
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="assignProject">Project<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="assignProject">Project</label>
                     <div class="col-lg-7">
-						<select class="loadProjectTask form-control" id="assignProject"  onchange="loadAllTasksByProjectId(this);loadAllUsersByProjectId(this)" autofocus>
+						<select class="loadProjectTask form-control" id="assignProject"  onchange="loadAllTasksByProjectId(this);loadAllUsersByProjectId(this)" autofocus required>
 						<option></option>
 					    </select>
                     </div>
                 </div>
                 <div class="form-group col-lg-12">
-                    <label class="col-lg-5 control-lable" for="assignTask">Task<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="assignTask">Task</label>
                     <div class="col-lg-7">
-						<select class="form-control" id="assignTask">
+						<select class="form-control" id="assignTask" required>
 						<option></option>
 					    </select>
                     </div>
                 </div>
             <div class="row" id="assignUserDiv">
                 <div class="form-group col-lg-12" >
-                    <label class="col-lg-5 control-lable" for="assignUser">User<span style="color:red;">*</span></label>
+                    <label class="col-lg-5 control-lable" for="assignUser">User</label>
                     <div class="col-lg-7">
-                    <select class="form-control" id="assignUser">
-						<option></option>
-					</select>
+	                    <select class="form-control" id="assignUser" required>
+							<option></option>
+						</select>
 					</div>
                 </div>
             </div>

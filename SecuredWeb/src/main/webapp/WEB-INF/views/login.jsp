@@ -7,11 +7,10 @@
         <meta name="_csrf" content="${_csrf.token}"/>
 		<meta name="_csrf_header" content="${_csrf.headerName}"/>
         <title>Login page</title>
-	    <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
+	    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 	   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
 	   	<link href="/SecuredWeb/static/css/securedWeb.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 		
     </head>
     <body>
@@ -33,11 +32,11 @@
                             </c:if>
                             <div class="input-group input-sm">
                                 <label class="input-group-addon" for="username"><i class="glyphicon glyphicon-user"></i></label>
-                                <input type="text" class="form-control" id="username" name="ssoId" placeholder="Enter Username" required>
+                                <input type="text" class="form-control" id="username" name="ssoId" placeholder="Enter Username">
                             </div>
                             <div class="input-group input-sm">
                                 <label class="input-group-addon" for="password"><i class="glyphicon glyphicon-lock"></i></label> 
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
                             </div>
                             <div class="input-group input-sm">
                               <div class="checkbox">
@@ -84,11 +83,6 @@
 		  <!-- ---------------------Modal ends here----------------------- -->
 	    </body>
 </html>
-<!-- <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
- -->
- 
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -97,8 +91,6 @@
 <script>
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
-
-
 
 function loadAjaxPage(pageType){	
 	var reqURL= "view/ajaxPage/"+pageType;
@@ -114,6 +106,7 @@ function loadAjaxPage(pageType){
 		       },
 	        success: function(response) {
 	        	$('#newUserModalBody').html( response );
+	        	$('#newUserModalAjax').modal('show');
 	        	$.ajax({
 	    	    	async: false,
 	    	    	type: "GET",
@@ -141,9 +134,14 @@ function loadAjaxPage(pageType){
 		       },
 	        success: function(response) {
 	        	$('#ForgotPasswordModalBody').html( response );
+	        	$('#ForgotPasswordModalAjax').modal('show');
 	        }
 	    });
-	}	
+	}
+	$('input,select,textarea').filter('[required]').each(function(){ 
+		$(this).parent().prev().append('<span style="color:red;">*</span>');
+	});
+	
 }
 
 function registerUserSubmit()
@@ -157,116 +155,94 @@ function registerUserSubmit()
     var email 			= $('#newEmail').val();	
     var tenantId 		= $('select#tenants option:selected').val();
     var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-	
     
     if(firstName=="")
 	{
-    	
-    	if ($("#newFirstName").parent().next(".validation").length == 0) // only add if not added
+    	if ($("#newFirstName").next(".validation").length == 0) // only add if not added
         {
-            $("#newFirstName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter first name..</div>");
+            $("#newFirstName").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter first name.</div>");
         }
-		$('#newFirstName').focus();
-		return false;
 	}else{
-		$("#newFirstName").parent().next(".validation").remove(); // remove it
+		$("#newFirstName").next(".validation").remove(); // remove it
 	}
     
     
     if(lastName==""){
-		if ($("#newLastName").parent().next(".validation").length == 0) // only add if not added
+		if ($("#newLastName").next(".validation").length == 0) // only add if not added
         {
-            $("#newLastName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter last name.</div>");
+            $("#newLastName").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter last name.</div>");
         }
-		$('#newLastName').focus();
-		return false;
 	}else{
-		$("#newLastName").parent().next(".validation").remove(); // remove it
+		$("#newLastName").next(".validation").remove(); // remove it
 	}
     
     
     if(ssoId==""){
-		if ($("#newSsoId").parent().next(".validation").length == 0) // only add if not added
+		if ($("#newSsoId").next(".validation").length == 0) // only add if not added
         {
-            $("#newSsoId").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter user id for your account.</div>");
+            $("#newSsoId").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter user id for your account.</div>");
         }
-		$('#newSsoId').focus();
-		return false;
-		
 	}else{
-		$("#newSsoId").parent().next(".validation").remove(); // remove it
+		$("#newSsoId").next(".validation").remove(); // remove it
 	}
     
     if(password==""){
-		if ($("#newPassword").parent().next(".validation").length == 0) // only add if not added
+		if ($("#newPassword").next(".validation").length == 0) // only add if not added
         {
-            $("#newPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password.</div>");
+            $("#newPassword").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter password.</div>");
         }
-		$('#newPassword').focus();
-		return false;
-		
 	}else{
-		$("#newPassword").parent().next(".validation").remove(); // remove it
+		$("#newPassword").next(".validation").remove(); // remove it
 	}
     
     if(confirmPassword==""){
-		if ($("#newConfirmPassword").parent().next(".validation").length == 0) // only add if not added
+		if ($("#newConfirmPassword").next(".validation").length == 0) // only add if not added
         {
-            $("#newConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password to confirm.</div>");
+            $("#newConfirmPassword").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter password to confirm.</div>");
         }
-		$('#newConfirmPassword').focus();
-		return false;
-		
 	}else{
-		$("#newConfirmPassword").parent().next(".validation").remove(); // remove it
+		$("#newConfirmPassword").next(".validation").remove(); // remove it
 	}
 
     if(email==""){
-    	if ($("#newEmail").parent().next(".validation").length == 0) // only add if not added
+    	if ($("#newEmail").next(".validation").length == 0) // only add if not added
         {
-            $("#newEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter email.</div>");
+            $("#newEmail").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter email.</div>");
         }
-		$('#newEmail').focus();
-		return false;
-		
 	}else{
-		$("#newEmail").parent().next(".validation").remove(); // remove it
+		$("#newEmail").next(".validation").remove(); // remove it
 	}
 
     if(tenantId==""){
-		if ($("select#tenants").parent().next(".validation").length == 0) // only add if not added
+		if ($("select#tenants").next(".validation").length == 0) // only add if not added
         {
-            $("select#tenants").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select atleast one tenant.</div>");
+            $("select#tenants").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please select atleast one tenant.</div>");
         }
-		$('select#tenants').focus();
-		return false;
-		
 	}else{
-		$("select#tenants").parent().next(".validation").remove(); // remove it
+		$("select#tenants").next(".validation").remove(); // remove it
 	}
 
     if(password!=confirmPassword){
-		if ($("#newConfirmPassword").parent().next(".validation").length == 0) // only add if not added
+		if ($("#newConfirmPassword").next(".validation").length == 0) // only add if not added
         {
-            $("#newConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Passwords did not match, please enter correct passwords.</div>");
+            $("#newConfirmPassword").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Passwords did not match, please enter correct passwords.</div>");
         }
 		
 		$('#newPassword').focus();
 		$('#newConfirmPassword').focus();
-		return false;
 	}else{
-		$("#newConfirmPassword").parent().next(".validation").remove(); // remove it
+		$("#newConfirmPassword").next(".validation").remove(); // remove it
 	}
 
     if(!emailRegex.test(email)){
-		if ($("#newEmail").parent().next(".validation").length == 0) // only add if not added
+		if ($("#newEmail").next(".validation").length == 0) // only add if not added
         {
-            $("#newEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a valid email address.</div>");
+            $("#newEmail").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter a valid email address.</div>");
         }
 		$('#newEmail').focus();
 		return false;
-	}else{
-		$("#newEmail").parent().next(".validation").remove(); // remove it
+    }else{
+		$("#newEmail").next(".validation").remove(); // remove it
 	}
     
 	
@@ -283,7 +259,6 @@ function registerUserSubmit()
 		role.type="USER";
 		userRoles.push(role);
 		user.userRoles= userRoles;
-		
 		
 		$.ajax({
 	    	async: false,
@@ -307,7 +282,6 @@ function registerUserSubmit()
 	        		});
 	        		
 	        	}	
-	        	 
 	        }
 	    });
 }
