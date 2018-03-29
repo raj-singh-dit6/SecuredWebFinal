@@ -11,7 +11,6 @@
 	   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
 	   	<link href="/SecuredWeb/static/css/securedWeb.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-		
     </head>
     <body>
         <div id="mainWrapper">
@@ -19,7 +18,12 @@
                 <div class="login-card">
                     <div class="login-form">
                         <c:url var="loginUrl" value="/login" />
-                        <form action="${loginUrl}" method="post" class="form-horizontal">
+                        <form action="${loginUrl}" method="post" id="loginForm" class="form-horizontal">
+                            <c:if test="${error!= null}">
+                                <div class="alert alert-danger">
+                                    <p>${error}</p>
+                                </div>
+                            </c:if>
                             <c:if test="${param.error != null}">
                                 <div class="alert alert-danger">
                                     <p>Invalid username and password.</p>
@@ -67,6 +71,7 @@
 	       <div class="modal fade" id="newUserModalAjax">
 		     <div class="modal-dialog modal-dialog-centered">
 		      	<div class="modal-content" id="newUserModalBody">
+		    
 		       	</div>
 		     </div>
 		   </div>
@@ -88,9 +93,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
+<script src="/SecuredWeb/static/js/jquery.validate.js"></script>
+
+<script src="/SecuredWeb/static/js/securedWeb.validation.js"></script>
 <script>
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
+
+$('#newUserModalAjax').on('shown.bs.modal', function (e) {
+	$("#addUserForm").validate({
+	  rules: {	
+			newSsoId: {
+		      minlength: 6
+		    },
+		  	newEmail: {
+		      email: true
+		    },
+	      	newConfirmPassword: {
+	        	equalTo: "#newPassword"
+	      	}
+		    
+		  },
+	  messages: {
+		    tenants : { required:"Please select atleast one tenant."},
+		  	newFirstName:{ required: "Please enter your first name."},
+			newLastName: { required:"Please enter your last name."},
+	    	newSsoId : {
+	        	required: "Please enter a user id.",
+	        	minlength: "Your user id must be at least 8 characters."
+	      	},
+	      	newPassword : { required:"Please enter a password."},
+	      	newConfirmPassword : { required:"Please enter a password to confirm."},
+	    	newEmail: {
+				required : "Please enter your email id.",	    	
+	    		email:"Your email address must be in the format of 'xyz@domain.com'.",
+	    	},
+	  	},
+	  submitHandler: function(form) {
+		  return false;
+	  	},
+	});
+});
 
 function loadAjaxPage(pageType){	
 	var reqURL= "view/ajaxPage/"+pageType;
@@ -146,7 +189,7 @@ function loadAjaxPage(pageType){
 
 function registerUserSubmit()
 {
-	
+	debugger
     var firstName 		= $('#newFirstName').val();
     var lastName 		= $('#newLastName').val();
     var ssoId 			= $('#newSsoId').val();
@@ -155,98 +198,8 @@ function registerUserSubmit()
     var email 			= $('#newEmail').val();	
     var tenantId 		= $('select#tenants option:selected').val();
     var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    
-    if(firstName=="")
-	{
-    	if ($("#newFirstName").next(".validation").length == 0) // only add if not added
-        {
-            $("#newFirstName").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter first name.</div>");
-        }
-	}else{
-		$("#newFirstName").next(".validation").remove(); // remove it
-	}
-    
-    
-    if(lastName==""){
-		if ($("#newLastName").next(".validation").length == 0) // only add if not added
-        {
-            $("#newLastName").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter last name.</div>");
-        }
-	}else{
-		$("#newLastName").next(".validation").remove(); // remove it
-	}
-    
-    
-    if(ssoId==""){
-		if ($("#newSsoId").next(".validation").length == 0) // only add if not added
-        {
-            $("#newSsoId").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter user id for your account.</div>");
-        }
-	}else{
-		$("#newSsoId").next(".validation").remove(); // remove it
-	}
-    
-    if(password==""){
-		if ($("#newPassword").next(".validation").length == 0) // only add if not added
-        {
-            $("#newPassword").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter password.</div>");
-        }
-	}else{
-		$("#newPassword").next(".validation").remove(); // remove it
-	}
-    
-    if(confirmPassword==""){
-		if ($("#newConfirmPassword").next(".validation").length == 0) // only add if not added
-        {
-            $("#newConfirmPassword").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter password to confirm.</div>");
-        }
-	}else{
-		$("#newConfirmPassword").next(".validation").remove(); // remove it
-	}
 
-    if(email==""){
-    	if ($("#newEmail").next(".validation").length == 0) // only add if not added
-        {
-            $("#newEmail").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter email.</div>");
-        }
-	}else{
-		$("#newEmail").next(".validation").remove(); // remove it
-	}
-
-    if(tenantId==""){
-		if ($("select#tenants").next(".validation").length == 0) // only add if not added
-        {
-            $("select#tenants").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please select atleast one tenant.</div>");
-        }
-	}else{
-		$("select#tenants").next(".validation").remove(); // remove it
-	}
-
-    if(password!=confirmPassword){
-		if ($("#newConfirmPassword").next(".validation").length == 0) // only add if not added
-        {
-            $("#newConfirmPassword").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Passwords did not match, please enter correct passwords.</div>");
-        }
-		
-		$('#newPassword').focus();
-		$('#newConfirmPassword').focus();
-	}else{
-		$("#newConfirmPassword").next(".validation").remove(); // remove it
-	}
-
-    if(!emailRegex.test(email)){
-		if ($("#newEmail").next(".validation").length == 0) // only add if not added
-        {
-            $("#newEmail").after("<div class='validation col-lg-12' style='color:red;margin-bottom: 5px;'>Please enter a valid email address.</div>");
-        }
-		$('#newEmail').focus();
-		return false;
-    }else{
-		$("#newEmail").next(".validation").remove(); // remove it
-	}
-    
-	
-		var user={};
+	var user={};
 		user.firstName=firstName;
 		user.lastName=lastName;
 		user.ssoId=ssoId;
@@ -274,13 +227,13 @@ function registerUserSubmit()
 	        	if(status.status==200)
 	        	{
 	        		bootbox.alert("Account has been created for user name : '"+ssoId+"'", function(){ 
-	        			$('#newUserModalAjax').modal('toggle'); 
+	        			$('#newUserModalAjax').modal('toggle');
+	        			
 	        		});
 	        	}else
 	        	{
 	        		bootbox.alert(status.message, function(){ 
 	        		});
-	        		
 	        	}	
 	        }
 	    });
@@ -300,10 +253,12 @@ function resetPass(){
         	{
         		bootbox.alert(status.message, function(){ 
         			$('ForgotPasswordModalAjax').modal('hide'); 
+        			$('div.alert-danger').hide();
         		});
         	}else
         	{
-        		bootbox.alert(status.message, function(){ 
+        		bootbox.alert(status.message, function(){
+        			$('div.alert-danger').hide();
         		});
         		
         	}	

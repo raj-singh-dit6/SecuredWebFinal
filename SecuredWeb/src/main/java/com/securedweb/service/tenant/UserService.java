@@ -18,8 +18,6 @@ public interface UserService {
 
 	List<UserDTO> getAllUsers();
 
-	boolean isUserSSOUnique(String ssoId);
-
 	User getUser(Integer id);
 
 	User findUserByEmail(String userEmail);
@@ -27,5 +25,10 @@ public interface UserService {
 	void updatePassword(String updatedPassword, Integer id);
 
 	boolean changePassword(UserDTO user);
+
+
+	boolean isUserSSOUnique(String ssoId, String tenantId);
+
+	boolean isUserEmailUnique(String email, String tenantId);
 
 }

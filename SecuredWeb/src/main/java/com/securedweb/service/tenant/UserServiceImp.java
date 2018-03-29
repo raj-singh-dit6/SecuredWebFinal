@@ -109,8 +109,8 @@ public class UserServiceImp implements UserService{
 	}
 
 	@Override
-	public boolean isUserSSOUnique(String ssoId) {
-		User user = userRepository.findBySsoIdAndTenantId(ssoId,TenantHolder.getTenantId());
+	public boolean isUserSSOUnique(String ssoId,String tenantId) {
+		User user = userRepository.findBySsoIdAndTenantId(ssoId,tenantId);
 		return user == null;
 	}
 	
@@ -171,5 +171,11 @@ public class UserServiceImp implements UserService{
 			return false;
 		}	
 		
+	}
+
+	@Override
+	public boolean isUserEmailUnique(String email,String tenantId) {
+		User user = userRepository.findByEmailAndTenantId(email,tenantId);
+		return user == null;
 	}
 }

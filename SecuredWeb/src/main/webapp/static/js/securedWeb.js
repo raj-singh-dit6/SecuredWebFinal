@@ -5,53 +5,6 @@ function changePassword()
 	var newPassword = $('#userPassword').val();
 	var confirmPassword = $('#userConfirmPassword').val();
 	
-	if(oldpassoword==""){
-		 if ($("#userCurrentPassword").parent().next(".validation").length == 0) // only add if not added
-	        {
-	            $("#userCurrentPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter your current password.</div>");
-	      }
-		$('#userCurrentPassword').focus();
-		return false;
-	}else {
-        $("#userCurrentPassword").parent().next(".validation").remove(); // remove it
-    }
-	
-	if(newPassword==""){
-		 if ($("#userPassword").parent().next(".validation").length == 0) // only add if not added
-	        {
-	            $("#userPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter your new password.</div>");
-	      }
-		$('#userPassword').focus();
-		return false;
-	}else {
-        $("#userPassword").parent().next(".validation").remove(); // remove it
-    }
-	
-	
-	if(confirmPassword==""){
-		if ($("#userConfirmPassword").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password to confirm.</div>");
-        }
-		$('#userConfirmPassword').focus();
-		return false;
-	}else {
-        $("#userConfirmPassword").parent().next(".validation").remove(); // remove it
-    }
-	
-	if(newPassword!=confirmPassword){
-		if ($("#userConfirmPassword").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Passwords did not match, please enter correct passwords.</div>");
-        }
-		$('#userPassword').focus();
-		$('#userConfirmPassword').focus();
-		return false;
-	}else{
-		
-		$("#userConfirmPassword").parent().next(".validation").remove(); // remove it
-	}
-	
 	var user = {};
 	user.ssoId = userId;
 	user.password = oldpassoword;
@@ -646,7 +599,9 @@ function loadAjaxPage(pageType,operation,id)
 	
 	$('input,select,textarea').filter('[required]').each(function(){ 
 		$(this).parent().prev().append('<span style="color:red;">*</span>');
-	});}
+	});
+
+}
 
 
 function fillProjectDocumentsInDataTable(projectId)
@@ -966,32 +921,11 @@ function deleteById(pageType,id)
 function uploadProjectDocuments(projectId){
 	
 	
-	if($('#multipleFiles').val()=="")
+	if(!$("#UploadDocumentForm").valid())
 	{
-
-		if ($("#multipleFiles").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#multipleFiles").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select at least one file.</div>");
-        }
-		$('#multipleFiles').focus();
 		return false;
-	}else{
-		$("#multipleFiles").parent().next(".validation").remove(); // remove it
-	}
+	}	
 	
-	if($('textarea#description').val()=="")
-	{
-		if ($("textarea#description").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("textarea#description").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please add description files to be uploaded.</div>");
-        }
-		
-		$('textarea#description').focus();
-		return false;
-		
-	}else{
-		$("textarea#description").parent().next(".validation").remove(); // remove it
-	}
 
     var form = $('#UploadDocumentForm')[0];
     var data = new FormData(form);
@@ -1047,33 +981,12 @@ function uploadProjectDocuments(projectId){
 
 function addProject(){
 	
-	var projName=$('#projName').val();
-	var projDesc =$('#projDesc').val();;
-
-	if(projName=="")
+	 
+	if(!$("#ProjectForm").valid())
 	{
-		if ($("projName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("projName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter project name.</div>");
-        }
-		
-		$('#projName').focus();
 		return false;
-	}else{
-		$("#projName").parent().next(".validation").remove(); // remove it
 	}
 	
-	if(projDesc==""){
-		if ($("projDesc").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("projDesc").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please add description for project.</div>");
-        }
-		$('#projDesc').focus();
-		return false;
-	}else{
-		$("#projDesc").parent().next(".validation").remove(); // remove it
-	}
-
 	var parentProject = {};
 	$('select#projParent option').each(function() {
 		if (this.selected && $(this).val()!="" )
@@ -1083,13 +996,16 @@ function addProject(){
 		}
 	});
 	
+	var projName=$('#projName').val();
+	var projDesc =$('#projDesc').val();;
+	
 	var project = {};
     project.name 	= projName;
     project.description 	= projDesc;
     project.parentProject	= parentProject;
     
-    alert(JSON.stringify(project));
-    
+    //alert(JSON.stringify(project));
+   
 	$.ajax({
 		   type:'POST',
 	       async: false,
@@ -1119,6 +1035,11 @@ function addProject(){
 function updateTask()
 {
 	
+	if(!$("#TaskForm").valid())
+	{
+		return false;
+	}	
+	
 	var taskStatus = {};
 	taskStatus.id = $('select#taskStatus option:selected').val(); 
 	taskStatus.status = $('select#taskStatus option:selected').text();
@@ -1136,60 +1057,6 @@ function updateTask()
 	task.taskStatus =taskStatus;
 
 	
-	if(project.name=="")
-	{
-
-		if ($("select#taskProject").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#taskProject").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select a project for the task.</div>");
-        }
-		$("select#taskProject").focus();
-		return false;
-	}else{
-		$("select#taskProject").parent().next(".validation").remove(); // remove it
-	}
-
-	
-	
-	if(taskStatus.status=="")
-	{
-		if ($("select#taskStatus").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#taskStatus").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select a task status for task.</div>");
-        }
-		$('#select#taskStatus').focus();
-		return false;
-		
-	}else{
-		$("select#taskStatus").parent().next(".validation").remove(); // remove it
-	}
-	
-	if(task.name =="")
-	{
-		if ($("#taskName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a task name.</div>");
-        }
-		$('#taskName').focus();
-		return false;
-		
-	}else{
-		$("#taskName").parent().next(".validation").remove(); // remove it
-	}
-	
-
-	if(task.description =="")
-	{
-		if ($("#taskDesc").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskDesc").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a task description.</div>");
-        }
-		$('#taskDesc').focus();
-		return false;
-		
-	}else{
-		$("#taskDesc").parent().next(".validation").remove(); // remove it
-	}
 	
 	
 	//alert(JSON.stringify(task));
@@ -1221,36 +1088,14 @@ function updateTask()
 
 function updateTaskStatus()
 {	
+	if(!$("#TaskStatusForm").valid())
+	{
+		return false;
+	}	
 	var taskStatus = {};
 	taskStatus.id 			= $('#taskStatusId').val();
 	taskStatus.status 		= $('#taskStatusName').val();
 	taskStatus.statusColour = $('#taskStatusColour').val();
-    debugger
-	if(taskStatus.status =="")
-	{
-		if ($("#taskStatusName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskStatusName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a task status.</div>");
-        }
-		$('#taskStatusName').focus();
-		return false;
-		
-	}else{
-		$("#taskStatusName").parent().next(".validation").remove(); // remove it
-	}
-	
-	if(taskStatus.statusColour=="")
-	{
-		if ($("#taskStatusColour").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskStatusColour").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select a task status indicator.</div>");
-        }
-		$('#taskStatusColour').focus();
-		return false;
-		
-	}else{
-		$("#taskStatusColour").parent().next(".validation").remove(); // remove it
-	}
 	
     $.ajax({
        type:'POST',
@@ -1280,33 +1125,13 @@ function updateTaskStatus()
 
 function updateProject()
 {	
+	if(!$("#ProjectForm").valid())
+	{
+		return false;
+	}	
+	
 	var projName=$('#projName').val();
 	var projDesc =$('#projDesc').val();;
-
-	if(projName=="")
-	{
-		if ($("#projName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#projName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter project name.</div>");
-        }
-		$('#projName').focus();
-		return false;
-		
-	}else{
-		$("#projName").parent().next(".validation").remove(); // remove it
-	}
-
-	if(projDesc==""){
-		if ($("#projDesc").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#projDesc").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please add project description.</div>");
-        }
-		$('#projDesc').focus();
-		return false;
-		
-	}else{
-		$("#projDesc").parent().next(".validation").remove(); // remove it
-	}
 	
 	var parentProject = {};
 	$('select#projParent option').each(function() {
@@ -1354,58 +1179,15 @@ function updateProject()
 
 function updateUser()
 {	
+	if(!$("#UserForm").valid())
+	{
+		return false;
+	}	
+	
     var firstName 		= $('#userFirstName').val();
     var lastName 		= $('#userLastName').val();
     var email 			= $('#userEmail').val();
     var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-	if(firstName=="")
-	{
-		if ($("#userFirstName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userFirstName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter first name.</div>");
-        }
-		$('#userFirstName').focus();
-		return false;
-		
-	}else{
-		$("#userFirstName").parent().next(".validation").remove(); // remove it
-	}
-
-	if(lastName==""){
-		if ($("#userLastName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userLastName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter last name.</div>");
-        }
-		$('#userLastName').focus();
-		return false;
-		
-	}else{
-		$("#userLastName").parent().next(".validation").remove(); // remove it
-	}
-
-	if(email==""){
-		if ($("#userEmail").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter email id.</div>");
-        }
-		$('#userEmail').focus();
-		return false;
-		
-	}else{
-		$("#userEmail").parent().next(".validation").remove(); // remove it
-	}
-
-	if(!emailRegex.test(email)){
-		if ($("#userEmail").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a valid email id.</div>");
-        }
-		$('#userEmail').focus();
-		return false;
-		
-	}else{
-		$("#userEmail").parent().next(".validation").remove(); // remove it
-	}
 	
 	var userRoles = [];
 	$.each($("#userRoles option:selected"), function(){            
@@ -1450,112 +1232,17 @@ function updateUser()
 
 function addUser(){
 
+	if(!$("#UserForm").valid())
+	{
+		return false;
+	}	
+	
     var firstName 		= $('#userFirstName').val();
     var lastName 		= $('#userLastName').val();
     var ssoId 			= $('#userSsoId').val();
     var password 		= $('#userPassword').val();
     var confirmPassword = $('#userConfirmPassword').val();
     var email 			= $('#userEmail').val();	
-    var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-	if(firstName=="")
-	{
-		if ($("#userFirstName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userFirstName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter first name.</div>");
-        }
-		$('#userFirstName').focus();
-		return false;
-		
-	}else{
-		$("#userFirstName").parent().next(".validation").remove(); // remove it
-	}
-
-	if(lastName==""){
-		if ($("#userLastName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userLastName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter last name.</div>");
-        }
-		$('#userLastName').focus();
-		return false;
-		
-	}else{
-		$("#userLastName").parent().next(".validation").remove(); // remove it
-	}
-
-	if(ssoId==""){
-		if ($("#userSsoId").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userSsoId").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter user id.</div>");
-        }
-		$('#userSsoId').focus();
-		return false;
-		
-	}else{
-		$("#userSsoId").parent().next(".validation").remove(); // remove it
-	}
-
-
-	if(password==""){
-		if ($("#userPassword").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter password.</div>");
-        }
-		$('#userPassword').focus();
-		return false;
-		
-	}else{
-		$("#userPassword").parent().next(".validation").remove(); // remove it
-	}
-
-	if(confirmPassword==""){
-		if ($("#userConfirmPassword").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userConfirmPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter confirm password.</div>");
-        }
-		$('#userConfirmPassword').focus();
-		return false;
-		
-	}else{
-		$("#userConfirmPassword").parent().next(".validation").remove(); // remove it
-	}
-
-
-	if(email==""){
-		if ($("#userEmail").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter email id.</div>");
-        }
-		$('#userEmail').focus();
-		return false;
-		
-	}else{
-		$("#userEmail").parent().next(".validation").remove(); // remove it
-	}
-
-	if(password!=confirmPassword){
-		if ($("#userPassword").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userPassword").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Passwords did not match, please enter correct passwords.</div>");
-        }
-		$('#userPassword').focus();
-		$('#userConfirmPassword').focus();
-		return false;
-		
-	}else{
-		$("#userPassword").parent().next(".validation").remove(); // remove it
-	}
-
-	if(!emailRegex.test(email)){
-		if ($("#userEmail").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userEmail").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter a valid email address.</div>");
-        }
-		$('#userEmail').focus();
-		return false;
-		
-	}else{
-		$("#userEmail").parent().next(".validation").remove(); // remove it
-	}
 	
 	
 	var userRoles = [];
@@ -1602,6 +1289,11 @@ function addUser(){
 
 function addUserProject(){
 
+	if(!$("#AssignProjectForm").valid())
+	{
+		return false;
+	}	
+	
 	var userProject={};
 	var user ={};
 	var project ={};
@@ -1619,31 +1311,6 @@ function addUserProject(){
 			user.fistName=$(this).text();
 		}
 	});
-	
-	if(project.name==null)
-	{
-		if ($("select#assignProject").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#assignProject").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select project.</div>");
-        }
-		$('select#assignProject').focus();
-		return false;
-		
-	}else{
-		$("select#assignProject").parent().next(".validation").remove(); // remove it
-	}
-
-	if(user.fistName==null){
-		if ($("select#assignUser").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#assignUser").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select user.</div>");
-        }
-		$('select#assignUser').focus();
-		return false;
-		
-	}else{
-		$("select#assignUser").parent().next(".validation").remove(); // remove it
-	}
 	
 	userProject.user=user
 	userProject.project= project;
@@ -1674,6 +1341,11 @@ function addUserProject(){
 
 function addUserTask(){
 
+	if(!$("#AssignTaskForm").valid())
+	{
+		return false;
+	}	
+	
 	var userTask={};
 	var user ={};
 	var project ={};
@@ -1700,42 +1372,6 @@ function addUserTask(){
 		}
 	});
 	
-	if(project.name==null)
-	{
-		if ($("select#assignProject ").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#assignProject ").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select project.</div>");
-        }
-		$('select#assignProject ').focus();
-		return false;
-		
-	}else{
-		$("select#assignProject ").parent().next(".validation").remove(); // remove it
-	}
-
-	if(user.fistName==null){
-		if ($("select#assignUser").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#assignUser").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select user.</div>");
-        }
-		$('select#assignUser').focus();
-		return false;
-		
-	}else{
-		$("select#assignUser").parent().next(".validation").remove(); // remove it
-	}
-
-	if(task.name==null){
-		if ($("select#assignTask").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#assignTask").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select task.</div>");
-        }
-		$('select#assignTask').focus();
-		return false;
-		
-	}else{
-		$("select#assignTask").parent().next(".validation").remove(); // remove it
-	}
 	
 	userTask.user=user
 	userTask.project= project;
@@ -1909,6 +1545,12 @@ function fillUserProjectsInDataTable(userProjects){
 }
 
 function addTask() {
+
+	
+	if(!$("#TaskForm").valid())
+	{
+		return false;
+	}	
 	
 	var taskStatus = {};
 	taskStatus.id=$('select#taskStatus option:selected').val();
@@ -1925,54 +1567,6 @@ function addTask() {
     task.project 	  = project;
     
     
-    if(project.name =="")
-	{
-		if ($("select#taskProject").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#taskProject").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select a project for the task.</div>");
-        }
-		$('select#taskProject').focus();
-		return false;
-		
-	}else{
-		$("select#taskProject").parent().next(".validation").remove(); // remove it
-	}
-    
-    if(task.name==""){
-		if ($("#taskName").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter the task name.</div>");
-        }
-		$('#taskName').focus();
-		return false;
-		
-	}else{
-		$("#taskName").parent().next(".validation").remove(); // remove it
-	}
-
-    if(task.description==""){
-    	if ($("#taskDesc").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskDesc").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please add description for the task.</div>");
-        }
-		$('#taskDesc').focus();
-		return false;
-		
-	}else{
-		$("#taskDesc").parent().next(".validation").remove(); // remove it
-	}
-
-    if(taskStatus.status==""){
-		if ($("select#taskStatus").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#taskStatus").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select task status for the task.</div>");
-        }
-		$('select#taskStatus').focus();
-		return false;
-		
-	}else{
-		$("select#taskStatus").parent().next(".validation").remove(); // remove it
-	}
     
     
     $.ajax({
@@ -2001,36 +1595,13 @@ function addTask() {
 
 function addTaskStatus() {
 	
+	if(!$("#TaskStatusForm").valid())
+	{
+		return false;
+	}	
     var taskStatus = {};
     taskStatus.status 	= $('#taskStatusName').val();
     taskStatus.statusColour = $('#taskStatusColour').val();
-    
-    debugger
-    if(taskStatus.status==""){
-		 $('#taskStatusName').focus();
-		 if ($("#taskStatusName").parent().next(".validation").length == 0) // only add if not added
-	        {
-	            $("#taskStatusName").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter the task status name.</div>");
-	        }
-			$('#taskStatusName').focus();
-			return false;
-			
-	}else{
-		$("#taskStatusName").parent().next(".validation").remove(); // remove it
-	}
-    
-
-    if(taskStatus.statusColour==""){
-		if ($("#taskStatusColour").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#taskStatusColour").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select task status for the task.</div>");
-        }
-		$('#taskStatusColour').focus();
-		return false;
-		
-	}else{
-		$("#taskStatusColour").parent().next(".validation").remove(); // remove it
-	}
     
     $.ajax({
        type:'POST',
@@ -2462,6 +2033,11 @@ function fillTaskStatusInDataTable(taskStatus){
 
 function updateTaskByUser(){ 
 	
+	if(!$("#UpdateUserTaskForm").valid())
+	{
+		return false;
+	}	
+	
 	var userTaskId = $('#userTaskId').val();
 	var description = $('#userTaskDesc').val();
 	
@@ -2473,30 +2049,6 @@ function updateTaskByUser(){
 	task.description = description;
 	task.taskStatus = taskStatus;
 	
-	if(description=="")
-	{
-		if ($("#userTaskDesc").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("#userTaskDesc").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please add a description for task.</div>");
-        }
-		$('#userTaskDesc').focus();
-		return false;
-		
-	}else{
-		$("#userTaskDesc").parent().next(".validation").remove(); // remove it
-	}
-
-	if(taskStatus.status==""){
-		if ($("select#userTaskStatus").parent().next(".validation").length == 0) // only add if not added
-        {
-            $("select#userTaskStatus").parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please select a task status for the task.</div>");
-        }
-		$('select#userTaskStatus').focus();
-		return false;
-		
-	}else{
-		$("select#userTaskStatus").parent().next(".validation").remove(); // remove it
-	}
 	
 	var userTask = {};
 

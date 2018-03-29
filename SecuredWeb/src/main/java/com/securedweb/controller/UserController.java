@@ -28,6 +28,7 @@ import com.securedweb.repository.tenant.PasswordResetTokenRepository;
 import com.securedweb.service.tenant.MailService;
 import com.securedweb.service.tenant.RoleService;
 import com.securedweb.service.tenant.UserService;
+import com.securedweb.util.TenantHolder;
 
 @RestController
 @RequestMapping("/user")
@@ -55,12 +56,17 @@ public class UserController {
  @PostMapping(value="/add",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO addUser(@RequestBody UserDTO user){
 	 StatusDTO status = new StatusDTO();
-	 if(userService.isUserSSOUnique(user.getSsoId()))
+	 if(userService.isUserSSOUnique(user.getSsoId(),user.getTenantId()!=""?user.getTenantId():TenantHolder.getTenantId()))
 	{
-		 userService.addUser(user);
-	     status.setMessage("User added successfully");
-	     status.setStatus(200);
-	     return status;
+		if(userService.isUserEmailUnique(user.getEmail(),user.getTenantId()!=""?user.getTenantId():TenantHolder.getTenantId()))
+		{  
+			 userService.addUser(user);
+		     status.setMessage("User added successfully");
+		     status.setStatus(200);
+		}else {
+			status.setMessage("An account already exists with this email id.");	
+		}
+		 return status;
 	}else {
 		status.setMessage("Please enter a unique SSO ID");
 		return status;
@@ -70,11 +76,16 @@ public class UserController {
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
  @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO updateUser(@RequestBody UserDTO user){
-	 userService.updateUser(user);
 	 StatusDTO status = new StatusDTO();
-     status.setMessage("User details updated successfully");
-     status.setStatus(200);
-     return status;
+	 if(userService.isUserEmailUnique(user.getEmail(),TenantHolder.getTenantId()))
+	{  
+			 userService.updateUser(user);
+		     status.setMessage("User details updated successfully");
+		     status.setStatus(200);
+	}else {
+			status.setMessage("An account already exists with this email id.");	
+	}
+    return status;
  }
  
  @PreAuthorize("hasRole('ADMIN') or hasRole('DBA')")
@@ -128,10 +139,11 @@ public class UserController {
 	            tokenRepository.save(token);
 	            
 	            Mail mail = new Mail();
+	            mail.setContextPath(request.getContextPath());
 	            mail.setFrom("raj.singh.dit8@gmail.com");
 	            mail.setTo(user.getEmail());
 	            mail.setSubject("Password reset request");
-
+	            
 	            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()+"/SecuredWeb/service/reset-password?token=" + token.getToken();
 	            System.err.println(url);
 	            mail.setBody(url);
@@ -143,6 +155,28 @@ public class UserController {
 	    }
 		return status;
  }
+
+ @GetMapping(value="/unique/ssoId/{ssoId}",produces={MediaType.APPLICATION_JSON_VALUE})
+ public StatusDTO isUserSSOUnique(@PathVariable("ssoId") String ssoId){
+	 StatusDTO status = new StatusDTO();
+	 if(!userService.isUserSSOUnique(ssoId,TenantHolder.getTenantId()))
+	 {
+		 status.setMessage("Please enter a unique user id.");
+		 status.setStatus(200);	 
+	 }
+     return status;
+ }
  
+ @GetMapping(value="/unique/email/{emailId:.+}",produces={MediaType.APPLICATION_JSON_VALUE})
+ public StatusDTO isUserEmailUnique(@PathVariable("emailId") String emailId){
+	 System.err.println(emailId);
+	 StatusDTO status = new StatusDTO();
+	 if(!userService.isUserEmailUnique(emailId,TenantHolder.getTenantId()))
+	 {
+		 status.setMessage("An account already exist with this email id.");
+		 status.setStatus(200);	 
+	 }
+     return status;
+ }
  
 }	

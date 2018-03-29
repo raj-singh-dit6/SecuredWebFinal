@@ -7,16 +7,9 @@
         <meta name="_csrf" content="${_csrf.token}"/>
 		<meta name="_csrf_header" content="${_csrf.headerName}"/>
         <title>Reset Password</title>
-    	<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-	    <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
 	    <link href="/SecuredWeb/static/css/bootstrap.css" rel="stylesheet">
-	   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
     </head>
     <body>
         <div id="mainWrapper">
@@ -35,9 +28,6 @@
 		                                <div class="alert alert-danger">
 		                                    <span id="errorMessage">${error}</span>
 		                                </div>
-		                                <!-- <div class="alert alert-success">
-		                                	<button type="button" data-toggle="modal" data-target="#ForgotPasswordModalAjax" class="btn" onClick="loadAjaxPage('forgotPassword')">Forgot Password?</button>
-		                                </div> -->
 		                            </div>
 		                            </c:when>
 		                            <c:otherwise>
@@ -89,10 +79,14 @@
 	    	
 	</body>
 </html>
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+	    <script src="/SecuredWeb/static/js/bootbox.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
 <script>
 function resetPasswordSubmit(){
-
-    var password = $("#password").val();
+    
+	var password = $("#password").val();
     var confirmPassword = $("#confirmPassword").val();
     var token = $("#hiddenToken").val();
    
@@ -123,8 +117,8 @@ function resetPasswordSubmit(){
 	        	if(status.status==200)
 	        	{
 	        		bootbox.alert(status.message, function(){ 
-	        		    });
-	        			
+	        			 window.location = "<%=request.getContextPath()%>"+"/login";
+	        		});
 	        	}else{
 	        		
 					bootbox.alert(status.message, function(){ 

@@ -22,7 +22,7 @@
                 <div class="form-group col-lg-12" id="userSsoIdDiv">
                     <label class="col-lg-5 control-lable" for="userSsoId">User ID</label>
                     <div class="input-group col-lg-7">
-                           <input type="text" name="userSsoId" id="userSsoId" class="form-control input-sm" required />
+                           <input type="text" name="userSsoId" id="userSsoId" class="form-control input-sm" onblur="isUnique('user',this,'ssoId')" required />
                     </div>
                 </div>
                 <div class="form-group col-lg-12" id="userPasswordDiv">
@@ -40,7 +40,7 @@
                 <div class="form-group col-lg-12">
                     <label class="col-lg-5 control-lable" for="userEmail">Email</label>
                     <div class="input-group col-lg-7">
-                        <input type="email" name="userEmail" id="userEmail" class="form-control input-sm" required/>
+                        <input type="email" name="userEmail" id="userEmail" class="form-control input-sm" onblur="isUnique('user',this,'email')" required/>
                     </div>
                 </div>
                 <div class="form-group col-lg-12">
@@ -50,11 +50,13 @@
 					    </select>
                     </div>
                 </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+	        		<button id="AddUserSubmit" type="submit" class="add btn btn-primary" onclick="addUser();">Add</button>  
+	                <button id="UpdateUserSubmit" type="submit" class="update btn btn-primary" onclick="updateUser();">Update</button>
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            	</div>
+                
             </form>
         </div>
-        <!-- Modal footer -->
-        <div class="modal-footer">
-                <button id="AddUserSubmit" type="button" class="btn btn-primary" onCLick="addUser()">Add</button>  
-                <button id="UpdateUserSubmit" type="button" class="btn btn-primary" onCLick="updateUser()">Update</button>  
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>	
+<!-- ------------------Modal ends here--------------- -->

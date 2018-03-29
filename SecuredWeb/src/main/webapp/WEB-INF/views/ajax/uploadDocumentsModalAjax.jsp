@@ -32,8 +32,7 @@
 
 		    <!-- Alert -->
 		    <div id="alertMsg" style="color: red;font-size: 18px;"></div>
-        
-        </div>
+        	</div>
         
         <!-- Modal footer -->
         <div class="modal-footer" id="addUploadFooter">

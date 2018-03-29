@@ -22,12 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.securedweb.configuration.TenantConfig;
-import com.securedweb.dto.tenant.ProjectDTO;
 import com.securedweb.dto.tenant.RoleDTO;
-import com.securedweb.dto.tenant.TaskStatusDTO;
-import com.securedweb.model.tenant.Role;
-import com.securedweb.model.tenant.TaskStatus;
 import com.securedweb.repository.tenant.UserRepository;
 import com.securedweb.service.master.TenantService;
 import com.securedweb.service.tenant.ProjectService;
@@ -44,7 +39,6 @@ public class AppController {
 	
 	@Autowired
     UserService userService;
-    
 	
 	@Autowired
 	UserRepository userRepository;
@@ -162,5 +156,11 @@ public class AppController {
         System.out.println(authentication.getPrincipal());
         return authenticationTrustResolver.isAnonymous(authentication);
     }
- 
+    
+    @GetMapping(value = {"/reset-password-redirect"})
+    public String resetPasswordRedirect(Model model) {
+    	model.addAttribute("error","Please raise a new password reset request.");
+    	return "login";
+    }
+    
 }

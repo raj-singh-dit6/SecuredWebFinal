@@ -22,8 +22,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -55,7 +57,6 @@ public class AppConfig implements WebMvcConfigurer{
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
- 
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("/WEB-INF/views/");
@@ -135,6 +136,17 @@ public class AppConfig implements WebMvcConfigurer{
     @Bean
     public TaskStatusCheckerServiceImpl taskStatusCheckerService() {
         return new TaskStatusCheckerServiceImpl();
+    }
+    
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+      configurer.setUseSuffixPatternMatch(false);
+      configurer.setUseRegisteredSuffixPatternMatch(true);
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+      configurer.favorPathExtension(false);
     }
     
 }

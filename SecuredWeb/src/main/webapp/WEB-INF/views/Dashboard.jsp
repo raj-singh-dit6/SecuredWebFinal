@@ -185,20 +185,14 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.6/js/bootstrap-colorpicker.js"></script>  
 	
 	<!-- jquery form validator -->
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+	<script src="/SecuredWeb/static/js/jquery.validate.js"></script>
+	
+	<script src="/SecuredWeb/static/js/securedWeb.validation.js"></script>
 <script>
-
-$.validate({
-    modules : 'location, date, security, file',
-    onModulesLoaded : function() {
-      $('#country').suggestCountry();
-    }
-  });
 
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 var tenantId=$("#tenantId").val();
-
 
 $(function () {
 	$('#taskStatusColour').colorpicker();
@@ -212,7 +206,151 @@ $(document).ready(function() {
 	    width  : 600,
 	    height : 300,
 	});
-    
 });
+
+
+
+$('#UserModalAjax').on('shown.bs.modal', function (e) {
+$("#UserForm").validate({
+	  rules: {	
+		  userSsoId: { minlength: 8},
+		  userEmail: {email: true},
+	  },
+	  messages: {
+		  	userFirstName:{ required: "Please enter your first name."},
+		  	userLastName: { required:"Please enter your last name."},
+		  	userSsoId : {
+	        	required: "Please enter a user id.",
+	        	minlength: "Your user id must be at least 8 characters."
+	      	},
+	      	userPassword : { required:"Please enter a password."},
+	      	userConfirmPassword : { required:"Please enter a password to confirm."},
+	    	userEmail: {
+				required : "Please enter your email id.",	    	
+	    		email:"Your email address must be in the format of 'xyz@domain.com'.",
+	    	},
+	    	userRoles : { required:"Please select  your role in your organisation."},
+	  	},
+	  submitHandler: function(form) {
+		  return false;
+	  }
+	});
+});
+
+$('#ProjectModalAjax').on('shown.bs.modal', function (e) {
+	debugger;
+	$("#ProjectForm").validate({
+		  rules: {	
+			  projName: { minlength: 8},
+			  projDesc: {minlength: 20},
+		  },
+		  messages: {
+			  	projName:{ required:"Please mention project name.",
+			  		minlength: "Your project name id must be at least 8 characters."},
+			  	projDesc: { 
+			  		required:"Please add description to the project.",
+			  		minlength: "Project description must be at least 20 characters."},
+		  	},
+		  submitHandler: function(form) {
+			  return false;
+		  }
+		});
+	});
+	
+	
+$('#TaskModalAjax').on('shown.bs.modal', function (e) {
+	debugger;
+	$("#TaskForm").validate({
+		  rules: {	
+			  taskName: { minlength: 10},
+		  },
+		  messages: {
+			  taskProject: { required:"Please select project for which you want to add task."},	
+			  taskName:{ required:"Please mention project name.",
+			  		minlength: "Your task name must be at least 10 characters."},
+			  taskStatus: { required:"Please select task status for the task."},	
+		  	},
+		  submitHandler: function(form) {
+		    return false;
+		  }
+		});
+	});
+
+
+
+$('#TaskStatusModalAjax').on('shown.bs.modal', function (e) {
+	debugger;
+	$("#TaskStatusForm").validate({
+		  rules: {	
+			  taskStatusName: { minlength: 5},
+		  },
+		  messages: {
+			  taskStatusName:{ required:"Please mention task status name.",
+			  		minlength: "Your task status name must be at least 5 characters."},
+			  taskStatusColour: { required:"Please select task status for the task."},	
+		  	},
+		  	submitHandler: function (form) {
+				return false;	
+			}
+		});
+	
+    });
+    
+    
+$('#AssignProjectModalAjax').on('shown.bs.modal', function (e) {
+	debugger;
+	$("#AssignProjectForm").validate({
+		  messages: {
+			  assignProject: { required:"Please select project."},	
+			  assignUser: { required:"Please select user to whom u wish to assign project."},	
+		  	},
+		  	submitHandler: function (form) {
+				return false;	
+			}
+		});
+	
+    });
+    
+$('#AssignProjectModalAjax').on('shown.bs.modal', function (e) {
+	debugger;
+	$("#AssignProjectForm").validate({
+		  messages: {
+			  assignProject: { required:"Please select project."},	
+			  assignUser: { required:"Please select user."},
+			  assignTask: { required:"Please select task."},
+		  	},
+		  	submitHandler: function (form) {
+				return false;	
+			}
+		});
+});
+
+$('#UpdateTaskByUserModalAjax').on('shown.bs.modal', function (e) {
+		debugger;
+		$("#UpdateUserTaskForm").validate({
+			  messages: {
+				  userTaskDesc: { required:"Please add description to your task."},	
+				  userTaskStatus: { required:"Please select task status for your task."},
+			  	},
+			  	submitHandler: function (form) {
+					return false;	
+				}
+			});	
+	
+ });
+ 
+$('#UploadDocumentsModalAjax').on('shown.bs.modal', function (e) {
+	$("#UploadDocumentForm").validate({
+		  messages: {
+			  multipleFiles: { required:"Please select atleast one file."},	
+			  description: { required:"Please add description for your files."},
+		  	},
+		  	submitHandler: function (form) {
+				return false;	
+			}
+		});	
+
+});
+
 
 </script>

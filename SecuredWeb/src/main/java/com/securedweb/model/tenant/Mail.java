@@ -11,6 +11,7 @@ public class Mail {
     private String body;
 
 	private Map<String, Object> model;
+	private String contextPath;
 
     public Mail() {
 
@@ -54,5 +55,13 @@ public class Mail {
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public String getContextPath() {
+		return contextPath;
+	}
+
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
 	}
 }
