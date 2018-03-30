@@ -85,7 +85,6 @@ public class MailServiceImpl implements MailService {
     {
     	ClassLoader classLoader = getClass().getClassLoader();
     	File file = new File(classLoader.getResource("images/mindfireLogo.jpg").getFile());
-    	
     	return file;
     }
     

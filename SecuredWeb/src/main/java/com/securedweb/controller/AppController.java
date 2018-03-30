@@ -77,14 +77,14 @@ public class AppController {
             return "login";
         } else {
         	String tenantId=userRepository.findBySsoId(getPrincipal()).getTenantId();
-        	return "redirect:/Dashboard?"+"tenantId="+tenantId;
+        	return "redirect:/dashboard?"+"tenantId="+tenantId;
         }
     }
     
     /*
-     * This method get redirected request and returns view "views/Dashboard.jsp"
+     * This method get redirected request and returns view "views/dashboard.jsp"
      */
-    @GetMapping(value = "/Dashboard")
+    @GetMapping(value = "/dashboard")
     public String getDashboard (Model model,HttpServletRequest req) {
     	String tenantId=req.getParameter("tenantId");
     	System.err.println("CONTROLLER TENANT FROM REQUEST"+tenantId);
@@ -96,7 +96,7 @@ public class AppController {
         model.addAttribute("tenantId", tenantId);
         model.addAttribute("userId", getPrincipal());
         model.addAttribute("loggedinuser", getPrincipal());
-    	return "Dashboard";
+    	return "dashboard";
     }
  
     /**

@@ -25,7 +25,7 @@
 </head>
  
 <body>
-	<%@include file="NavBar.jsp" %>	
+	<%@include file="navbar.jsp" %>	
 	<div class="container-fluid text-center" style="height:100%">    
 	  <div class="row content">
 	    <div class="col-sm-12 text-left">

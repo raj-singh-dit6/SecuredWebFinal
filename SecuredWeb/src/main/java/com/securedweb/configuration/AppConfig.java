@@ -21,6 +21,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -138,15 +139,26 @@ public class AppConfig implements WebMvcConfigurer{
         return new TaskStatusCheckerServiceImpl();
     }
     
+    /**
+     *  Configures URL path matcher to avoid case sensitive URLs & allow *.* URLs
+     */ 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-      configurer.setUseSuffixPatternMatch(false);
-      configurer.setUseRegisteredSuffixPatternMatch(true);
+		AntPathMatcher matcher = new AntPathMatcher();  
+	    matcher.setCaseSensitive(false); 	// To enable case insensitive URL
+	    
+	    configurer.setPathMatcher(matcher);
+		configurer.setUseSuffixPatternMatch(false); //  To allow URL with *.* 
+		configurer.setUseRegisteredSuffixPatternMatch(true);
     }
 
+    /**
+     *  Configures content negotiation & allow URL with *.* 
+     */
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
       configurer.favorPathExtension(false);
     }
+    
     
 }
