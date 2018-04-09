@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
-                .tokenValiditySeconds(31536000).and().csrf().ignoringAntMatchers("/service/resetPassword").and().exceptionHandling().accessDeniedPage("/Access_Denied");
+                .tokenValiditySeconds(31536000).and().csrf().ignoringAntMatchers("/service/resetPassword").and().exceptionHandling().accessDeniedPage("/access_denied");
 		http.headers().frameOptions().sameOrigin();
 	}
 	

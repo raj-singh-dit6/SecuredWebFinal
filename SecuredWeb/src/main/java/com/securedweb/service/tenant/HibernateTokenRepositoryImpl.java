@@ -29,7 +29,7 @@ public class HibernateTokenRepositoryImpl implements PersistentTokenRepository{
         persistentLogin.setUsername(token.getUsername());
         persistentLogin.setSeries(token.getSeries());
         persistentLogin.setToken(token.getTokenValue());
-        persistentLogin.setLast_used(token.getDate());
+        persistentLogin.setLastUsed(token.getDate());
         persistentLoginRepository.save(persistentLogin);
     }
  
@@ -39,7 +39,7 @@ public class HibernateTokenRepositoryImpl implements PersistentTokenRepository{
     	 LOG.info("Fetch Token if any for seriesId : {}", seriesId);
         PersistentLogin persistentLogin = persistentLoginRepository.findById(seriesId).get();
         return new PersistentRememberMeToken(persistentLogin.getUsername(), persistentLogin.getSeries(),
-        										persistentLogin.getToken(), persistentLogin.getLast_used());
+        										persistentLogin.getToken(), persistentLogin.getLastUsed());
 	    } catch (Exception e) {
 	    	LOG.info("Token not found...");
 	        return null;
@@ -62,7 +62,7 @@ public class HibernateTokenRepositoryImpl implements PersistentTokenRepository{
     	LOG.info("Updating Token for seriesId : {}", seriesId);
         PersistentLogin persistentLogin = persistentLoginRepository.findById(seriesId).get();
         persistentLogin.setToken(tokenValue);
-        persistentLogin.setLast_used(lastUsed);
+        persistentLogin.setLastUsed(lastUsed);
         persistentLoginRepository.save(persistentLogin);
     }
 }

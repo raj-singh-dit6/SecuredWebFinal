@@ -1,28 +1,13 @@
 package com.securedweb.service.tenant;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
-import com.securedweb.model.tenant.Task;
-import com.securedweb.repository.tenant.TaskRepository;
-
-@Service("taskStatusCheckerService")
-@PropertySource("classpath:cron.properties")
+/*@Service("taskStatusCheckerService")
+@PropertySource("classpath:cron.properties")*/
 public class TaskStatusCheckerServiceImpl{
-	
+/*	
 	@Autowired
 	TaskRepository  taskRepository;
 	
-	
-	
-	/*@Scheduled(cron = "0 0/1 0 ? * *")*/
+	@Scheduled(cron = "0 0/1 0 ? * *")
 	//@Scheduled(cron = "0 0/2 * * * ?")
 	@Scheduled(fixedDelayString = "${fixedDelay.in.milliseconds}")
 	public void taskStatusChecker() throws ParseException {
@@ -51,4 +36,4 @@ public class TaskStatusCheckerServiceImpl{
 		}
 	}
 	
-}
+*/}

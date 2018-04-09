@@ -101,39 +101,40 @@ var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
 
 $('#newUserModalAjax').on('shown.bs.modal', function (e) {
-	$("#addUserForm").validate({
-	  rules: {	
-			newSsoId: {
-		      minlength: 6
-		    },
-		  	newEmail: {
-		      email: true
-		    },
-	      	newConfirmPassword: {
-	        	equalTo: "#newPassword"
-	      	}
-		    
-		  },
-	  messages: {
-		    tenants : { required:"Please select atleast one tenant."},
-		  	newFirstName:{ required: "Please enter your first name."},
-			newLastName: { required:"Please enter your last name."},
-	    	newSsoId : {
-	        	required: "Please enter a user id.",
-	        	minlength: "Your user id must be at least 8 characters."
-	      	},
-	      	newPassword : { required:"Please enter a password."},
-	      	newConfirmPassword : { required:"Please enter a password to confirm."},
-	    	newEmail: {
-				required : "Please enter your email id.",	    	
-	    		email:"Your email address must be in the format of 'xyz@domain.com'.",
-	    	},
-	  	},
-	  submitHandler: function(form) {
-		  return false;
-	  	},
+	$("#NewUserForm").validate({
+		 rules: {	
+				newSsoId: {
+			      minlength: 3
+			    },
+			  	newEmail: {
+			      email: true
+			    },
+		      	newConfirmPassword: {
+		        	equalTo: "#newPassword"
+		      	}
+			  },
+		  messages: {
+			    tenants : { required:"Please select atleast one tenant."},
+			  	newFirstName:{ required: "Please enter your first name."},
+				newLastName: { required:"Please enter your last name."},
+		    	newSsoId : {
+		        	required: "Please enter a user id.",
+		        	minlength: "Your user id must be at least 3 characters.",
+		      	},
+		      	newPassword : { required:"Please enter a password."},
+		      	newConfirmPassword : { required:"Please enter a password to confirm."},
+		    	newEmail: {
+					required : "Please enter your email id.",	    	
+		    		email:"Your email address must be in the format of 'xyz@domain.com'.",
+		    	},
+		  	},
+		  submitHandler: function(form) {
+			  debugger
+			  return false;
+	  }
 	});
 });
+	
 
 function loadAjaxPage(pageType){	
 	var reqURL= "view/ajaxPage/"+pageType;
@@ -189,7 +190,12 @@ function loadAjaxPage(pageType){
 
 function registerUserSubmit()
 {
-	debugger
+	
+	if(!$("#NewUserForm").valid())
+	{
+		return false;
+	}
+	
     var firstName 		= $('#newFirstName').val();
     var lastName 		= $('#newLastName').val();
     var ssoId 			= $('#newSsoId').val();
@@ -197,7 +203,6 @@ function registerUserSubmit()
     var confirmPassword = $('#newConfirmPassword').val();
     var email 			= $('#newEmail').val();	
     var tenantId 		= $('select#tenants option:selected').val();
-    var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
 	var user={};
 		user.firstName=firstName;
@@ -227,12 +232,13 @@ function registerUserSubmit()
 	        	if(status.status==200)
 	        	{
 	        		bootbox.alert("Account has been created for user name : '"+ssoId+"'", function(){ 
-	        			$('#newUserModalAjax').modal('toggle');
+	        			$('#newUserModalAjax').modal('hide');
 	        			
 	        		});
 	        	}else
 	        	{
 	        		bootbox.alert(status.message, function(){ 
+	        		
 	        		});
 	        	}	
 	        }

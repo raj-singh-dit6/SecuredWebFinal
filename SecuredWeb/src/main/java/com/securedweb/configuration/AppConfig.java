@@ -160,5 +160,4 @@ public class AppConfig implements WebMvcConfigurer{
       configurer.favorPathExtension(false);
     }
     
-    
 }

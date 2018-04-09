@@ -19,14 +19,6 @@ public class CurrentTenantIdentifierResolverImpl implements CurrentTenantIdentif
 	@Override
 	public String resolveCurrentTenantIdentifier() {
 		
-		/*ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		String tenantId = attr!=null?attr.getRequest().getParameter("tenantId"):"";
-        
-        if (tenantId != "") {
-            TenantHolder.setTenantId(tenantId);
-        	return tenantId;
-        }
-        return DEFAULT_TENANT_ID;*/
         
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();				
 		if(authentication != null) {

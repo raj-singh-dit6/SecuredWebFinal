@@ -1,25 +1,13 @@
 package com.securedweb.dto.tenant;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter @NoArgsConstructor
 public class StatusDTO {
 	
 	 private long status;
 	 private String message;
 	 
-	 public long getStatus() {
-		 return status;
-	 }
-	 
-	 public void setStatus(long status) {
-		 this.status = status;
-	 }
-	 
-	 public String getMessage() {
-		 return message;
-	 }
-	 
-	 public void setMessage(String message) {
-		 this.message = message;
-	 }
-
-
 }

@@ -77,11 +77,11 @@ public class UserController {
  @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO updateUser(@RequestBody UserDTO user){
 	 StatusDTO status = new StatusDTO();
-	 if(userService.isUserEmailUnique(user.getEmail(),TenantHolder.getTenantId()))
+	if(userService.isUserEmailUnique(user.getEmail(),TenantHolder.getTenantId()))
 	{  
-			 userService.updateUser(user);
-		     status.setMessage("User details updated successfully");
-		     status.setStatus(200);
+		 userService.updateUser(user);
+	     status.setMessage("User details updated successfully");
+	     status.setStatus(200);
 	}else {
 			status.setMessage("An account already exists with this email id.");	
 	}
@@ -139,7 +139,6 @@ public class UserController {
 	            tokenRepository.save(token);
 	            
 	            Mail mail = new Mail();
-	            mail.setContextPath(request.getContextPath());
 	            mail.setFrom("raj.singh.dit8@gmail.com");
 	            mail.setTo(user.getEmail());
 	            mail.setSubject("Password reset request");
@@ -150,7 +149,7 @@ public class UserController {
 	            
 	            mailService.sendEmail(mail);
 	            
-	            status.setMessage("Email sent to your registered email id : "+user.getEmail());
+	            status.setMessage("If you are registered, then an email with password reset link would have been sent to your email id.");
 	            status.setStatus(200);
 	    }
 		return status;

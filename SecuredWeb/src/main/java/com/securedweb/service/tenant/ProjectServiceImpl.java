@@ -9,15 +9,12 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.securedweb.dto.tenant.ProjectDTO;
 import com.securedweb.dto.tenant.TaskDTO;
 import com.securedweb.dto.tenant.UserDTO;
-import com.securedweb.dto.tenant.UserProjectDTO;
 import com.securedweb.model.tenant.Project;
 import com.securedweb.model.tenant.Task;
 import com.securedweb.model.tenant.User;
@@ -93,12 +90,8 @@ public class ProjectServiceImpl implements ProjectService {
 		projectList=(List<Project>) projectRepository.findByTenantId(TenantHolder.getTenantId());
 		for(Project project:projectList)
 		{
-			if(project!=null)
-			{
 					Hibernate.initialize(project.getChildProjects());
 					Hibernate.initialize(project.getParentProject());
-					//Hibernate.initialize(project.getTasks());
-					//Hibernate.initialize(project.getUserProjects());
 					
 						ProjectDTO projectDTO = new ProjectDTO();
 						projectDTO.setId(project.getId());
@@ -108,7 +101,6 @@ public class ProjectServiceImpl implements ProjectService {
 						projectDTO.setDescription(project.getDescription());
 						projectDTOList.add(projectDTO);
 						
-			}	
 		}
 		return projectDTOList;
 	}
@@ -122,31 +114,21 @@ public class ProjectServiceImpl implements ProjectService {
 	public ProjectDTO getProjectDTO(Integer id) {
 		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
 		ProjectDTO projectDTO = new ProjectDTO();
-		if(project!=null)
-		{
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
-			//Hibernate.initialize(project.getTasks());
-			//Hibernate.initialize(project.getUserProjects());
 
 				projectDTO.setName(project.getName());
 				projectDTO.setId(project.getId());
 				projectDTO.setDescription(project.getDescription());
 				projectDTO.setParentProject(project.getParentProject());
-		}
 		return projectDTO;
 	}
 	
 	@Override
 	public Project getParentProject(Integer id) {
 		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
-		if(project!=null)
-		{
 			Hibernate.initialize(project.getChildProjects());
 			Hibernate.initialize(project.getParentProject());
-			//Hibernate.initialize(project.getTasks());
-			//Hibernate.initialize(project.getUserProjects());
-		}
 		return project;
 	}
 	
@@ -154,13 +136,6 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Project getProject(Integer id) {
 		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
-		if(project!=null)
-		{
-			//Hibernate.initialize(project.getChildProjects());
-			//Hibernate.initialize(project.getParentProject());
-			//Hibernate.initialize(project.getTasks());
-			//Hibernate.initialize(project.getUserProjects());
-		}
 		return project;
 	}
 

@@ -20,7 +20,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -42,12 +41,12 @@ public class MasterConfig {
    public DataSource masterDataSource() {
 	  
       DriverManagerDataSource dataSource = new DriverManagerDataSource();
-      dataSource.setDriverClassName(springEnvironment.getProperty("master.datasource.classname",
+      dataSource.setDriverClassName(springEnvironment.getProperty("master.database.classname",
               "com.mysql.jdbc.Driver"));
-      dataSource.setUrl(springEnvironment.getProperty("master.datasource.url", 
-              "jdbc:mysql://localhost:3306/master_db") + "?createDatabaseIfNotExist=true");
-      dataSource.setUsername(springEnvironment.getProperty("master.datasource.user", "root"));
-      dataSource.setPassword(springEnvironment.getProperty("master.datasource.password", "admin"));
+      dataSource.setUrl(springEnvironment.getProperty("master.database.url", 
+              "jdbc:mysql://localhost:3306/master_db") + "?createDatabaseIfNotExist=true&useUnicode=yes&characterEncoding=UTF-8");
+      dataSource.setUsername(springEnvironment.getProperty("master.database.user", "root"));
+      dataSource.setPassword(springEnvironment.getProperty("master.database.password", "admin"));
       return dataSource;
    }
 
@@ -67,16 +66,15 @@ public class MasterConfig {
 
    private Properties getHibernateProperties() {
       Properties properties = new Properties();
-      properties.put("hibernate.dialect", springEnvironment.getProperty("hibernate.dialect"
-              , "org.hibernate.dialect.MySQLDialect"));
-      properties.put("hibernate.show_sql", springEnvironment.getProperty("hibernate.show_sql"
-              , "true"));
-      properties.put("hibernate.format_sql", springEnvironment.getProperty("hibernate.format_sql"
-              , "true"));
-      properties.put("hibernate.hbm2ddl.auto", springEnvironment.getProperty("hibernate.hbm2ddl.auto"
-              , "update"));
-      properties.put("hibernate.id.new_generator_mappings", springEnvironment.getProperty("hibernate.id.new_generator_mappings"
-              , "false"));
+      properties.put("hibernate.dialect", springEnvironment.getProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect"));
+      /*properties.put("hibernate.dialect.storage_engine",springEnvironment.getProperty("hibernate.dialect.storage_engine","innodb"));*/
+      properties.put("hibernate.show_sql", springEnvironment.getProperty("hibernate.show_sql", "true"));
+      properties.put("hibernate.format_sql", springEnvironment.getProperty("hibernate.format_sql", "true"));
+      properties.put("hibernate.hbm2ddl.auto", springEnvironment.getProperty("hibernate.hbm2ddl.auto", "update"));
+      properties.put("hibernate.id.new_generator_mappings", springEnvironment.getProperty("hibernate.id.new_generator_mappings", "false"));
+      properties.put("hibernate.physical_naming_strategy", "com.securedweb.configuration.CustomNamingStrategy");
+      
+      
       return properties;
    }
 

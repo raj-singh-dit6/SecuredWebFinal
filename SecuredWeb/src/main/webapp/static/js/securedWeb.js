@@ -998,12 +998,13 @@ function addProject(){
 	
 	var projName=$('#projName').val();
 	var projDesc =$('#projDesc').val();;
+	var projStartDate =$('#projStartDate').val();
 	
 	var project = {};
     project.name 	= projName;
     project.description 	= projDesc;
     project.parentProject	= parentProject;
-    
+    project.startDate 		= projStartDate; 
     //alert(JSON.stringify(project));
    
 	$.ajax({
@@ -1131,8 +1132,9 @@ function updateProject()
 	}	
 	
 	var projName=$('#projName').val();
-	var projDesc =$('#projDesc').val();;
-	
+	var projDesc =$('#projDesc').val();
+	var projStartDate =$('#projStartDate').val();
+
 	var parentProject = {};
 	$('select#projParent option').each(function() {
 	    if (this.selected)
@@ -1150,7 +1152,7 @@ function updateProject()
     project.name 	= projName;
     project.description 	= projDesc;
     project.parentProject	= parentProject;
-    
+    project.startDate 		= projStartDate;
     $.ajax({
        type:'POST',
        async: false,
@@ -1835,6 +1837,7 @@ function fillProjectsInDataTable(projects){
 		dataEach.push(project.id);
 		dataEach.push(project.name);
 		dataEach.push(project.description);
+		dataEach.push(project.startDate);
 		if(project.parentProject!=null){
 			dataEach.push(project.parentProject.id);
 			dataEach.push(project.parentProject.name);
@@ -1858,6 +1861,7 @@ function fillProjectsInDataTable(projects){
         	{ title: "Project Id" },
             { title: "Project Name" },
             { title: "Description" },
+            { title: "Start Date" },
             { title: "Parent Project Id" },
             { title: "Parent Project" },
             { title: "Child Projects" },            
@@ -1897,7 +1901,7 @@ function fillProjectsInDataTable(projects){
                 "searchable": false
             },
             {
-                "targets": [ 3 ],
+                "targets": [ 4 ],
                 "visible": false,
                 "searchable": false
             }
@@ -2079,5 +2083,4 @@ function updateTaskByUser(){
 	       }
 	       
 	 });
-	
 }

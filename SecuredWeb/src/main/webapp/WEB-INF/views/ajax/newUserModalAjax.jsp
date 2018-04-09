@@ -6,7 +6,7 @@
 	        
 	        <!-- Modal body -->
 	        <div id = "newUserModal"  class="modal-body">
-	        	<form action="#" method="POST" id="addUserForm" name="addUserForm">
+	        	<form action="#" method="POST" id="NewUserForm" name="NewUserForm">
 	                <div class="form-group col-lg-12">
 	                    <label class="col-lg-5 control-lable" for="tenants">Tenant</label>
 	                    <div class="col-lg-7">
@@ -53,7 +53,7 @@
 	                </div>
 							<!-- Modal footer -->
 			        <div class="modal-footer">
-			                <button id="registerUserSubmit" type="submit" class="btn btn-primary" onclick="registerUserSubmit();">Register</button>  
+			                <button id="registerUserSubmit" type="submit" class="btn btn-primary" onClick="registerUserSubmit()">Register</button>  
 			                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 			         </div>
 	            </form>

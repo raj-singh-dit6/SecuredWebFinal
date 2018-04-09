@@ -1,6 +1,7 @@
 package com.securedweb.model.tenant;
 
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -14,68 +15,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import lombok.Data;
+
 @Entity
-@Table(name="PASSWORD_RESET_TOKEN")
-public class PasswordResetToken {
+@Data
+public class PasswordResetToken implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name="TOKEN",nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "USER_ID")
+    @JoinColumn(name = "userId",nullable = false )
     private User user;
 
-    @Column(name="EXPIRY_DATE",nullable = false)
+    @Column(nullable = false)
     private Date expiryDate;
     
-    @Column(name="CREATED_ON")
 	@CreationTimestamp
 	private LocalDateTime createDateTime;
 
-	@Column(name="UPDATED_ON")
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
 
     public void setExpiryDate(int hours){
         Calendar now = Calendar.getInstance();
@@ -104,19 +73,4 @@ public class PasswordResetToken {
         return diffHours>72;
     }
 
-	public LocalDateTime getCreateDateTime() {
-		return createDateTime;
-	}
-
-	public void setCreateDateTime(LocalDateTime createDateTime) {
-		this.createDateTime = createDateTime;
-	}
-
-	public LocalDateTime getUpdateDateTime() {
-		return updateDateTime;
-	}
-
-	public void setUpdateDateTime(LocalDateTime updateDateTime) {
-		this.updateDateTime = updateDateTime;
-	}
 }
