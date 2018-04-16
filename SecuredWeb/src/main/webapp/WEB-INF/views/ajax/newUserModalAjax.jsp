@@ -1,7 +1,7 @@
    			        <!-- Modal Header -->
 	        <div class="modal-header">
 	          <h4 class="modal-title">Register New User</h4>
-	          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+	           <button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	        
 	        <!-- Modal body -->
@@ -53,7 +53,7 @@
 	                </div>
 							<!-- Modal footer -->
 			        <div class="modal-footer">
-			                <button id="registerUserSubmit" type="submit" class="btn btn-primary" onClick="registerUserSubmit()">Register</button>  
+			                <button id="registerUserSubmit" type="submit" class="btn btn-primary" onclick="addNewUserSubmit()">Register</button>  
 			                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 			         </div>
 	            </form>

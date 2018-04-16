@@ -188,9 +188,9 @@ function loadAjaxPage(pageType){
 	
 }
 
-function registerUserSubmit()
-{
-	
+function addNewUserSubmit()
+{	
+	debugger
 	if(!$("#NewUserForm").valid())
 	{
 		return false;
@@ -243,6 +243,7 @@ function registerUserSubmit()
 	        	}	
 	        }
 	    });
+		debugger
 }
 
 function resetPass(){
