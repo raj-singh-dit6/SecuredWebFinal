@@ -87,12 +87,10 @@ public class AppController {
     @GetMapping(value = "/dashboard")
     public String getDashboard (Model model,HttpServletRequest req) {
     	String tenantId=req.getParameter("tenantId");
-    	System.err.println("CONTROLLER TENANT FROM REQUEST"+tenantId);
     	req.getSession().setAttribute("tenantId", tenantId);
+    	
     	String tenantName= tenantService.findById(tenantId).getTenantName();
-    	System.err.println(tenantName);
-    	System.err.println("CONTROLLER TENANT FROM SESSION :"+req.getSession().getAttribute("tenantId"));
-        model.addAttribute("tenantName", tenantName);
+    	model.addAttribute("tenantName", tenantName);
         model.addAttribute("tenantId", tenantId);
         model.addAttribute("userId", getPrincipal());
         model.addAttribute("loggedinuser", getPrincipal());

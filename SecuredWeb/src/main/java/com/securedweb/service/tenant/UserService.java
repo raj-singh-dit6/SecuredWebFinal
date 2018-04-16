@@ -29,6 +29,6 @@ public interface UserService {
 
 	boolean isUserSSOUnique(String ssoId, String tenantId);
 
-	boolean isUserEmailUnique(String email, String tenantId);
+	boolean isUserEmailUnique(String ssoId, String email, String tenantId);
 
 }

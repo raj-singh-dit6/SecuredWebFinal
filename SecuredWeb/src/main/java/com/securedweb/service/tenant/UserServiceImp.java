@@ -174,8 +174,11 @@ public class UserServiceImp implements UserService{
 	}
 
 	@Override
-	public boolean isUserEmailUnique(String email,String tenantId) {
+	public boolean isUserEmailUnique(String ssoId,String email,String tenantId) {
 		User user = userRepository.findByEmailAndTenantId(email,tenantId);
-		return user == null;
+		if(user != null && user.getSsoId().equals(ssoId))
+			return true;
+		else
+			return user == null;
 	}
 }

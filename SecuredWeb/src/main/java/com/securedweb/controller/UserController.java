@@ -58,7 +58,7 @@ public class UserController {
 	 StatusDTO status = new StatusDTO();
 	 if(userService.isUserSSOUnique(user.getSsoId(),user.getTenantId()!=""?user.getTenantId():TenantHolder.getTenantId()))
 	{
-		if(userService.isUserEmailUnique(user.getEmail(),user.getTenantId()!=""?user.getTenantId():TenantHolder.getTenantId()))
+		if(userService.isUserEmailUnique(user.getSsoId(),user.getEmail(),user.getTenantId()!=""?user.getTenantId():TenantHolder.getTenantId()))
 		{  
 			 userService.addUser(user);
 		     status.setMessage("User added successfully");
@@ -77,7 +77,7 @@ public class UserController {
  @PostMapping(value="/update",consumes={MediaType.APPLICATION_JSON_VALUE},produces={MediaType.APPLICATION_JSON_VALUE})
  public StatusDTO updateUser(@RequestBody UserDTO user){
 	 StatusDTO status = new StatusDTO();
-	if(userService.isUserEmailUnique(user.getEmail(),TenantHolder.getTenantId()))
+	if(userService.isUserEmailUnique(user.getSsoId(),user.getEmail(),TenantHolder.getTenantId()))
 	{  
 		 userService.updateUser(user);
 	     status.setMessage("User details updated successfully");
@@ -170,7 +170,7 @@ public class UserController {
  public StatusDTO isUserEmailUnique(@PathVariable("emailId") String emailId){
 	 System.err.println(emailId);
 	 StatusDTO status = new StatusDTO();
-	 if(!userService.isUserEmailUnique(emailId,TenantHolder.getTenantId()))
+	 if(!userService.isUserEmailUnique("",emailId,TenantHolder.getTenantId()))
 	 {
 		 status.setMessage("An account already exist with this email id.");
 		 status.setStatus(200);	 
