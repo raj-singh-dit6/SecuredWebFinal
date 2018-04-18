@@ -36,26 +36,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/list")
+		http.authorizeRequests().antMatchers("/service/reset-password","/service/resetPassword").permitAll();
+		http.authorizeRequests().antMatchers("/", "/list")
                 .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
-                .antMatchers("/addUser/**", "/delete-user-*").access("hasRole('ADMIN')").antMatchers("/edit-user-*")
-                .access("hasRole('ADMIN') or hasRole('DBA')").and().formLogin().loginPage("/login")
+                .and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
-                .tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
-    }
+                .tokenValiditySeconds(31536000).and().csrf().ignoringAntMatchers("/service/resetPassword").and().exceptionHandling().accessDeniedPage("/access_denied");
+		http.headers().frameOptions().sameOrigin();
+	}
 	
-	/*To return PasswordEncoder P = BCryptPasswordEncoder*/
+	/*To return PasswordEncoder P = CustomPasswordEncoder*/
 	@Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new CustomPasswordEncoder();
     }
  
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setPasswordEncoder(new CustomPasswordEncoder());
         return authenticationProvider;
     }
  
