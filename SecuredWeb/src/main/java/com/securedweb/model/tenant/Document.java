@@ -36,12 +36,12 @@ public class Document implements Serializable{
     @Column(length=255, nullable=false)
     private String location;
  
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "userId")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id")
     private User user;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "projectid")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "project_Id")
     private Project  project;
      
 	@CreationTimestamp

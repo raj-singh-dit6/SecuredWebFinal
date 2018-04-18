@@ -40,6 +40,7 @@ public class Project implements Serializable{
 	@Column(nullable=false)
 	private String description;
 	
+	@Column(nullable=true)
 	private Date startDate;
 	
 	@ManyToOne(cascade={CascadeType.ALL})

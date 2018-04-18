@@ -1004,9 +1004,9 @@ function addProject(){
     project.name 	= projName;
     project.description 	= projDesc;
     project.parentProject	= parentProject;
-    project.startDate 		= projStartDate; 
-    //alert(JSON.stringify(project));
-   
+    //project.startDate 		= projStartDate;
+    //alert(projStartDate);
+    
 	$.ajax({
 		   type:'POST',
 	       async: false,
@@ -1133,7 +1133,7 @@ function updateProject()
 	
 	var projName=$('#projName').val();
 	var projDesc =$('#projDesc').val();
-	var projStartDate =$('#projStartDate').val();
+	//var projStartDate =$('#projStartDate').val();
 
 	var parentProject = {};
 	$('select#projParent option').each(function() {
@@ -1152,7 +1152,7 @@ function updateProject()
     project.name 	= projName;
     project.description 	= projDesc;
     project.parentProject	= parentProject;
-    project.startDate 		= projStartDate;
+   // project.startDate 		= projStartDate;
     $.ajax({
        type:'POST',
        async: false,

@@ -76,10 +76,9 @@ public class ProjectServiceImpl implements ProjectService {
 			 Project parentProject = getParentProject(project.getParentProject().getId());
 			 project.setParentProject(parentProject);
 		 } 
-			
-			 updateProject.setName(project.getName());
-			 updateProject.setDescription(project.getDescription());
-			 updateProject.setParentProject(project.getParentProject());
+		 updateProject.setName(project.getName());
+		 updateProject.setDescription(project.getDescription());
+		 updateProject.setParentProject(project.getParentProject());
 		return project;
 	}
 
@@ -90,16 +89,16 @@ public class ProjectServiceImpl implements ProjectService {
 		projectList=(List<Project>) projectRepository.findByTenantId(TenantHolder.getTenantId());
 		for(Project project:projectList)
 		{
-					Hibernate.initialize(project.getChildProjects());
-					Hibernate.initialize(project.getParentProject());
-					
-						ProjectDTO projectDTO = new ProjectDTO();
-						projectDTO.setId(project.getId());
-						projectDTO.setName(project.getName());
-						projectDTO.setParentProject(project.getParentProject());
-						projectDTO.setChildProjects(project.getChildProjects());
-						projectDTO.setDescription(project.getDescription());
-						projectDTOList.add(projectDTO);
+			Hibernate.initialize(project.getChildProjects());
+			Hibernate.initialize(project.getParentProject());
+			
+				ProjectDTO projectDTO = new ProjectDTO();
+				projectDTO.setId(project.getId());
+				projectDTO.setName(project.getName());
+				projectDTO.setParentProject(project.getParentProject());
+				projectDTO.setChildProjects(project.getChildProjects());
+				projectDTO.setDescription(project.getDescription());
+				projectDTOList.add(projectDTO);
 						
 		}
 		return projectDTOList;
@@ -114,13 +113,13 @@ public class ProjectServiceImpl implements ProjectService {
 	public ProjectDTO getProjectDTO(Integer id) {
 		Project project= projectRepository.findByIdAndTenantId(id, TenantHolder.getTenantId());
 		ProjectDTO projectDTO = new ProjectDTO();
-			Hibernate.initialize(project.getChildProjects());
-			Hibernate.initialize(project.getParentProject());
+		Hibernate.initialize(project.getChildProjects());
+		Hibernate.initialize(project.getParentProject());
 
-				projectDTO.setName(project.getName());
-				projectDTO.setId(project.getId());
-				projectDTO.setDescription(project.getDescription());
-				projectDTO.setParentProject(project.getParentProject());
+			projectDTO.setName(project.getName());
+			projectDTO.setId(project.getId());
+			projectDTO.setDescription(project.getDescription());
+			projectDTO.setParentProject(project.getParentProject());
 		return projectDTO;
 	}
 	

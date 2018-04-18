@@ -27,12 +27,12 @@
 					    </select>
                     </div>
                 </div>
-                <div class="form-group col-lg-12">
+                <!-- <div class="form-group col-lg-12">
                     <label class="col-lg-5 control-lable" for="projStartDate">Project Start Date</label>
                     <div class="col-lg-7">
-						<input id="projStartDate" type="date" value="2011-01-13"/>
+						<input id="projStartDate" type="date"/>
                     </div>
-                </div>
+                </div> -->
             <!-- Modal footer -->
 	        <div class="modal-footer">
 	                <button id="AddProjectSubmit" type="submit" class="add btn btn-primary" onclick="addProject();">Add</button>  

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,6 @@ public class UserProjectServiceImpl implements UserProjectService {
 		userProject.setProject(project);
 		userProject.setUser(user);
 		userProject.setTenantId(TenantHolder.getTenantId());
-		
 		user.getUserProjects().add(userProject);
 		  
 		System.err.println(user.getFirstName() + " : TOTAL PROJECTS : "+ user.getUserTasks().size());
@@ -90,7 +90,6 @@ public class UserProjectServiceImpl implements UserProjectService {
 			}
 			
 		}
-		System.err.println(userProjectDTOList);
 		return userProjectDTOList;
 	
 	}
@@ -103,7 +102,6 @@ public class UserProjectServiceImpl implements UserProjectService {
 		 List<UserProjectDTO> userProjectDTOList= new ArrayList<UserProjectDTO>();
 		 if (principal instanceof UserDetails) {
 			 String  ssoId = ((UserDetails)principal).getUsername();
-			 System.err.println("User ssoId :"+ssoId);
 			 User user = userRepository.findBySsoIdAndTenantId(ssoId, TenantHolder.getTenantId());
 			 Set<UserProject> userProjectSet=userProjectRepository.findByUserAndTenantId(user,TenantHolder.getTenantId());
 			for(UserProject userProject:userProjectSet)
@@ -118,7 +116,6 @@ public class UserProjectServiceImpl implements UserProjectService {
 				}
 			 }
 		 }
-		 System.err.println(userProjectDTOList);
 		 return userProjectDTOList;
 	}
 }	
