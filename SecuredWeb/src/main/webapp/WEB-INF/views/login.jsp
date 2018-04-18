@@ -4,13 +4,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <meta name="_csrf" content="${_csrf.token}"/>
-		<meta name="_csrf_header" content="${_csrf.headerName}"/>
         <title>Login page</title>
-	    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-	   	<link href="/SecuredWeb/static/css/app.css" rel="stylesheet">
-	   	<link href="/SecuredWeb/static/css/securedWeb.css" rel="stylesheet">
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+        <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>	    
     </head>
     <body>
         <div id="mainWrapper">
@@ -18,12 +16,7 @@
                 <div class="login-card">
                     <div class="login-form">
                         <c:url var="loginUrl" value="/login" />
-                        <form action="${loginUrl}" method="post" id="loginForm" class="form-horizontal">
-                            <c:if test="${error!= null}">
-                                <div class="alert alert-danger">
-                                    <p>${error}</p>
-                                </div>
-                            </c:if>
+                        <form action="${loginUrl}" method="post" class="form-horizontal">
                             <c:if test="${param.error != null}">
                                 <div class="alert alert-danger">
                                     <p>Invalid username and password.</p>
@@ -36,11 +29,11 @@
                             </c:if>
                             <div class="input-group input-sm">
                                 <label class="input-group-addon" for="username"><i class="glyphicon glyphicon-user"></i></label>
-                                <input type="text" class="form-control" id="username" name="ssoId" placeholder="Enter Username">
+                                <input type="text" class="form-control" id="username" name="ssoId" placeholder="Enter Username" required>
                             </div>
                             <div class="input-group input-sm">
                                 <label class="input-group-addon" for="password"><i class="glyphicon glyphicon-lock"></i></label> 
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
                             </div>
                             <div class="input-group input-sm">
                               <div class="checkbox">
@@ -54,223 +47,91 @@
                                     class="btn btn-block btn-primary btn-default" value="Log in">
                             </div>
                         </form>
-                        <div class="row">
-	                        <div class="col-md-6">
-	                        	<button type="button" data-toggle="modal" data-target="#newUserModalAjax" class="btn" onClick="loadAjaxPage('registerUser')">Register</button>
-	            		   </div>
-	            		   <div class="col-md-6">
-	                        	<button type="button" data-toggle="modal" data-target="#ForgotPasswordModalAjax" class="btn" onClick="loadAjaxPage('forgotPassword')">Forgot Password?</button>
-	            		   </div>
-            		   </div>
                     </div>
                 </div>
             </div>
-            
         </div>
-	       <!--New  User  Modal -->
-	       <div class="modal fade" id="newUserModalAjax">
-		     <div class="modal-dialog modal-dialog-centered">
-		      	<div class="modal-content" id="newUserModalBody">
-		    
-		       	</div>
-		     </div>
-		   </div>
-		   	<!-- ---------------------Modal ends here----------------------- -->
- 	   	
- 	   	<!-- Forgot Password Modal -->
-		 <div class="modal fade" id="ForgotPasswordModalAjax">
-		    <div class="modal-dialog modal-dialog-centered">
-		      <div class="modal-content" id="ForgotPasswordModalBody">
-		      
-		      </div>
-		   </div>
-		 </div>
-		  <!-- ---------------------Modal ends here----------------------- -->
-	    </body>
+        <div class="modal fade" id="newUser">
+	    <div class="modal-dialog modal-dialog-centered">
+	      <div class="modal-content">
+	      
+	        <!-- Modal Header -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">Add New User</h4>
+	          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+	        </div>
+	        
+	        <!-- Modal body -->
+	        <div id = "newUserModal"  class="modal-body">
+	        	<form action="#" method="POST" name="addUserForm">
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <label class="col-md-3 control-lable" for="firstName">First Name</label>
+	                    <div class="col-md-7">
+	                        <input type="text" name="firstName" id="newfirstName" class="form-control input-sm"/>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <label class="col-md-3 control-lable" for="lastName">Last Name</label>
+	                    <div class="col-md-7">
+	                        <input type="text" name="lastName" id="newlastName" class="form-control input-sm" />
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <label class="col-md-3 control-lable" for="ssoId">SSO ID</label>
+	                    <div class="col-md-7">
+							<input type="text" name="ssoId" id="newSsoId" class="form-control input-sm" />
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <label class="col-md-3 control-lable" for="password">Password</label>
+	                    <div class="col-md-7">
+	                        <input type="password" name="password" id="newPassword" class="form-control input-sm" />
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <label class="col-md-3 control-lable" for="email">Email</label>
+	                    <div class="col-md-7">
+	                        <input type="text" name="email" id="newEmail" class="form-control input-sm" />
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <label class="col-md-3 control-lable" for="userRoles">Roles</label>
+	                    <div class="col-md-7">
+							<select multiple class="form-control" id="neweserRoles">
+						        <option id="${role.id}" value="${role.id}">${role.type}</option>
+						      </select>
+	                        <%-- <select name="userRoles" items="${roles}" multiple="true" itemValue="id" itemLabel="type" class="form-control input-sm" /> --%>
+	                    </div>
+	                </div>
+	            </div>
+	            </form>
+	        </div>
+	        <!-- Modal footer -->
+	        <div class="modal-footer">
+	             <c:choose>
+	                 <c:when test="${edit}">
+	                     <button id="editUser" type="button" class="btn btn-primary">Submit</button>  
+	                 </c:when>
+	                 <c:otherwise>
+	                     <button id="registerUser" type="button" class="btn btn-primary">Add</button>  
+	                 </c:otherwise>
+	             </c:choose>
+	                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	         </div>	
+	      </div>
+	    </div>
+ 	 </div>
+    <!-- ------------------Modal ends here--------------- -->    
+    </body>
 </html>
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-<script src="/SecuredWeb/static/js/bootbox.min.js"></script>
-<script src="/SecuredWeb/static/js/jquery.validate.js"></script>
-
-<script src="/SecuredWeb/static/js/securedWeb.validation.js"></script>
-<script>
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
-
-$('#newUserModalAjax').on('shown.bs.modal', function (e) {
-	$("#NewUserForm").validate({
-		 rules: {	
-				newSsoId: {
-			      minlength: 3
-			    },
-			  	newEmail: {
-			      email: true
-			    },
-		      	newConfirmPassword: {
-		        	equalTo: "#newPassword"
-		      	}
-			  },
-		  messages: {
-			    tenants : { required:"Please select atleast one tenant."},
-			  	newFirstName:{ required: "Please enter your first name."},
-				newLastName: { required:"Please enter your last name."},
-		    	newSsoId : {
-		        	required: "Please enter a user id.",
-		        	minlength: "Your user id must be at least 3 characters.",
-		      	},
-		      	newPassword : { required:"Please enter a password."},
-		      	newConfirmPassword : { required:"Please enter a password to confirm."},
-		    	newEmail: {
-					required : "Please enter your email id.",	    	
-		    		email:"Your email address must be in the format of 'xyz@domain.com'.",
-		    	},
-		  	},
-		  submitHandler: function(form) {
-			  debugger
-			  return false;
-	  }
-	});
-});
-	
-
-function loadAjaxPage(pageType){	
-	var reqURL= "view/ajaxPage/"+pageType;
-	
-	if(pageType=="registerUser")
-	{   
-		$.ajax({
-	    	async: false,
-	    	type: "GET",
-	        url: reqURL,
-	        beforeSend: function(xhr) {
-		           xhr.setRequestHeader(header, token);
-		       },
-	        success: function(response) {
-	        	$('#newUserModalBody').html( response );
-	        	$('#newUserModalAjax').modal('show');
-	        	$.ajax({
-	    	    	async: false,
-	    	    	type: "GET",
-	    	        url: "tenant/all",
-	    	        beforeSend: function(xhr) {
-				           xhr.setRequestHeader(header, token);
-				       },
-	    	        success: function(tenants) {
-	    	        	tenants.forEach(function(tenant){
-			            	$("select#tenants").append('<option id="'+tenant.tenantId+'" value="'+tenant.tenantId+'">'+tenant.tenantName+'</option>"');
-			            });
-	    	        	 
-	    	        }
-	    	    });
-	        }
-	    });
-	}else if(pageType=="forgotPassword")
-	{
-		$.ajax({
-	    	async: false,
-	    	type: "GET",
-	        url: reqURL,
-	        beforeSend: function(xhr) {
-		           xhr.setRequestHeader(header, token);
-		       },
-	        success: function(response) {
-	        	$('#ForgotPasswordModalBody').html( response );
-	        	$('#ForgotPasswordModalAjax').modal('show');
-	        }
-	    });
-	}
-	$('input,select,textarea').filter('[required]').each(function(){ 
-		$(this).parent().prev().append('<span style="color:red;">*</span>');
-	});
-	
-}
-
-function addNewUserSubmit()
-{	
-	debugger
-	if(!$("#NewUserForm").valid())
-	{
-		return false;
-	}
-	
-    var firstName 		= $('#newFirstName').val();
-    var lastName 		= $('#newLastName').val();
-    var ssoId 			= $('#newSsoId').val();
-    var password 		= $('#newPassword').val();
-    var confirmPassword = $('#newConfirmPassword').val();
-    var email 			= $('#newEmail').val();	
-    var tenantId 		= $('select#tenants option:selected').val();
-
-	var user={};
-		user.firstName=firstName;
-		user.lastName=lastName;
-		user.ssoId=ssoId;
-		user.password=password;
-		user.email=email;
-		
-		var userRoles = [];
-		var role ={};
-		role.id=1;
-		role.type="USER";
-		userRoles.push(role);
-		user.userRoles= userRoles;
-		
-		$.ajax({
-	    	async: false,
-	    	type: "POST",
-	        url: "user/add?tenantId="+tenantId,
-	        contentType: 'application/json',
-	        data : JSON.stringify(user),
-	        dataType : 'json',
-	        beforeSend: function(xhr) {
-		           xhr.setRequestHeader(header, token);
-		       },
-	        success: function(status) {
-	        	if(status.status==200)
-	        	{
-	        		bootbox.alert("Account has been created for user name : '"+ssoId+"'", function(){ 
-	        			$('#newUserModalAjax').modal('hide');
-	        			
-	        		});
-	        	}else
-	        	{
-	        		bootbox.alert(status.message, function(){ 
-	        		
-	        		});
-	        	}	
-	        }
-	    });
-		debugger
-}
-
-function resetPass(){
-    var email = $("#Email").val();
-    $.ajax({
-    	async: false,
-    	type: "POST",
-        url: "user/resetPassword?email="+email,
-        beforeSend: function(xhr) {
-	           xhr.setRequestHeader(header, token);
-	       },
-        success: function(status) {
-        	if(status.status==200)
-        	{
-        		bootbox.alert(status.message, function(){ 
-        			$('ForgotPasswordModalAjax').modal('hide'); 
-        			$('div.alert-danger').hide();
-        		});
-        	}else
-        	{
-        		bootbox.alert(status.message, function(){
-        			$('div.alert-danger').hide();
-        		});
-        		
-        	}	
-        	 
-        }
-    });
-}
-</script>

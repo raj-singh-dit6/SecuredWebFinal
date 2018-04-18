@@ -3,6 +3,7 @@ package com.securedweb.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,38 +17,39 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.securedweb.model.tenant.Role;
 import com.securedweb.model.tenant.User;
-import com.securedweb.repository.tenant.UserRepository;
+import com.securedweb.service.tenant.UserService;
 
 
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService{
 	
-	private static final Logger LOG = LoggerFactory.getLogger(CustomUserDetailsService.class);
+	static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String ssoId)
 	{
-		User user = userRepository.findBySsoId(ssoId);
-		LOG.info("User { } ",user);
+		User user = userService.findBySSO(ssoId);
+		logger.info("User { } ",user);
 		if(user==null) {
-			LOG.info("user not found");
+			logger.info("user not find");
 			throw new UsernameNotFoundException("Username not found");
 		}
 		
 		return new org.springframework.security.core.userdetails.User(user.getSsoId(), user.getPassword(), 
                 true, true, true, true, getGrantedAuthorities(user));
+		
 	}
 	
 	private List<GrantedAuthority> getGrantedAuthorities(User user){
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         for(Role role : user.getUserRoles()){
-        	LOG.info("Role : {}", role);
+            logger.info("Role : {}", role);
             authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getType()));
         }
-        LOG.info("authorities : {}", authorities);
+        logger.info("authorities : {}", authorities);
         return authorities;
     }
 }

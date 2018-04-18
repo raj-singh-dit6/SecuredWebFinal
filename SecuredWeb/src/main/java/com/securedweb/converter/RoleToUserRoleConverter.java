@@ -7,7 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import com.securedweb.model.tenant.Role;
-import com.securedweb.repository.tenant.RoleRepository;
+import com.securedweb.service.tenant.RoleService;
 
 /**
  * A converter class used in views to map id's to actual userRole objects.
@@ -18,7 +18,7 @@ public class RoleToUserRoleConverter implements Converter<Object, Role>{
     static final Logger logger = LoggerFactory.getLogger(RoleToUserRoleConverter.class);
      
     @Autowired
-    RoleRepository roleRepository;
+    RoleService roleService;
  
     /**
      * Gets UserRole by Id
@@ -26,7 +26,7 @@ public class RoleToUserRoleConverter implements Converter<Object, Role>{
      */
     public Role convert(Object element) {
         Integer id = Integer.parseInt((String)element);
-        Role role= roleRepository.findById(id).get();
+        Role role= roleService.findById(id);
         logger.info("Role : {}",role);
         return role;
     }
