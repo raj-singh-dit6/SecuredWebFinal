@@ -1,11 +1,34 @@
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
-var tenantId=$("#tenantId").val();
+function changePassword()
+{
+	var userId= $('#userId').val();
+	var oldpassoword = $('#userCurrentPassword').val();
+	var newPassword = $('#userPassword').val();
+	var confirmPassword = $('#userConfirmPassword').val();
+	
+	var user = {};
+	user.ssoId = userId;
+	user.password = oldpassoword;
+	user.newPassword = newPassword;
+	
+	$.ajax({
+		type:'POST',
+		async: false,
+       	url : 'user/changePassword?tenantId='+tenantId,
+       	contentType: 'application/json',
+       	data : JSON.stringify(user),
+       	dataType : 'json',
+        beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+        success: function(status) {
+        	bootbox.alert(status.message);
+        	if(status.status==200){
+        		$('#ChangePasswordModalAjax').modal('hide');
+        	}	
+        }
+    });
+}
 
-$(document).ready(function() {
-	$('#successAlert').hide();
-	$('#warningAlert').hide();
-});
 
 function loadAllTasksByProjectId(obj)
 {
@@ -74,16 +97,22 @@ function loadAjaxPage(pageType,operation,id)
 			       },
 		        success: function(roles) {
 		            roles.forEach(function(role){
-		            	$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'">'+role.type+'</option>"');
+		            	if(role.type.indexOf("USER")!=-1){
+		            		$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'" selected>'+role.type+'</option>"');
+		            	}else{
+		            		$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'">'+role.type+'</option>"');	
+		            	}
 		            });
 		        }
 		    });
 		}
 		else if(operation=="edit")
 		{  	var ssoId = id;
+			var userRoles = [];
 			$("#UserModalHeading").text("Update User Details");
 			$("#userPasswordDiv").hide();
-			$("#userSsoIdDiv").hide();
+			$("#userConfirmPasswordDiv").hide();
+			$("#userSsoId").prop( "disabled", true);
 			$("#AddUserSubmit").hide();
 			$.ajax({
 		    	async: false,
@@ -96,6 +125,11 @@ function loadAjaxPage(pageType,operation,id)
 		        	$("#userFirstName").val(user.firstName);
 		        	$("#userLastName").val(user.lastName);
 		        	$("#userEmail").val(user.email);
+		        	$("#userSsoId").val(user.ssoId);
+					user.userRoles.forEach(function(role){
+						userRoles.push(role.id);
+		            });
+		        	 
 		        }
 		    });
 			$.ajax({
@@ -107,7 +141,11 @@ function loadAjaxPage(pageType,operation,id)
 			       },
 		        success: function(roles) {
 		            roles.forEach(function(role){
-		            	$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'">'+role.type+'</option>"');
+		            	if(userRoles.indexOf(role.id)!=-1){
+		            		$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'" selected>'+role.type+'</option>"');
+		            	}else{
+		            		$("#userRoles").append('<option id="'+role.id+'" value="'+role.id+'">'+role.type+'</option>"');
+		            	}
 		            });
 		        }
 		    });
@@ -145,6 +183,7 @@ function loadAjaxPage(pageType,operation,id)
 		}	
 		else if(operation=="edit")
 		{  	var projectId = id;
+			var userProjectId;
 			$("#ProjectModalHeading").text("Update Project Details");
 			$("#AddProjectSubmit").hide();
 			$.ajax({
@@ -158,6 +197,10 @@ function loadAjaxPage(pageType,operation,id)
 		        	$("#projName").val(project.name);
 		        	$("#projDesc").val(project.description);
 		        	$("#projId").val(id);
+		        	if(project.parentProject!=null)
+		        	{	
+		        		userProjectId = project.parentProject.id;
+		        	}
 		        }
 		    });
 			$.ajax({
@@ -169,8 +212,13 @@ function loadAjaxPage(pageType,operation,id)
 			       },
 		        success: function(projects) {
 		        	projects.forEach(function(project){
-		            	$("select#projParent").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
-		            });
+		        		if(userProjectId==project.id)
+		        		{
+		            		$("select#projParent").append('<option id="'+project.id+'" value="'+project.id+'" selected>'+project.name+'</option>"');
+		        		}else{
+		        			$("select#projParent").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+		        		}
+	        		});
 		        }
 		    });
 		}
@@ -266,6 +314,8 @@ function loadAjaxPage(pageType,operation,id)
 			}	
 			else if(operation=="edit")
 			{  	var taskId = id;
+				var taskProjectId ="";
+				var taskStatusId = "";
 				$("#TaskModalHeading").text("Update Task Details");
 				$("#AddTaskSubmit").hide();
 				$.ajax({
@@ -279,6 +329,9 @@ function loadAjaxPage(pageType,operation,id)
 			        	$("#taskName").val(task.name);
 			        	$("#taskDesc").val(task.description);
 			        	$("#taskId").val(task.id);
+			        	taskProjectId = task.project.id;
+			        	taskStatusId = task.taskStatus.id;
+			        	
 			        }
 			    });
 				
@@ -291,8 +344,12 @@ function loadAjaxPage(pageType,operation,id)
 				       },
 			        success: function(projects) {
 			        	projects.forEach(function(project){
-			            	$("select#taskProject").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
-			            });
+			        		if(taskProjectId==project.id){
+			            		$("select#taskProject").append('<option id="'+project.id+'" value="'+project.id+'" selected>'+project.name+'</option>"');
+			        		}else{
+			        			$("select#taskProject").append('<option id="'+project.id+'" value="'+project.id+'">'+project.name+'</option>"');
+			        		}
+			        	});
 			        }
 				});
 				
@@ -305,8 +362,14 @@ function loadAjaxPage(pageType,operation,id)
 				       },
 			        success: function(taskStatuses) {
 			        	taskStatuses.forEach(function(taskStatus){
-			            	$("select#taskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'">'+taskStatus.status+'</option>"');
-			            });
+			        		if(taskStatusId==taskStatus.id){
+			        			$("select#taskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'" selected>'+taskStatus.status+'</option>"');
+			        		}else
+			        		{
+			        			$("select#taskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'">'+taskStatus.status+'</option>"');
+			        		}
+			        
+			        	});
 			        }
 				});
 			}
@@ -342,7 +405,7 @@ function loadAjaxPage(pageType,operation,id)
 			            });
 			        }
 				});
-			}	
+			}
 			
 	}else if(pageType=="taskStatus")
 	{
@@ -359,6 +422,9 @@ function loadAjaxPage(pageType,operation,id)
 	        }
 	    });
 		$('#TaskStatusModalAjax').modal('show');
+		
+		$('#taskStatusColour').colorpicker();
+		
 		if(operation=="add"){
 			$("#TaskStatusModalHeading").text("Add New Task Status");
 			$("#UpdateTaskStatusSubmit").hide();
@@ -377,6 +443,9 @@ function loadAjaxPage(pageType,operation,id)
 			       },
 		        success: function(taskStatus) {
 		        	$("#taskStatusName").val(taskStatus.status);
+		        	$("#taskStatusColour").val(taskStatus.statusColour);
+		        	$("#taskStatusColour").trigger('change');
+		        	
 		        	$("#taskStatusId").val(taskStatus.id);
 		        }
 		    });
@@ -385,6 +454,7 @@ function loadAjaxPage(pageType,operation,id)
 		
 	}else if(pageType=="userTaskByUser")
 	{
+		debugger
 		$.ajax({
 	    	async: false,
 	    	type: "GET",
@@ -410,18 +480,204 @@ function loadAjaxPage(pageType,operation,id)
 			           xhr.setRequestHeader(header, token);
 			       },
 		        success: function(userProjects) {
-		        	//alert(userProjects);
 		        	userProjects.forEach(function(userProject){
 		            	$("select#assignProject").append('<option id="'+userProject.project.id+'" value="'+userProject.project.id+'"  >'+userProject.project.name+'</option>"');
 		            });
 		        }
 			});
+		}
+	}else if(pageType=="updateTaskByUser"){
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	            $("#UpdateTaskByUserModalBody").html( response );
+	        }
+	    });
+		$('#UpdateTaskByUserModalAjax').modal('show');
+		if(operation=="edit"){
+			var userTaskId = id;
+			var selectedTaskStatus = "";
+			$("#UpdateTaskByUserModalHeading").text("Update Task Details");
+			var userTaskId = id;
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "userTask/"+userTaskId+"?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(userTask) {
+		        	$("#userTaskId").val(userTask.id);
+		        	$("#userProjectName").val(userTask.project.name);
+		        	$("#userTaskName").val(userTask.task.name);
+		        	$("#userTaskDesc").val(userTask.task.description);
+		        	selectedTaskStatus = userTask.task.taskStatus.id;
+		        	debugger
+		        }
+		    });
+			
+			$.ajax({
+		    	async: false,
+		    	type: "GET",
+		        url: "taskStatus/all?tenantId="+tenantId,
+		        beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			       },
+		        success: function(taskStatuses) {
+		        	taskStatuses.forEach(function(taskStatus){
+		        		debugger
+		        		if(taskStatus.id==selectedTaskStatus){
+		        			$("select#userTaskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'" selected>'+taskStatus.status+'</option>"');
+		            	}else{
+		            		$("select#userTaskStatus").append('<option id="'+taskStatus.id+'" value="'+taskStatus.id+'">'+taskStatus.status+'</option>"');
+		            	}				            
+		            });
+		        }
+			});
 		}	
+
+	}else if(pageType=="projectDocuments"){
+		$('.modal').modal('hide');
+		var projectId = id;
+		debugger
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	            $("#DocumentsModalBody").html( response );
+	        }
+	    });
+		$("#DocumentsModalHeading").text("Manage Project Documents");
+		$("#DocumentsModalAjax").modal('show');
+		$('#addDocumentsFooter').prepend('<button id="UploadDocuments" type="button" class="btn btn-primary" data-toggle="modal" onCLick="loadAjaxPage(\'uploadDocuments\',\'\',\''+projectId+'\')" data-target="#UploadDocumentsModalAjax">Upload Documents</button>');
+		$('#documentsTable').html('');
+		fillProjectDocumentsInDataTable(projectId);
 		
+	}else if(pageType=="uploadDocuments"){
+		var projectId = id;
+		$('.modal').modal('hide');
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	            $("#UploadDocumentsModalBody").html( response );
+	        }
+	    });
+		$("#UploadDocumentsModalAjax").modal('show');
+		$("#UploadDocumentsModalHeading").text("Upload Project Documents");
+		$('#addUploadFooter').append('<button id="UploadMoreDocuments" type="button" class="btn btn-primary" onClick="uploadProjectDocuments(\''+projectId+'\')">Upload</button>');
+		$('#addUploadFooter').append('<button type="button" class="btn btn-secondary" data-toggle="modal" onClick="loadAjaxPage(\'projectDocuments\',\'\',\''+projectId+'\')" data-target="#DocumentsModalAjax">Go back to manage documents</button>');
 	}
+	else if(pageType=="changePassword"){
+		
+		$.ajax({
+	    	async: false,
+	    	type: "GET",
+	        url: reqURL,
+	        beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		       },
+	        success: function(response) {
+	            $("#ChangePasswordModalBody").html( response );
+	        }
+	    });
+			$("#ChangePasswordModalAjax").modal('show');
+	}
+	
+	$('input,select,textarea').filter('[required]').each(function(){ 
+		$(this).parent().prev().append('<span style="color:red;">*</span>');
+	});
+
 }
 
 
+function fillProjectDocumentsInDataTable(projectId)
+{
+	debugger
+	var documents = null;
+	$.ajax({
+    	async: false,
+    	type: "GET",
+        url: "document/all/project/"+projectId+"?tenantId="+tenantId,
+        beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+        success: function(documentList) {
+        	documents =  documentList 
+        }
+    });
+	
+	var dataSet=[];
+	documents.forEach(function(document){
+		var dataEach = [];
+		dataEach.push(document.id);
+		dataEach.push(document.name);
+		dataEach.push(document.description);
+		dataEach.push(document.location);
+		dataSet.push(dataEach);
+	});
+
+	$('#documentsTable').DataTable( {
+		data: dataSet,
+		columns: [
+            { title: "Document Id" },
+            { title: "Document Name	" },
+            { title: "Document Description" },
+            { title: "Document Location" },
+            { "render": function (data, type, full, meta) {
+               	return '<a data-fancybox="'+full[1]+'"  href="files/'+full[3]+'" class="fancybox btn btn-success custom-width" )">Download</a>'} },
+            { "render": function (data, type, full, meta) {
+               	return '<a class="btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'projectDocument\',\'' + full[0] + '\')" >Delete</a>'} },
+        ],
+        "scrollY": 200,
+        "scrollX": true,
+	    select	   : true,
+	    rowReorder: true,
+	    colReorder: true,
+	    "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 3 ],
+                "visible": false,
+                "searchable": false
+            }]
+    });	
+}
+
+function downloadById(projectId,documentId)
+{	
+	$.ajax({
+    	async: false,
+    	type: "GET",
+        url: "document/download/"+projectId+"/"+documentId+"?tenantId="+tenantId,
+        beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+        success: function(status) {
+        	if(status.status==200){
+				alert(status);
+        	}	
+        }
+    });
+
+}
 function deleteById(pageType,id)
 {	
 	if(pageType=="user")
@@ -453,11 +709,11 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            $('#manageUsers').click();
+	    		            manageList('user');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
-	    		            $('#manageUsers').click();
+	    	        		manageList('user');
 	    	        	}	
 	    	        }
 	    	    });
@@ -493,7 +749,7 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            $('#manageProjects').click();
+	    		            manageList('project');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
@@ -533,11 +789,11 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            $('#manageTasks').click();
+	    		            manageList('task');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
-	    		            $('#manageTasks').click();
+	    	        		manageList('task');
 	    	        	}	
 	    	        }
 	    	    });
@@ -573,11 +829,11 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            $('#manageTaskStatus').click();
+	    		            manageList('taskStatus');
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
-	    		            $('#manageTaskStatus').click();
+	    	        		manageList('taskStatus');
 	    	        	}	
 	    	        }
 	    	    });
@@ -613,7 +869,7 @@ function deleteById(pageType,id)
 	    	        	if(status.status==200){
 	    	        		$('#successMessage').html(status.message);
 	    		            $('#successAlert').show();
-	    		            $('#manageUserProjects').click();
+	    		            manageList('userProject');	
 	    	        	}else{
 	    	        		$('#warningMessage').html(status.message);
 	    	        		$('#warningAlert').show();
@@ -624,10 +880,113 @@ function deleteById(pageType,id)
 	    	}
 		});
 		
-	}	
+	}else if(pageType=="projectDocument")
+	{
+		
+		var documentId = id;
+		var action=bootbox.confirm({
+	    message: "Are you sure , you want to delete this document?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if(result)
+	    	{
+	    		$.ajax({
+	    	    	async: false,
+	    	    	type: "DELETE",
+	    	        url: "document/delete/"+documentId+"?tenantId="+tenantId,
+	    	        beforeSend: function(xhr) {
+	    		           xhr.setRequestHeader(header, token);
+	    		       },
+	    	        success: function(status) {
+	    	        	if(status.status==200){
+	    	        	}	
+	    	        }
+	    	    });
+	    	}	
+	    	}
+		});
+	}
 }
 
-function addProject() {
+
+function uploadProjectDocuments(projectId){
+	
+	
+	if(!$("#UploadDocumentForm").valid())
+	{
+		return false;
+	}	
+	
+
+    var form = $('#UploadDocumentForm')[0];
+    var data = new FormData(form);
+
+    $('#UploadMoreDocuments').prop('disabled', true);
+	$.ajax({
+	      type : 'POST',
+	      enctype: 'multipart/form-data',
+	      url : 'document/upload/project/'+projectId+'?tenantId='+tenantId,
+	      data: data,
+	      contentType: false, 
+          processData: false, 
+	      xhr: function(){
+	        //Get XmlHttpRequest object
+	         var xhr = $.ajaxSettings.xhr() ;
+	        
+	        //Set onprogress event handler 
+	         xhr.upload.onprogress = function(event){
+	          	var perc = Math.round((event.loaded / event.total) * 100);
+	          	$('#progressBar').text(perc + '%');
+	          	$('#progressBar').css('width',perc + '%');
+	         };
+	         return xhr ;
+	    	},
+	    	beforeSend: function( xhr ) {
+	    		 xhr.setRequestHeader(header, token);
+	    		//Reset alert message and progress bar
+	    		$('#alertMsg').text('');
+	    		$('#progressBar').text('');
+	    		$('#progressBar').css('width','0%');
+	    	},	
+	    	success : function(status){
+	    		
+	    		if(status.status==200){
+	    			$('#multipleFiles').val("");
+	    			$('#UploadMoreDocuments').prop('disabled', false);
+	    			$('textarea#description').val("");
+	    			$('#progressBar').text('');
+		    		$('#progressBar').css('width','0%');
+	    			bootbox.alert(status.message);
+	    			
+	    		}else{
+	    			$('#multipleFiles').val("");
+	    			$('#UploadMoreDocuments').prop('disabled', false);
+	    			$('textarea#description').val("");
+	    			$('#progressBar').text('');
+		    		$('#progressBar').css('width','0%');
+	    		}
+				
+	    	}	
+	    });
+	}
+
+function addProject(){
+	
+	 
+	if(!$("#ProjectForm").valid())
+	{
+		return false;
+	}
+	
 	var parentProject = {};
 	$('select#projParent option').each(function() {
 		if (this.selected && $(this).val()!="" )
@@ -636,40 +995,51 @@ function addProject() {
 		    	parentProject.name=$(this).text();
 		}
 	});
-    
+	
+	var projName=$('#projName').val();
+	var projDesc =$('#projDesc').val();;
+	var projStartDate =$('#projStartDate').val();
+	
 	var project = {};
-    project.name 	= $('#projName').val();
-    project.description 	= $('#projDesc').val();
+    project.name 	= projName;
+    project.description 	= projDesc;
     project.parentProject	= parentProject;
-    $.ajax({
-       type:'POST',
-       async: false,
-       url : 'project/add?tenantId='+tenantId,
-       contentType: 'application/json',
-       data : JSON.stringify(project),
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(status) {
-    	   
-    	   if(status.status==200){
-	        	$('#successMessage').html(status.message);
-	        	$('#ProjectModalAjax').modal('hide');
-	            $('#successAlert').show();
-	            $('#manageProjects').click();
-	          }else{
-	        	$('#warningMessage').html(status.message);
-	        	$('#ProjectModalAjax').modal('hide');  
-	            $('#warningAlert').show();
-	          }
-       }
- });
+    //project.startDate 		= projStartDate;
+    //alert(projStartDate);
+    
+	$.ajax({
+		   type:'POST',
+	       async: false,
+	       url : 'project/add?tenantId='+tenantId,
+	       contentType: 'application/json',
+	       data : JSON.stringify(project),
+	       dataType : 'json',
+	       beforeSend: function(xhr) {
+	    		
+	    	   xhr.setRequestHeader(header, token);
+	       },
+	       success : function(status) {
+	    	   if(status.status==200){
+		        	$('#successMessage').html(status.message);
+		        	$('#ProjectModalAjax').modal('hide');
+		            $('#successAlert').show();
+		            manageList('project');
+		          }else{
+		        	$('#warningMessage').html(status.message);
+		        	$('#ProjectModalAjax').modal('hide');  
+		        	$('#warningAlert').show();
+		          }
+	       }
+	}); 
 }
 
-
 function updateTask()
-{	
+{
+	
+	if(!$("#TaskForm").valid())
+	{
+		return false;
+	}	
 	
 	var taskStatus = {};
 	taskStatus.id = $('select#taskStatus option:selected').val(); 
@@ -679,14 +1049,18 @@ function updateTask()
 	project.id 	= $('select#taskProject option:selected').val();
 	project.name = $('select#taskProject option:selected').text();
     
+	
 	var task = {};
 	task.id = $('#taskId').val();
 	task.name = $('#taskName').val();
 	task.description = $('#taskDesc').val();
 	task.project = project;
 	task.taskStatus =taskStatus;
+
 	
-	alert(JSON.stringify(task));
+	
+	
+	//alert(JSON.stringify(task));
 	
 	$.ajax({
        type:'POST',
@@ -703,11 +1077,11 @@ function updateTask()
 	        	$('#successMessage').html(status.message);
 	        	$('#TaskModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageTasks').click();
+	            manageList('task');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#TaskModalAjax').modal('hide');  
-	            $('#warningAlert').show();
+	        	manageList('task');
 	          }
        }
  });
@@ -715,11 +1089,15 @@ function updateTask()
 
 function updateTaskStatus()
 {	
+	if(!$("#TaskStatusForm").valid())
+	{
+		return false;
+	}	
 	var taskStatus = {};
 	taskStatus.id 			= $('#taskStatusId').val();
 	taskStatus.status 		= $('#taskStatusName').val();
-	taskStatus.statusColour = $('select#taskStatusColour option:selected').val();
-    
+	taskStatus.statusColour = $('#taskStatusColour').val();
+	
     $.ajax({
        type:'POST',
        async: false,
@@ -735,7 +1113,7 @@ function updateTaskStatus()
 	        	$('#successMessage').html(status.message);
 	        	$('#TaskStatusModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageTaskStatus').click();
+	            manageList('taskStatus');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#TaskStatusModalAjax').modal('hide');  
@@ -748,6 +1126,15 @@ function updateTaskStatus()
 
 function updateProject()
 {	
+	if(!$("#ProjectForm").valid())
+	{
+		return false;
+	}	
+	
+	var projName=$('#projName').val();
+	var projDesc =$('#projDesc').val();
+	//var projStartDate =$('#projStartDate').val();
+
 	var parentProject = {};
 	$('select#projParent option').each(function() {
 	    if (this.selected)
@@ -762,10 +1149,10 @@ function updateProject()
 	
 	var project = {};
 	project.id = $('#projId').val();
-    project.name 	= $('#projName').val();
-    project.description 	= $('#projDesc').val();
+    project.name 	= projName;
+    project.description 	= projDesc;
     project.parentProject	= parentProject;
-    
+   // project.startDate 		= projStartDate;
     $.ajax({
        type:'POST',
        async: false,
@@ -781,7 +1168,7 @@ function updateProject()
 	        	$('#successMessage').html(status.message);
 	        	$('#ProjectModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageProjects').click();
+	            manageList('project');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#ProjectModalAjax').modal('hide');  
@@ -794,6 +1181,16 @@ function updateProject()
 
 function updateUser()
 {	
+	if(!$("#UserForm").valid())
+	{
+		return false;
+	}	
+	
+    var firstName 		= $('#userFirstName').val();
+    var lastName 		= $('#userLastName').val();
+    var email 			= $('#userEmail').val();
+    var emailRegex 		= /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+	
 	var userRoles = [];
 	$.each($("#userRoles option:selected"), function(){            
 		var role={};
@@ -809,8 +1206,6 @@ function updateUser()
     user.email 		= $('#userEmail').val();
     user.userRoles	= userRoles;
 	
-    //alert(JSON.stringify(user));
-    
     $.ajax({
 	       type:'POST',
 	       async: false,
@@ -827,7 +1222,7 @@ function updateUser()
 	        	$('#successMessage').html(status.message);
 	        	$('#UserModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageUsers').click();
+	            manageList('user');
 	          }else{
 	        	$('#warningMessage').html(status.message);
 	        	$('#UserModalAjax').modal('hide');  
@@ -838,6 +1233,20 @@ function updateUser()
 }
 
 function addUser(){
+
+	if(!$("#UserForm").valid())
+	{
+		return false;
+	}	
+	
+    var firstName 		= $('#userFirstName').val();
+    var lastName 		= $('#userLastName').val();
+    var ssoId 			= $('#userSsoId').val();
+    var password 		= $('#userPassword').val();
+    var confirmPassword = $('#userConfirmPassword').val();
+    var email 			= $('#userEmail').val();	
+	
+	
 	var userRoles = [];
 	$.each($("#userRoles option:selected"), function(){            
 		var role={};
@@ -847,11 +1256,11 @@ function addUser(){
 	});
 	
     var user = {};
-    user.firstName 	= $('#userFirstName').val();
-    user.lastName 	= $('#userLastName').val();
-    user.ssoId 		= $('#userSsoId').val();
-    user.password 	= $('#userPassword').val();
-    user.email 		= $('#userEmail').val();
+    user.firstName 	= firstName;
+    user.lastName 	= lastName;
+    user.ssoId 		= ssoId;
+    user.password 	= password;
+    user.email 		= email;
     user.userRoles	= userRoles;
 
     $.ajax({
@@ -869,11 +1278,11 @@ function addUser(){
     		   	$('#successMessage').html(status.message);
     		    $('#UserModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageUsers').click();
+	            manageList('user');
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
-		        $('#manageUsers').click();
+	       		manageList('user');
 	       	}
        }
  });
@@ -882,6 +1291,11 @@ function addUser(){
 
 function addUserProject(){
 
+	if(!$("#AssignProjectForm").valid())
+	{
+		return false;
+	}	
+	
 	var userProject={};
 	var user ={};
 	var project ={};
@@ -899,7 +1313,6 @@ function addUserProject(){
 			user.fistName=$(this).text();
 		}
 	});
-	
 	
 	userProject.user=user
 	userProject.project= project;
@@ -919,7 +1332,7 @@ function addUserProject(){
     		   	$('#successMessage').html(status.message);
     		    $('#AssignProjectModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageUserProjects').click();
+	            manageList('userProject');
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
@@ -930,6 +1343,11 @@ function addUserProject(){
 
 function addUserTask(){
 
+	if(!$("#AssignTaskForm").valid())
+	{
+		return false;
+	}	
+	
 	var userTask={};
 	var user ={};
 	var project ={};
@@ -961,8 +1379,6 @@ function addUserTask(){
 	userTask.project= project;
 	userTask.task= task;
 
-	//alert(JSON.stringify(userTask));
-	
     $.ajax({
        type:'POST',
        async: false,
@@ -978,7 +1394,7 @@ function addUserTask(){
     		   	$('#successMessage').html(status.message);
     		    $('#AssignTaskModalAjax').modal('hide');
 	            $('#successAlert').show();
-	            $('#manageUserTasks').click();
+	            manageList('userTask');
 	       	}else{
 	       		$('#warningMessage').html(status.message);
 	       		$('#warningAlert').show();
@@ -986,40 +1402,6 @@ function addUserTask(){
        }
  });
 }
-
-$('#manageUserProjects').click(function(e) {
-	
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'userProject/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(userProjects) {
-    		fillUserProjectsInDataTable(userProjects);
-       }
- });
-});
-
-$('#manageUserTasks').click(function(e) {
-	
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'userTask/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(userTasks) {
-    		fillUserTasksInDataTable(userTasks);
-       }
- });
-});
 
 
 function fillUserTasksInDataTable(userTasks){
@@ -1036,9 +1418,6 @@ function fillUserTasksInDataTable(userTasks){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
@@ -1113,9 +1492,6 @@ function fillUserProjectsInDataTable(userProjects){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
@@ -1171,20 +1547,29 @@ function fillUserProjectsInDataTable(userProjects){
 }
 
 function addTask() {
+
+	
+	if(!$("#TaskForm").valid())
+	{
+		return false;
+	}	
 	
 	var taskStatus = {};
-	taskStatus.id=$('#taskStatus option:selected').val();
-	taskStatus.status=$('#taskStatus option:selected').text();
+	taskStatus.id=$('select#taskStatus option:selected').val();
+	taskStatus.status=$('select#taskStatus option:selected').text();
 	
 	var project={};
-	project.id 	= $('#taskProject option:selected').val();
-	project.name 	= $('#taskProject option:selected').text();
+	project.id 	= $('select#taskProject option:selected').val();
+	project.name 	= $('select#taskProject option:selected').text();
     
 	var task = {};
     task.name 		  = $('#taskName').val();
     task.description  = $('#taskDesc').val();
     task.taskStatus   = taskStatus;
     task.project 	  = project;
+    
+    
+    
     
     $.ajax({
        type:'POST',
@@ -1201,7 +1586,7 @@ function addTask() {
           if(status.status==200){
             $('#TaskModalAjax').modal('hide');
             $('#successAlert').show();
-            $('#manageTasks').click();
+            manageList('task');
           }else{
         	$('#TaskModalAjax').modal('hide');  
             $('#warningAlert').show();
@@ -1212,9 +1597,13 @@ function addTask() {
 
 function addTaskStatus() {
 	
+	if(!$("#TaskStatusForm").valid())
+	{
+		return false;
+	}	
     var taskStatus = {};
     taskStatus.status 	= $('#taskStatusName').val();
-    taskStatus.statusColour = $('select#taskStatusColour option:selected').val();
+    taskStatus.statusColour = $('#taskStatusColour').val();
     
     $.ajax({
        type:'POST',
@@ -1232,7 +1621,7 @@ function addTaskStatus() {
         	$('#successAlert').text(status.message);
             $('#TaskStatusModalAjax').modal('hide');
             $('#successAlert').show();
-            $('#manageTaskStatus').click();
+            manageList('taskStatus');
           }else{
         	$('#warningAlert').text(status.message);
         	$('#TaskStatusModalAjax').modal('hide');  
@@ -1243,7 +1632,7 @@ function addTaskStatus() {
 } 
 
 
-$('#loadProjectsForUser').click(function(e) {
+function loadProjectsForUser() {
     
     $.ajax({
        type:'GET',
@@ -1255,11 +1644,11 @@ $('#loadProjectsForUser').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(userProjects) {
-        	//alert(userProjects);
+    	   $('#dataTable').html('');
     	   fillAssignedProjectsInDataTable(userProjects);
        }
  });
-}); 
+}
 
 function fillAssignedProjectsInDataTable(userProjects){
 	var dataSet=[];
@@ -1268,21 +1657,15 @@ function fillAssignedProjectsInDataTable(userProjects){
 		dataEach.push(userProject.project.id);
 		dataEach.push(userProject.project.name);
 		dataEach.push(userProject.project.description);
-		dataEach.push(userProject.project.createDateTime);
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
-       
 	$('#dataTable').DataTable( {
 		data: dataSet,
 		columns: [
             { title: "Project Id" },
             { title: "Project Name	" },
             { title: "Project Description" },
-            { title: "Created TimeStamp" },
         ],
         responsive: true,
         scrollY:        450,
@@ -1314,7 +1697,7 @@ function fillAssignedProjectsInDataTable(userProjects){
     });
 }
 
-$('#loadTasksForUser').click(function(e) {
+function loadTasksForUser() {
     
     $.ajax({
        type:'GET',
@@ -1326,41 +1709,41 @@ $('#loadTasksForUser').click(function(e) {
            xhr.setRequestHeader(header, token);
        },
        success : function(userTasks) {
-       
-    	   //alert(userTasks)
+    	   $('#dataTable').html('');
     	   fillAssignedTasksInDataTable(userTasks);
        }
  });
-}); 
+}
 
 function fillAssignedTasksInDataTable(userTasks){
 	var dataSet=[];
 	userTasks.forEach(function(userTask){
 		var dataEach = [];
-		dataEach.push(userTask.task.id);
+		dataEach.push(userTask.id);
 		dataEach.push(userTask.project.name);
+		dataEach.push(userTask.project.description);
 		dataEach.push(userTask.task.name);
 		dataEach.push(userTask.task.description);
 		dataEach.push(userTask.task.taskStatus.status);
 		dataEach.push(userTask.task.taskStatus.statusColour);
-		dataEach.push(userTask.task.createDateTime);
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
        
 	$('#dataTable').DataTable( {
 		data: dataSet,
 		columns: [
-            { title: "Task Id" },
+            { title: "userTask Id" },
             { title: "Project Name" },
+            { title: "Project Description" },
             { title: "Task Name	" },
             { title: "Task Description" },
             { title: "Task Status" },
-            { title: "Task Status Flag" },
-            { title: "Created TimeStamp" },
+            { title: "Status Flag",
+            	"render": function (data, type, full, meta) {
+            		return '<div class="w3-half" style="background:'+full[6] +'"><p></p></div>'} },
+            { "render": function (data, type, full, meta) {
+            	return '<a class="btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'updateTaskByUser\',\'edit\',\'' + full[0] + '\')" data-target="#UpdateTaskByUserModalAjax" >Edit</a>'} },
         ],
         responsive: true,
         scrollY:        450,
@@ -1391,25 +1774,6 @@ function fillAssignedTasksInDataTable(userTasks){
             }]
     });
 }
-
-
-$('#manageUsers').click(function(e) {
-    
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'user/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(users) {
-       
-    	   fillUsersInDataTable(users);
-       }
- });
-}); 
 
 function fillUsersInDataTable(users){
 	var dataSet=[];
@@ -1428,11 +1792,8 @@ function fillUsersInDataTable(users){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
        
-	$('#dataTable').DataTable( {
+	dt=$('#dataTable').DataTable( {
 		data: dataSet,
 		columns: [
             { title: "First Name" },
@@ -1469,23 +1830,6 @@ function fillUsersInDataTable(users){
     });
 }
 
-$('#manageProjects').click(function(e) {
-	
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'project/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(projects) {
-    	   fillProjectsInDataTable(projects);
-       }
- });
-}); 
-
 function fillProjectsInDataTable(projects){
 	var dataSet=[];
 	projects.forEach(function(project){
@@ -1493,6 +1837,7 @@ function fillProjectsInDataTable(projects){
 		dataEach.push(project.id);
 		dataEach.push(project.name);
 		dataEach.push(project.description);
+		dataEach.push(project.startDate);
 		if(project.parentProject!=null){
 			dataEach.push(project.parentProject.id);
 			dataEach.push(project.parentProject.name);
@@ -1509,9 +1854,6 @@ function fillProjectsInDataTable(projects){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
@@ -1519,13 +1861,17 @@ function fillProjectsInDataTable(projects){
         	{ title: "Project Id" },
             { title: "Project Name" },
             { title: "Description" },
+            { title: "Start Date" },
             { title: "Parent Project Id" },
             { title: "Parent Project" },
-            { title: "Child Projects" },
+            { title: "Child Projects" },            
             { "render": function (data, type, full, meta) {
+            	return '<a class="btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'projectDocuments\',\'\',\'' + full[0] + '\')" data-target="#DocumentsModalAjax" >Manage Documents</a>'} },
+           	 { "render": function (data, type, full, meta) {
             	return '<a class="projectEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'project\',\'edit\',\'' + full[0] + '\')" data-target="#ProjectModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
-               	return '<a class="projectDelete btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'project\',\'' + full[0] + '\')" >Delete</a>'} },
+               	return '<a class="btn btn-danger custom-width" href=# id=\'' + full[0] + '\' onClick="deleteById(\'project\',\'' + full[0] + '\')" >Delete</a>'} },
+           		
         ],
         responsive: true,
         scrollY:        450,
@@ -1555,32 +1901,13 @@ function fillProjectsInDataTable(projects){
                 "searchable": false
             },
             {
-                "targets": [ 3 ],
+                "targets": [ 4 ],
                 "visible": false,
                 "searchable": false
             }
 		]
     });
 }
-
-
-
-$('#manageTasks').click(function(e) {
-    $.ajax({
-       type:'GET',
-       async: false,
-       url : 'task/all?tenantId='+tenantId,
-       contentType: 'application/json',
-       dataType : 'json',
-       beforeSend: function(xhr) {
-           xhr.setRequestHeader(header, token);
-       },
-       success : function(tasks) {
-    	   //alert(tasks);
-    	   fillTasksInDataTable(tasks);
-       }
- });
-}); 
 
 function fillTasksInDataTable(tasks){
 	var dataSet=[];
@@ -1595,11 +1922,8 @@ function fillTasksInDataTable(tasks){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
-	$('#dataTable').DataTable( {
+	 $('#dataTable').DataTable( {
         data: dataSet,
         columns: [
         	{ title: "Task Id" },
@@ -1607,7 +1931,9 @@ function fillTasksInDataTable(tasks){
         	{ title: "Task Name" },
             { title: "Description" },
             { title: "Task Status"},
-            { title: "Status Flag" },
+        	{ title: "Status Flag",
+            	"render": function (data, type, full, meta) {
+            		return '<div class="w3-half" style="background:'+full[5] +'"><p></p></div>'} },
             { "render": function (data, type, full, meta) {
             	return '<a class="taskEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'task\',\'edit\',\'' + full[0] + '\')" data-target="#TaskModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
@@ -1628,22 +1954,46 @@ function fillTasksInDataTable(tasks){
     });
 }
 
-$('#manageTaskStatus').click(function(e) {
+function manageList(pageType) {
+
+	if ($.fn.DataTable.isDataTable("#dataTable")) {
+		  $('#dataTable').DataTable().clear().destroy();
+		  $('#dataTable').html('');
+	}
+	
+	var reqURL = pageType+'/all?tenantId='+tenantId;
 	
     $.ajax({
        type:'GET',
        async: false,
-       url : 'taskStatus/all?tenantId='+tenantId,
+       url : reqURL,
        contentType: 'application/json',
        dataType : 'json',
        beforeSend: function(xhr) {
            xhr.setRequestHeader(header, token);
        },
-       success : function(taskStatus) {
-    	   fillTaskStatusInDataTable(taskStatus);
-       }
+       success : function(response) {
+    	   if(pageType=="user"){
+    		   fillUsersInDataTable(response);
+    	   }
+    	   else if(pageType=="project"){
+    		   fillProjectsInDataTable(response);
+    	   }
+    	   else if(pageType=="task"){
+    		   fillTasksInDataTable(response);
+    	   }
+    	   else if(pageType=="taskStatus"){
+	    	   fillTaskStatusInDataTable(response);
+    	   }
+    	   else if(pageType="userProject"){
+    		   fillUserProjectsInDataTable(response);	
+	    	}
+    	   else if(pageType="userTask"){
+    		   fillUserTasksInDataTable(response);	
+	    	}
+       } 
  });
-});
+}
 
 function fillTaskStatusInDataTable(taskStatus){
 	var dataSet=[];
@@ -1655,16 +2005,15 @@ function fillTaskStatusInDataTable(taskStatus){
 		dataSet.push(dataEach);
 	});
 
-	if ($.fn.DataTable.isDataTable("#dataTable")) {
-		  $('#dataTable').DataTable().clear().destroy();
-		}
 
 	$('#dataTable').DataTable( {
         data: dataSet,
         columns: [
         	{ title: "Status Id" },
             { title: "Status" },
-            { title: "Status Colour"},
+            { title: "Status Flag",
+               "render": function (data, type, full, meta) {
+               return '<div class="w3-half" style="background:'+full[2] +'"><p></p></div>'} },
             { "render": function (data, type, full, meta) {
             	return '<a class="taskStatusEdit btn btn-success custom-width"  href=#  data-toggle="modal" id=\'' + full[0] + '\' onClick="loadAjaxPage(\'taskStatus\',\'edit\',\'' + full[0] + '\')" data-target="#TaskStatusModalAjax" >Edit</a>'} },
            	{ "render": function (data, type, full, meta) {
@@ -1683,4 +2032,55 @@ function fillTaskStatusInDataTable(taskStatus){
             }
 		]
     });
+}
+
+
+function updateTaskByUser(){ 
+	
+	if(!$("#UpdateUserTaskForm").valid())
+	{
+		return false;
+	}	
+	
+	var userTaskId = $('#userTaskId').val();
+	var description = $('#userTaskDesc').val();
+	
+	var taskStatus = {};
+	taskStatus.id=$('select#userTaskStatus option:selected').val();
+	taskStatus.status=$('select#userTaskStatus option:selected').text();
+	
+	var task = {};
+	task.description = description;
+	task.taskStatus = taskStatus;
+	
+	
+	var userTask = {};
+
+	userTask.id = userTaskId;
+	userTask.task = task;
+	
+	$.ajax({
+	       type:'POST',
+	       async: false,
+	       url : 'userTask/update?tenantId='+tenantId,
+	       contentType: 'application/json',
+	       data : JSON.stringify(userTask),
+	       dataType : 'json',
+	       beforeSend: function(xhr) {
+	           xhr.setRequestHeader(header, token);
+	       },
+	       success : function(status) {
+	    	   if(status.status==200){
+		        	$('#successMessage').html(status.message);
+		        	$('#UpdateTaskByUserModalAjax').modal('hide');
+		            $('#successAlert').show();
+		            manageList('taskStatus');
+		          }else{
+		        	$('#warningMessage').html(status.message);
+		        	$('#UpdateTaskByUserModalAjax').modal('hide');  
+		            $('#warningAlert').show();
+		          }
+	       }
+	       
+	 });
 }

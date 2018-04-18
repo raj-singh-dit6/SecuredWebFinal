@@ -40,6 +40,35 @@ div.dataTables_length>label{
 	float : left;
 }
 
+.validation
+    {
+      color: red;
+      margin-bottom: 20px;
+    }
+    
+.w3-half {height:5px;padding-top:30px}    
 
+
+/*!
+For jQuery validation
+*/
+
+label {
+    display: block;
+}
+
+input.error {
+    border: 1px solid red;
+}
+
+label.error {
+    font-weight: normal;
+    color: red;
+}
+
+
+.input-group>.custom-file, .input-group>.custom-select, .input-group>.form-control {
+    width: 100% !important;
+}
 
 

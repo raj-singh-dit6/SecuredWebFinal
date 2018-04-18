@@ -7,14 +7,12 @@
         <!-- Modal body -->
         <div class="modal-body">
         	<form action="#" method="POST" name="ForgotPasswordForm">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable" for="Email">Email</label>
-                    <div class="col-md-7">
-						<input class="form-control" id="Email"/>
+                <div class="form-group col-lg-12">
+                    <label class="col-lg-5 control-lable" for="Email">Email</label>
+                    <div class="col-lg-7">
+						<input class="form-control" id="Email" autofocus required/>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
         <!-- Modal footer -->
